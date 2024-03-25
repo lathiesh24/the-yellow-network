@@ -10,18 +10,18 @@ const DefaultCard: React.FC = () => {
     ]
 
     return (
-        <div className="flex justify-center ml-[350px] mr-[330px] mb-8">
-            <div className="flex flex-col">
+        <div className="flex justify-center mb-12 gap-x-4 text-[12px] ">
+            <div className="flex flex-col w-[356px]">
                 {cardData.slice(0, 2).map((item, index) => {
                     return (
-                        <div key={index} className="border rounded-md bg-white mb-4 p-6">{item}</div>
+                        <div key={index} className="border rounded-md bg-white mb-4 p-6 shadow-md">{item}</div>
                     )
                 })}
             </div>
-            <div className="flex flex-col mx-4">
+            <div className="flex flex-col w-[356px] ">
                 {cardData.slice(2).map((item, index) => {
                     return (
-                        <div key={index} className="border rounded-md bg-white mb-4 p-6">{item}</div>
+                        <div key={index} className="border rounded-md bg-white mb-4 p-6 shadow-md">{item}</div>
                     )
                 })}
             </div>

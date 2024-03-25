@@ -14,7 +14,7 @@ const NavBar: React.FC = () => {
     };
 
     return (
-        <div className="flex bg-white h-max w-full items-center flex-row justify-between shadow-md py-3">
+        <div className="fixed flex bg-white h-max w-full items-center flex-row justify-between shadow-md py-3">
             <div className="ml-8">
                 <Image
                     src="/tyn-logo.png"
