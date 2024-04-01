@@ -78,7 +78,7 @@ export default function Page() {
           )}
         </div>
         <div className=''>
-          <Prompt onSaveInput={handleSaveInput} defaultPrompt={defaultPrompt} />
+          <Prompt onSaveInput={handleSaveInput} defaultPrompt={defaultPrompt} renderMessages={renderMessages} />
         </div>
         <div>
           <CompanyProfilePane />
