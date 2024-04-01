@@ -16,11 +16,6 @@ const Prompt: React.FC<PromptProps> = ({ onSaveInput }) => {
         onSaveInput(inputPrompt);
         setInputPrompt('');
     };
-
-    useEffect(() => {
-        console.log("SavedInput", onSaveInput);
-    }, [onSaveInput]);
-
     return (
         <div className="fixed  bottom-0 flex justify-center items-center bg-white mb-12 w-[800px] rounded-lg shadow-md">
             <div className="flex-1 flex items-center">
