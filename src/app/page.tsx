@@ -1,19 +1,31 @@
-"use client"
+"use client";
 import React, { useState } from 'react';
 import DefaultCard from "./components/DefaultCard";
 import Navbar from "./components/Navbar";
 import Prompt from "./components/Prompt";
 import { RxAvatar } from 'react-icons/rx';
+import HistoryBar from './components/HistoryBar';
+import CompanyProfilePane from './components/CompanyProfilePane';
 
 export default function Page() {
   const [userMessages, setUserMessages] = useState<string[]>([]);
   const [systemResponses, setSystemResponses] = useState<string[]>([]);
+  const [defaultPrompt, setDefaultPrompt] = useState<string>('');
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleSaveInput = (input: string) => {
     setUserMessages([...userMessages, input]);
     const systemResponse = `System response to "${input}"`;
     setSystemResponses([...systemResponses, systemResponse]);
   };
+
+  const handleSelectPrompt = (prompt: string) => {
+    setDefaultPrompt(prompt);
+  };
+
+  const handleToggleHistory = () => {
+    setOpen(!open);
+  }
 
   const renderMessages = () => {
     const messages = [];
@@ -53,25 +65,24 @@ export default function Page() {
   };
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <div className="flex-grow">
-        <Navbar />
+    <main className="">
+      <div className="">
+        <Navbar open={open} handleToggleHistory={handleToggleHistory} />
       </div>
-      {!userMessages.length && (
-        <>
-          <div className="flex justify-center items-center mb-16 font-semibold text-2xl">
-            What problem are you trying to solve?
-          </div>
-          <div className="mt-auto flex justify-center items-center">
-            <DefaultCard />
-          </div>
-        </>
-      )}
-      <div className="mt-auto flex flex-col justify-start items-center overflow-y-auto">
-        <div className=" mb-32 w-[656px] ">
-          {renderMessages()}
+      <div className='flex'>
+        <div className="">
+          {open && (
+            <div className="w-1/4">
+              <HistoryBar open={open} />
+            </div>
+          )}
         </div>
-        <Prompt onSaveInput={handleSaveInput} />
+        <div className=''>
+          <Prompt onSaveInput={handleSaveInput} defaultPrompt={defaultPrompt} />
+        </div>
+        <div>
+          <CompanyProfilePane />
+        </div>
       </div>
     </main>
   );
