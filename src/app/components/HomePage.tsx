@@ -5,10 +5,18 @@ import NavBar from './Navbar';
 import DefaultCard from './DefaultCard';
 import Prompt from './Prompt';
 import axios from 'axios';
+import HistoryBar from './HistoryBar';
+import CompanyProfilePane from './CompanyProfilePane';
 
 export default function HomePage() {
   const [userMessages, setUserMessages] = useState<string[]>([]);
   const [systemResponses, setSystemResponses] = useState([]);
+  const [defaultPrompt, setDefaultPrompt] = useState<string>('');
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleToggleHistory = () => {
+    setOpen(!open);
+  }
 
   const handleSaveInput = async (input: string) => {
     console.log("inputinhomepage",input)
@@ -84,25 +92,24 @@ export default function HomePage() {
   };
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <div className="flex-grow">
-        <NavBar />
+    <main className="">
+      <div className="">
+        <NavBar open={open} handleToggleHistory={handleToggleHistory} />
       </div>
-      {!userMessages.length && (
-        <>
-          <div className="flex justify-center items-center mb-16 font-semibold text-2xl">
-            What problem are you trying to solve?
-          </div>
-          <div className="mt-auto flex justify-center items-center">
-            <DefaultCard />
-          </div>
-        </>
-      )}
-      <div className="mt-auto flex flex-col justify-start items-center overflow-y-auto">
-        <div className=" mb-32 w-[656px] ">
-          {renderMessages()}
+      <div className='flex'>
+        <div className="">
+          {open && (
+            <div className="w-1/4">
+              <HistoryBar open={open} />
+            </div>
+          )}
         </div>
-        <Prompt onSaveInput={handleSaveInput} />
+        <div className=''>
+          <Prompt onSaveInput={handleSaveInput} defaultPrompt={defaultPrompt} renderMessages={renderMessages} />
+        </div>
+        <div>
+          <CompanyProfilePane />
+        </div>
       </div>
     </main>
   );
