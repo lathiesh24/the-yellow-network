@@ -7,12 +7,14 @@ import Prompt from './Prompt';
 import axios from 'axios';
 import HistoryBar from './HistoryBar';
 import CompanyProfilePane from './CompanyProfilePane';
+import { StartupType } from '../interfaces';
 
 export default function HomePage() {
   const [userMessages, setUserMessages] = useState<string[]>([]);
   const [systemResponses, setSystemResponses] = useState([]);
   const [defaultPrompt, setDefaultPrompt] = useState<string>('');
   const [open, setOpen] = useState<boolean>(false);
+  const [selectedStartup, setSelectedStartup] = useState<StartupType>()
 
   const handleToggleHistory = () => {
     setOpen(!open);
@@ -41,6 +43,13 @@ export default function HomePage() {
   };
   console.log("systemResponsess",systemResponses)
   console.log("userMessages",userMessages)
+
+  const handleClickItem = (item:StartupType) => {
+    setSelectedStartup(item)
+  }
+
+  console.log("selectedStartup",selectedStartup)
+
   const renderMessages = () => {
     const messages = [];
     for (let i = 0; i < userMessages.length || i < systemResponses.length; i++) {
@@ -75,8 +84,10 @@ export default function HomePage() {
                       <div>Product/Service</div>
                       <div>Website</div>
                 </div>
-                {systemResponses[i] && systemResponses[i].results.map((result:any,index:number)=> (
-                  <div className='grid grid-cols-3 mt-4 rounded shadow-md p-2'>
+                {systemResponses[i] && systemResponses[i].results.map((result:StartupType,index:number)=> (
+                  <div key={index} className='grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer' 
+                  onClick={()=>handleClickItem(result)}
+                  >
                         <div>{result?.startup_name}</div>
                         <div>{result?.startup_technology}</div>
                         <div>{result?.startup_url}</div>
@@ -107,9 +118,15 @@ export default function HomePage() {
         <div className=''>
           <Prompt onSaveInput={handleSaveInput} defaultPrompt={defaultPrompt} renderMessages={renderMessages} />
         </div>
-        <div>
-          <CompanyProfilePane />
-        </div>
+        {
+          selectedStartup && (
+            <div>
+                <CompanyProfilePane 
+                companyData={selectedStartup} 
+                />
+            </div>
+          )
+        }
       </div>
     </main>
   );
