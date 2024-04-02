@@ -3,8 +3,8 @@ import React from 'react';
 interface HistoryBarProps {
     open: boolean;
 }
-const HistoryBar: React.FC<HistoryBarProps> = ({ open }) => {
 
+const HistoryBar: React.FC<HistoryBarProps> = ({ open }) => {
     const chatHistory = [
         "which company contribute to seamless health information integration?",
         "Give me list of startups leveraging AI in Quantum computing",
@@ -16,8 +16,6 @@ const HistoryBar: React.FC<HistoryBarProps> = ({ open }) => {
         "I need to change data from document into applicable understanding",
         "I need to build a GenAI application in my cloud in less time"
     ]
-
-
 
     return (
         <>

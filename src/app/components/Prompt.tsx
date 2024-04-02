@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { IoMdSend } from 'react-icons/io';
 import DefaultCard from './DefaultCard';
 
@@ -20,6 +20,10 @@ const Prompt: React.FC<PromptProps> = ({ onSaveInput, defaultPrompt, renderMessa
         setInputPrompt('');
     };
 
+    const handleCardSelect = (value: string) => {
+        setInputPrompt(value); // Update textarea value
+    };
+
     return (
         <div className="fixed bottom-0 w-full flex flex-col items-center justify-center mb-6 md:mb-12 lg:mb-24 overflow-y-scroll">
             {renderMessages().length === 0 ?
@@ -29,7 +33,7 @@ const Prompt: React.FC<PromptProps> = ({ onSaveInput, defaultPrompt, renderMessa
                             What problem are you trying to solve?
                         </div>
                         <div className="mb-4 md:mb-8 lg:mb-16">
-                            <DefaultCard />
+                            <DefaultCard onSelectCard={handleCardSelect} />
                         </div>
                     </>
                 ) : (
@@ -37,8 +41,8 @@ const Prompt: React.FC<PromptProps> = ({ onSaveInput, defaultPrompt, renderMessa
                         {renderMessages()}
                     </div>
                 )}
-            <div className="bg-white w-[656px] rounded-lg ">
-                <div className="flex items-center">
+            <div className="bg-white w-[656px] rounded-lg shadow-lg ">
+                <div className="flex items-center ">
                     <textarea
                         className="flex-1 focus:outline-none py-4 px-4 rounded-md resize-none overflow-hidden text-[14px]"
                         placeholder="Provide your problem statement to be solved..."

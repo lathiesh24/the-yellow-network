@@ -1,6 +1,10 @@
 import React from 'react';
 
-const DefaultCard: React.FC = () => {
+interface DefaultCardProps {
+    onSelectCard: (value: string) => void;
+}
+
+const DefaultCard: React.FC<DefaultCardProps> = ({ onSelectCard }) => {
 
     const cardData = [
         "Need AI platforms improving patient diagnosis accuracy in healthcare.",
@@ -9,6 +13,10 @@ const DefaultCard: React.FC = () => {
         "Seeking startups improving pharmaceutical R&D with machine learning."
     ];
 
+    const handleCardClick = (value: string) => {
+        onSelectCard(value);
+    };
+
     return (
         <div className="flex justify-center mb-12 gap-x-4 text-[12px] ">
             <div className="flex flex-col w-[356px]">
@@ -16,7 +24,8 @@ const DefaultCard: React.FC = () => {
                     return (
                         <div
                             key={index}
-                            className="border rounded-md bg-white mb-4 p-6 shadow-md cursor-pointer hover:bg-blue-50 hover:font-medium hover:text-[13px] "
+                            className="border rounded-md bg-white mb-4 p-6 shadow-md cursor-pointer hover:bg-blue-50 hover:font-medium transition duration-150 ease-in-out"
+                            onClick={() => handleCardClick(item)} // Handle click event
                         >
                             {item}
                         </div>
@@ -28,7 +37,8 @@ const DefaultCard: React.FC = () => {
                     return (
                         <div
                             key={index}
-                            className="border rounded-md bg-white mb-4 p-6 shadow-md cursor-pointer hover:bg-blue-50 hover:font-medium hover:text-[13px] "
+                            className="border rounded-md bg-white mb-4 p-6 shadow-md cursor-pointer hover:bg-blue-50 hover:font-medium transition duration-150 ease-in-out"
+                            onClick={() => handleCardClick(item)} // Handle click event
                         >
                             {item}
                         </div>
