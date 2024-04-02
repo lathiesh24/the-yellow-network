@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
 import { MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
+import { StartupType } from '../interfaces';
 
-const CompanyProfilePane: React.FC = () => {
+
+interface CompanyProfilePaneProps {
+    companyData: StartupType; 
+}
+const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
+    companyData
+}) => {
     const [expanded, setExpanded] = useState<boolean>(false);
 
     const toggleWidth = () => {
         setExpanded(!expanded);
     };
+    console.log(companyData,"companyData")
 
     return (
         <>
-            <div className={`fixed top-0 right-0 bg-white shadow-md ${expanded ? 'w-[1000px]' : 'max-w-96'}`}>
+            <div className={`fixed top-0 right-0 bg-white shadow-md min-h-screen ${expanded ? 'w-[1000px]' : 'max-w-96'}`}>
                 <div className='flex flex-col gap-y-4 py-8'>
                     <div className='flex flex-col gap-y-5 px-8 -mt-5'>
                         {!expanded ?
@@ -20,50 +28,79 @@ const CompanyProfilePane: React.FC = () => {
                             (<div className=' -ml-2 cursor-pointer' onClick={toggleWidth}>
                                 <MdOutlineKeyboardDoubleArrowRight size={23} />
                             </div >)}
-                        <div className='flex flex-row justify-between items-center -mt-3'>
+                        <div className='flex flex-row justify-between items-center -mt-3 text-blue-400 font-semibold text-xl'>
                             <div>
-                                Spyne
+                                {companyData?.startup_name}
                             </div>
                             <div className='flex justify-center items-center px-4 py-1.5 bg-gray-400 rounded-md text-white font-semibold cursor-pointer'>
                                 Connect
                             </div>
                         </div>
                         <div className='border bg-white rounded-md px-4 py-4 shadow-sm'>
-                            AgNext revolutionizes AgTech, employing AI-based food assessment tech for transparent, rapid, and chemical-free quality analysis across the agriculture value chain.
+                            {companyData?.startup_overview}
                         </div>
                     </div>
-                    <div className='flex flex-col gap-y-1.5 px-8'>
-                        <div>Industry</div>
-                        <div>Company Industry</div>
-                    </div>
-                    <div className='flex flex-col gap-y-1.5 px-8'>
-                        <div>Technology</div>
-                        <div>Virtual Reality</div>
-                    </div>
-                    <div className='flex flex-col gap-y-1.5 px-8'>
-                        <div>Country</div>
-                        <div>United States of America</div>
-                    </div>
-                    <div className='flex flex-col gap-y-1.5 px-8'>
-                        <div>Company Stage</div>
-                        <div>Series B</div>
-                    </div>
-                    <div className='flex flex-col gap-y-1.5 px-8'>
-                        <div>Website Url</div>
-                        <div>www.demosite.com</div>
-                    </div>
-                    <div className='flex flex-col gap-y-1.5 px-8'>
-                        <div>Founder's Information</div>
-                        <div className='border bg-white rounded-md px-4 py-4 shadow-sm'>
-                            Hedva Feldman (CoFounder & CEO, . Harvard University Ronen Feldman(CoFounder, E1984,Cornell University PhD 1993)
-                        </div>
-                    </div>
-                    <div className='flex flex-col gap-y-1.5 px-8'>
-                        <div>Email</div>
-                        <div className='border bg-white rounded-md px-4 py-4 shadow-sm'>
-                            avishai.wool@algosec.com, yuval.baron@algosec.com
-                        </div>
-                    </div>
+                    {companyData?.startup_industry && (
+                            <div className='flex flex-col gap-y-1.5 px-8'>
+                                <div className='font-semibold'>Industry</div>
+                                <div>{companyData?.startup_industry}</div>
+                            </div>
+                        )}
+                    {companyData?.startup_technology && (
+                            <div className='flex flex-col gap-y-1.5 px-8'>
+                                <div className='font-semibold'>Technology</div>
+                                <div>{companyData?.startup_technology}</div>
+                            </div>
+                        )}
+                    {companyData?.startup_country && (
+                            <div className='flex flex-col gap-y-1.5 px-8'>
+                                <div className='font-semibold'>Country</div>
+                                <div>{companyData?.startup_country}</div>
+                            </div>
+                        )}
+                    {companyData?.startup_company_stage && (
+                            <div className='flex flex-col gap-y-1.5 px-8'>
+                                <div className='font-semibold'>Company Stage</div>
+                                <div>{companyData?.startup_company_stage}</div>
+                            </div>
+                    )}
+                    {companyData?.startup_url && (
+                            <div className='flex flex-col gap-y-1.5 px-8'>
+                                <div className='font-semibold'>Company profile</div>
+                                <div>{companyData?.startup_url}</div>
+                            </div>
+                        )}
+                    {companyData?.startup_description && (
+                            <div className='flex flex-col gap-y-1.5 px-8'>
+                                <div className='font-semibold'>Description</div>
+                                <div>{companyData?.startup_description}</div>
+                            </div>
+                    )}
+                    {companyData?.startup_solutions && (
+                            <div className='flex flex-col gap-y-1.5 px-8'>
+                                <div className='font-semibold'>Solutions provided</div>
+                                <div>{companyData?.startup_solutions}</div>
+                            </div>
+                    )}
+                    {companyData?.startup_usecases && (
+                            <div className='flex flex-col gap-y-1.5 px-8'>
+                                <div className='font-semibold'>Usecases</div>
+                                <div>{companyData?.startup_usecases}</div>
+                            </div>
+                    )}
+                    {companyData?.startup_founders_info && (
+                            <div className='flex flex-col gap-y-1.5 px-8'>
+                                <div className='font-semibold'>Founders Info</div>
+                                <div>{companyData?.startup_founders_info}</div>
+                            </div>
+                    )}
+                    {companyData?.startup_emails && (
+                            <div className='flex flex-col gap-y-1.5 px-8'>
+                                <div className='font-semibold'>Emails</div>
+                                <div>{companyData?.startup_emails}</div>
+                            </div>
+                    )}
+                  
                 </div>
             </div>
         </>
