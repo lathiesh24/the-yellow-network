@@ -5,9 +5,10 @@ import NavBar from './Navbar';
 import DefaultCard from './DefaultCard';
 import Prompt from './Prompt';
 import axios from 'axios';
-import HistoryBar from './HistoryBar';
+import HistoryBar from './LeftFrame/HistoryBar';
 import CompanyProfilePane from './CompanyProfilePane';
 import { StartupType } from '../interfaces';
+import LeftFrame from './LeftFrame/LeftFrame';
 
 export default function HomePage() {
   const [userMessages, setUserMessages] = useState<string[]>([]);
@@ -15,23 +16,23 @@ export default function HomePage() {
   const [defaultPrompt, setDefaultPrompt] = useState<string>('');
   const [open, setOpen] = useState<boolean>(false);
   const [selectedStartup, setSelectedStartup] = useState<StartupType>()
-  const [openCompanyPane,setOpenCompanyPane] = useState<boolean>(true);
+  const [openCompanyPane, setOpenCompanyPane] = useState<boolean>(true);
 
   const handleToggleHistory = () => {
     setOpen(!open);
   }
 
   const handleSaveInput = async (input: string) => {
-    console.log("inputinhomepage",input)
-    let userquery = {"userquery":input}
-    console.log("userquery",userquery)
+    console.log("inputinhomepage", input)
+    let userquery = { "userquery": input }
+    console.log("userquery", userquery)
 
-    setUserMessages([...userMessages, input]); 
+    setUserMessages([...userMessages, input]);
 
-    try{
-      console.log("input in url",input)
+    try {
+      console.log("input in url", input)
       console.log("api is called")
-      const response = await axios.post("http://127.0.0.1:8000/api/prompt/ragsearch/",userquery)
+      const response = await axios.post("http://127.0.0.1:8000/api/prompt/ragsearch/", userquery)
       let startupResults = response.data
       console.log("apiresponse",response)
       setSystemResponses(prevResponses => [...prevResponses, startupResults]);
@@ -41,7 +42,7 @@ export default function HomePage() {
   };
 
 
-  const handleClickItem = (item:StartupType) => {
+  const handleClickItem = (item: StartupType) => {
     setSelectedStartup(item)
     setOpenCompanyPane(true)
   }
@@ -121,7 +122,7 @@ export default function HomePage() {
         <div className="">
           {open && (
             <div className="w-1/4">
-              <HistoryBar open={open} />
+              < LeftFrame open={open} />
             </div>
           )}
         </div>
@@ -135,11 +136,11 @@ export default function HomePage() {
         {
           selectedStartup && (
             <div>
-                <CompanyProfilePane 
-                companyData={selectedStartup} 
+              <CompanyProfilePane
+                companyData={selectedStartup}
                 setOpenState={setOpenCompanyPane}
                 openState={openCompanyPane}
-                />
+              />
             </div>
           )
         }
