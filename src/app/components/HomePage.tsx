@@ -15,6 +15,7 @@ export default function HomePage() {
   const [defaultPrompt, setDefaultPrompt] = useState<string>('');
   const [open, setOpen] = useState<boolean>(false);
   const [selectedStartup, setSelectedStartup] = useState<StartupType>()
+  const [openCompanyPane,setOpenCompanyPane] = useState<boolean>(true);
 
   const handleToggleHistory = () => {
     setOpen(!open);
@@ -46,9 +47,11 @@ export default function HomePage() {
 
   const handleClickItem = (item:StartupType) => {
     setSelectedStartup(item)
+    setOpenCompanyPane(true)
   }
 
   console.log("selectedStartup",selectedStartup)
+  console.log("openState",openCompanyPane)
 
   const renderMessages = () => {
     const messages = [];
@@ -123,6 +126,8 @@ export default function HomePage() {
             <div>
                 <CompanyProfilePane 
                 companyData={selectedStartup} 
+                setOpenState={setOpenCompanyPane}
+                openState={openCompanyPane}
                 />
             </div>
           )
