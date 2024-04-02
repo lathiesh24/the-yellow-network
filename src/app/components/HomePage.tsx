@@ -5,9 +5,10 @@ import NavBar from './Navbar';
 import DefaultCard from './DefaultCard';
 import Prompt from './Prompt';
 import axios from 'axios';
-import HistoryBar from './HistoryBar';
+import HistoryBar from './LeftFrame/HistoryBar';
 import CompanyProfilePane from './CompanyProfilePane';
 import { StartupType } from '../interfaces';
+import LeftFrame from './LeftFrame/LeftFrame';
 
 export default function HomePage() {
   const [userMessages, setUserMessages] = useState<string[]>([]);
@@ -21,34 +22,34 @@ export default function HomePage() {
   }
 
   const handleSaveInput = async (input: string) => {
-    console.log("inputinhomepage",input)
-    let userquery = {"userquery":input}
-    console.log("userquery",userquery)
+    console.log("inputinhomepage", input)
+    let userquery = { "userquery": input }
+    console.log("userquery", userquery)
 
-    setUserMessages([...userMessages, input]); 
+    setUserMessages([...userMessages, input]);
 
-    try{
-      console.log("input in url",input)
+    try {
+      console.log("input in url", input)
       console.log("api is called")
-      const response = await axios.post("http://127.0.0.1:8000/api/prompt/ragsearch/",userquery)
+      const response = await axios.post("http://127.0.0.1:8000/api/prompt/ragsearch/", userquery)
       let startupResults = response.data
-      console.log("startupResults",startupResults)
+      console.log("startupResults", startupResults)
       setSystemResponses(prevResponses => [...prevResponses, startupResults]);
-      console.log("responseinprompt",response)
-    } catch(error) {
-      console.log("erroringettingstartups",error)
+      console.log("responseinprompt", response)
+    } catch (error) {
+      console.log("erroringettingstartups", error)
     }
 
- 
-  };
-  console.log("systemResponsess",systemResponses)
-  console.log("userMessages",userMessages)
 
-  const handleClickItem = (item:StartupType) => {
+  };
+  console.log("systemResponsess", systemResponses)
+  console.log("userMessages", userMessages)
+
+  const handleClickItem = (item: StartupType) => {
     setSelectedStartup(item)
   }
 
-  console.log("selectedStartup",selectedStartup)
+  console.log("selectedStartup", selectedStartup)
 
   const renderMessages = () => {
     const messages = [];
@@ -80,18 +81,18 @@ export default function HomePage() {
             <div className='text-black' key={`system-${i}`}>
               <div>
                 <div className='grid grid-cols-3 font-semibold text-base'>
-                      <div>Startup Name</div>
-                      <div>Product/Service</div>
-                      <div>Website</div>
+                  <div>Startup Name</div>
+                  <div>Product/Service</div>
+                  <div>Website</div>
                 </div>
-                {systemResponses[i] && systemResponses[i].results.map((result:StartupType,index:number)=> (
-                  <div key={index} className='grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer' 
-                  onClick={()=>handleClickItem(result)}
+                {systemResponses[i] && systemResponses[i].results.map((result: StartupType, index: number) => (
+                  <div key={index} className='grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer'
+                    onClick={() => handleClickItem(result)}
                   >
-                        <div>{result?.startup_name}</div>
-                        <div>{result?.startup_technology}</div>
-                        <div>{result?.startup_url}</div>
-                    </div>
+                    <div>{result?.startup_name}</div>
+                    <div>{result?.startup_technology}</div>
+                    <div>{result?.startup_url}</div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -111,7 +112,7 @@ export default function HomePage() {
         <div className="">
           {open && (
             <div className="w-1/4">
-              <HistoryBar open={open} />
+              < LeftFrame open={open} />
             </div>
           )}
         </div>
@@ -121,9 +122,9 @@ export default function HomePage() {
         {
           selectedStartup && (
             <div>
-                <CompanyProfilePane 
-                companyData={selectedStartup} 
-                />
+              <CompanyProfilePane
+                companyData={selectedStartup}
+              />
             </div>
           )
         }

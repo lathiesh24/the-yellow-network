@@ -25,7 +25,7 @@ const DefaultCard: React.FC<DefaultCardProps> = ({ onSelectCard }) => {
                         <div
                             key={index}
                             className="border rounded-md bg-white mb-4 p-6 shadow-md cursor-pointer hover:bg-blue-50 hover:font-medium transition duration-150 ease-in-out"
-                            onClick={() => handleCardClick(item)} // Handle click event
+                            onClick={() => handleCardClick(item)}
                         >
                             {item}
                         </div>
@@ -38,7 +38,7 @@ const DefaultCard: React.FC<DefaultCardProps> = ({ onSelectCard }) => {
                         <div
                             key={index}
                             className="border rounded-md bg-white mb-4 p-6 shadow-md cursor-pointer hover:bg-blue-50 hover:font-medium transition duration-150 ease-in-out"
-                            onClick={() => handleCardClick(item)} // Handle click event
+                            onClick={() => handleCardClick(item)}
                         >
                             {item}
                         </div>

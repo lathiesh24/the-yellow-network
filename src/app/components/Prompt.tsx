@@ -21,7 +21,7 @@ const Prompt: React.FC<PromptProps> = ({ onSaveInput, defaultPrompt, renderMessa
     };
 
     const handleCardSelect = (value: string) => {
-        setInputPrompt(value); // Update textarea value
+        setInputPrompt(value);
     };
 
     return (
