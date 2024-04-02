@@ -1,45 +1,71 @@
 import React, { useState } from 'react';
 import { MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 import { StartupType } from '../interfaces';
+import { GrFormClose } from "react-icons/gr";
+
 
 
 interface CompanyProfilePaneProps {
     companyData: StartupType; 
+    setOpenState: React.Dispatch<React.SetStateAction<boolean>>;
+    openState: boolean
 }
 const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
-    companyData
+    companyData,
+    setOpenState,
+    openState
 }) => {
     const [expanded, setExpanded] = useState<boolean>(false);
+
 
     const toggleWidth = () => {
         setExpanded(!expanded);
     };
-    console.log(companyData,"companyData")
+
+    const openPane = () => {
+        setOpenState(false)
+    }
+
+
+    console.log(openState, "companyData")
 
     return (
         <>
-            <div className={`fixed top-0 right-0 bg-white shadow-md min-h-screen ${expanded ? 'w-[1000px]' : 'max-w-96'}`}>
-                <div className='flex flex-col gap-y-4 py-8'>
-                    <div className='flex flex-col gap-y-5 px-8 -mt-5'>
-                        {!expanded ?
-                            (<div className=' -ml-2 cursor-pointer' onClick={toggleWidth}>
-                                <MdOutlineKeyboardDoubleArrowLeft size={23} />
-                            </div>) :
-                            (<div className=' -ml-2 cursor-pointer' onClick={toggleWidth}>
-                                <MdOutlineKeyboardDoubleArrowRight size={23} />
-                            </div >)}
-                        <div className='flex flex-row justify-between items-center -mt-3 text-blue-400 font-semibold text-xl'>
-                            <div>
-                                {companyData?.startup_name}
-                            </div>
-                            <div className='flex justify-center items-center px-4 py-1.5 bg-gray-400 rounded-md text-white font-semibold cursor-pointer'>
-                                Connect
-                            </div>
-                        </div>
-                        <div className='border bg-white rounded-md px-4 py-4 shadow-sm'>
-                            {companyData?.startup_overview}
-                        </div>
+           {openState &&
+            (
+                <div className={`fixed top-0 right-0 bg-white shadow-md min-h-screen ${expanded ? 'w-[1000px]' : 'max-w-96'}`}>
+                <div className='flex flex-col gap-y-4 py-8 bg-red-300 overflow-auto h-screen'>
+                    <div className=''>
+                            <div className='mx-6 flex flex-col -mt-5 gap-6'>
+                                <div className='flex justify-between'>
+                                        {!expanded ?
+                                            (<div className=' -ml-2 cursor-pointer' onClick={toggleWidth}>
+                                                <MdOutlineKeyboardDoubleArrowLeft size={23} />
+                                            </div>) :
+                                            (<div className=' -ml-2 cursor-pointer' onClick={toggleWidth}>
+                                                <MdOutlineKeyboardDoubleArrowRight size={23} />
+                                            </div >)}
+                                        <div className='mx-4 cursor-pointer' onClick={openPane}>
+                                            <GrFormClose size={23}/>
+                                        </div>
+                                </div>
+
+                                <div className='flex flex-col gap-2'>
+                                        <div className='flex flex-row justify-between items-center -mt-3 text-blue-400 font-semibold text-xl'>
+                                            <div>
+                                                {companyData?.startup_name}
+                                            </div>
+                                            <div className='flex justify-center items-center px-4 py-1.5 bg-gray-400 rounded-md text-white font-semibold cursor-pointer'>
+                                                Connect
+                                            </div>
+                                        </div>
+                                        <div className='border bg-white rounded-md px-4 py-4 shadow-sm'>
+                                            {companyData?.startup_overview}
+                                        </div>
+                                </div>
+                            </div> 
                     </div>
+                    <div>
                     {companyData?.startup_industry && (
                             <div className='flex flex-col gap-y-1.5 px-8'>
                                 <div className='font-semibold'>Industry</div>
@@ -100,9 +126,12 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
                                 <div>{companyData?.startup_emails}</div>
                             </div>
                     )}
+                    </div>
                   
                 </div>
             </div>
+            )
+           }
         </>
     );
 };
