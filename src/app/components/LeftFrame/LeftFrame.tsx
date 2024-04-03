@@ -56,6 +56,7 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open }) => {
                 {activeTab === 'connects' && <Connects />}
                 {activeTab === 'spotlight' && <Spotlight />}
             </div>
+
         </div>
     );
 }
