@@ -3,17 +3,13 @@ import React, { ReactNode, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
 import Image from "next/image";
-
 import { useRouter } from "next/router";
-
 interface FormData {
-    first_name: string;
-    email: string;
-    organization: string;
-    password:string;  
-  }
-
-
+  first_name: string;
+  email: string;
+  organization: string;
+  password: string;
+}
 
 const RegisterPage: React.FC = () => {
 
@@ -22,9 +18,6 @@ const RegisterPage: React.FC = () => {
     register,
     formState: { errors, isSubmitted, isValid, isDirty },
   } = useForm<FormData>();
-
-  
- 
 
   const onSubmit: SubmitHandler<FormData> = async (data, event) => {
     event.preventDefault();
@@ -40,14 +33,14 @@ const RegisterPage: React.FC = () => {
     //   dispatch(registerUser.setErrorMessage(error.message));
     // }
   };
-  
+
   // useEffect(() => {
   //   // Reset the email verification box state when the component mounts
   //   // setShowEmailVerificationBox(false);
   //   // const { registerStatus, emailVerificationStatus } = store.getState().registerUser;
 
   //   // if (authenticated === true) {
-      
+
   //   // }
   //   // if (registerStatus  && !emailVerificationStatus) {
   //   //   setShowEmailVerificationBox(true);
@@ -172,9 +165,8 @@ const RegisterPage: React.FC = () => {
           <button
             type="submit"
             disabled={!isValid}
-            className={`rounded-md text-sm px-4 py-2 flex items-center justify-center uppercase font-semibold ${
-              isValid ? "bg-grey-200" : "bg-blue-500 text-white"
-            } ${isDirty ? "bg-grey-200" : " bg-blue-500 text-white"}`}
+            className={`rounded-md text-sm px-4 py-2 flex items-center justify-center uppercase font-semibold ${isValid ? "bg-grey-200" : "bg-blue-500 text-white"
+              } ${isDirty ? "bg-grey-200" : " bg-blue-500 text-white"}`}
           >
             {/* {loading ? "Registering" : "Register"} */}
             Register
