@@ -34,25 +34,21 @@ export default function HomePage() {
       console.log("api is called")
       const response = await axios.post("http://127.0.0.1:8000/api/prompt/ragsearch/", userquery)
       let startupResults = response.data
-      console.log("startupResults", startupResults)
+      console.log("apiresponse",response)
       setSystemResponses(prevResponses => [...prevResponses, startupResults]);
-      console.log("responseinprompt", response)
-    } catch (error) {
-      console.log("erroringettingstartups", error)
+    } catch(error) {
+      console.log("erroringettingstartups",error)
     }
-
-
   };
-  console.log("systemResponsess", systemResponses)
-  console.log("userMessages", userMessages)
+
 
   const handleClickItem = (item: StartupType) => {
     setSelectedStartup(item)
     setOpenCompanyPane(true)
   }
 
-  console.log("selectedStartup", selectedStartup)
-  console.log("openState", openCompanyPane)
+  
+  
 
   const renderMessages = () => {
     const messages = [];
@@ -81,21 +77,31 @@ export default function HomePage() {
               </div>
               <div className='font-semibold text-black'>Game plan</div>
             </div>
+            { systemResponses[i] && systemResponses[i]?.chainresult && systemResponses[i].results <1 &&
+              <div>
+                 {systemResponses[i]?.chainresult}
+              </div>
+            }
             <div className='text-black' key={`system-${i}`}>
               <div>
-                <div className='grid grid-cols-3 font-semibold text-base'>
-                  <div>Startup Name</div>
-                  <div>Product/Service</div>
-                  <div>Website</div>
-                </div>
-                {systemResponses[i] && systemResponses[i].results.map((result: StartupType, index: number) => (
-                  <div key={index} className='grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer'
-                    onClick={() => handleClickItem(result)}
-                  >
-                    <div>{result?.startup_name}</div>
-                    <div>{result?.startup_technology}</div>
-                    <div>{result?.startup_url}</div>
-                  </div>
+                 {
+                    systemResponses[i] && systemResponses[i].results.length >=1 &&
+                    (
+                      <div className='grid grid-cols-2 font-semibold text-base'>
+                        <div>Startup Name</div>
+                        <div>Overview</div>
+                        {/* <div>Website</div> */}
+                     </div>
+                    )
+                  }
+                {systemResponses[i] && systemResponses[i].results && systemResponses[i].results.map((result:StartupType,index:number)=> (
+                    <div key={index} className='grid grid-cols-2 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer' 
+                    onClick={()=>handleClickItem(result)}
+                    >
+                        <div>{result?.startup_name}</div>
+                        <div>{result?.startup_overview}</div>
+                        {/* <div>{result?.startup_url}</div> */}
+                    </div>
                 ))}
               </div>
             </div>
@@ -112,6 +118,7 @@ export default function HomePage() {
         <NavBar open={open} handleToggleHistory={handleToggleHistory} />
       </div>
       <div className='flex'>
+
         <div className="">
           {open && (
             <div className="w-1/4">
@@ -119,9 +126,13 @@ export default function HomePage() {
             </div>
           )}
         </div>
+
         <div className=''>
           <Prompt onSaveInput={handleSaveInput} defaultPrompt={defaultPrompt} renderMessages={renderMessages} />
         </div>
+
+
+        <div>
         {
           selectedStartup && (
             <div>
@@ -133,6 +144,7 @@ export default function HomePage() {
             </div>
           )
         }
+        </div>
       </div>
     </main>
   );
