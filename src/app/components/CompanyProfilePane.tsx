@@ -34,7 +34,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
            {openState &&
             (
                 <div className={`fixed top-0 right-0 bg-white shadow-md min-h-screen ${expanded ? 'w-[1000px]' : 'max-w-96'}`}>
-                <div className='flex flex-col gap-y-4 py-8 bg-red-300 overflow-auto h-screen'>
+                <div className='flex flex-col gap-y-4 py-8 overflow-auto h-screen'>
                     <div className=''>
                             <div className='mx-6 flex flex-col -mt-5 gap-6'>
                                 <div className='flex justify-between'>
@@ -50,7 +50,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
                                         </div>
                                 </div>
 
-                                <div className='flex flex-col gap-2'>
+                                <div className='flex flex-col gap-2 text-sm'>
                                         <div className='flex flex-row justify-between items-center -mt-3 text-blue-400 font-semibold text-xl'>
                                             <div>
                                                 {companyData?.startup_name}

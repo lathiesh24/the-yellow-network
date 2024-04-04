@@ -1,63 +1,43 @@
-"use client";
-import React, { ReactNode, useEffect, useState } from "react";
+"use client"
+import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
 import Image from "next/image";
-
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 interface FormData {
-    first_name: string;
-    email: string;
-    organization: string;
-    password:string;  
-  }
-
-
+  first_name: string;
+  email: string;
+  organization: string;
+  password: string;
+}
 
 const RegisterPage: React.FC = () => {
+  const router = useRouter();
+  const [registerResponse, setRegisterResponse] = useState<string>("")
+  const [registerState, setRegisterState] = useState()
 
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitted, isValid, isDirty },
+    formState: { errors, isSubmitted },
   } = useForm<FormData>();
 
-  
- 
-
-  const onSubmit: SubmitHandler<FormData> = async (data, event) => {
-    event.preventDefault();
-    // try {
-    //   dispatch(registerUser.registerUser(data));
-    //   // router.push("/");
-    //   if(successMessage==="Registration successful"){
-    //    router.push("/")
-    //   }
-
-    // } catch (error) {
-    //   // Handle Firebase authentication errors
-    //   dispatch(registerUser.setErrorMessage(error.message));
-    // }
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/user/register/",
+        data
+      );
+      console.log("response in register", response.data);
+      // Handle successful registration, navigate to login page
+      router.push("/");
+    } catch (error) {
+      console.error("error in registration", error);
+      // Handle registration error
+    }
   };
-  
-  // useEffect(() => {
-  //   // Reset the email verification box state when the component mounts
-  //   // setShowEmailVerificationBox(false);
-  //   // const { registerStatus, emailVerificationStatus } = store.getState().registerUser;
-
-  //   // if (authenticated === true) {
-      
-  //   // }
-  //   // if (registerStatus  && !emailVerificationStatus) {
-  //   //   setShowEmailVerificationBox(true);
-  //   // }
-
-  // }, [registerStatus,emailVerificationStatus]);
-
-  // const closeEmailVerificationBox = () => {
-  //   setShowEmailVerificationBox(false);
-  // };
 
   return (
     <div className="h-screen flex flex-col md:flex-row bg-gradient-to-b from-yellow-100 to-yellow-400">
@@ -94,7 +74,6 @@ const RegisterPage: React.FC = () => {
               placeholder="Enter your Name"
               className="text-base placeholder-text-base px-5 py-3 h-10 outline-none rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] placeholder-text-gray-300 border border-solid w-80"
             />
-            {/* TODO:  VERIFY useForm error type */}
             {errors.first_name && isSubmitted && (
               <p className="text-red-500 capitalize">
                 {errors.first_name.message}
@@ -117,7 +96,6 @@ const RegisterPage: React.FC = () => {
               placeholder="Enter your email"
               className="text-base placeholder-text-base px-5 py-3 h-10 outline-none rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] placeholder-text-gray-300 border border-solid w-80"
             />
-            {/* TODO:  VERIFY useForm error type */}
             {errors.email && isSubmitted && (
               <p className="text-red-500 capitalize">{errors.email.message}</p>
             )}
@@ -137,7 +115,7 @@ const RegisterPage: React.FC = () => {
             />
             {errors.password && (
               <p className="text-red-500 capitalize">
-                {errors.password.message as ReactNode}
+                {errors.password.message as React.ReactNode}
               </p>
             )}
           </div>
@@ -147,36 +125,24 @@ const RegisterPage: React.FC = () => {
             <input
               type="text"
               {...register("organization", {
-                required: "Organization name is required",
+                required: "Organization name is requirerouterd",
               })}
               autoComplete="off"
               id="organization"
               placeholder="Enter your organization"
               className="text-base placeholder-text-base px-5 py-3 h-10 outline-none rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] placeholder-text-gray-300 border border-solid w-80"
             />
-            {/* TODO:  VERIFY useForm error type */}
             {errors.organization && isSubmitted && (
               <p className="text-red-500 capitalize">
                 {errors.organization.message}
               </p>
             )}
           </div>
-          {/* {isSubmitted && successMessage && (
-            <p className="text-blue-500 capitalize">{successMessage}</p>
-          )}
-
-          {isSubmitted && errorMessage && (
-            <p className="text-red-500 capitalize">{errorMessage}</p>
-          )} */}
 
           <button
             type="submit"
-            disabled={!isValid}
-            className={`rounded-md text-sm px-4 py-2 flex items-center justify-center uppercase font-semibold ${
-              isValid ? "bg-grey-200" : "bg-blue-500 text-white"
-            } ${isDirty ? "bg-grey-200" : " bg-blue-500 text-white"}`}
+            className="rounded-md bg-blue-500 text-sm px-4 py-2 text-white flex items-center justify-center uppercase font-semibold"
           >
-            {/* {loading ? "Registering" : "Register"} */}
             Register
           </button>
         </form>
@@ -188,9 +154,6 @@ const RegisterPage: React.FC = () => {
         </div>
         <div className="border-b border-solid border-gray-300 pr-4 md:pr-40 mt-4 md:mt-6"></div>
       </div>
-      {/* {showEmailVerificationBox && (
-        <EmailVerificationBox onClose={closeEmailVerificationBox} />
-      )} */}
     </div>
   );
 };
