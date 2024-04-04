@@ -6,10 +6,12 @@ interface PromptProps {
     onSaveInput: (input: string) => void;
     defaultPrompt: string;
     renderMessages: () => JSX.Element[];
+    inputPrompt: string;
+    setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Prompt: React.FC<PromptProps> = ({ onSaveInput, defaultPrompt, renderMessages }) => {
-    const [inputPrompt, setInputPrompt] = useState(defaultPrompt);
+const Prompt: React.FC<PromptProps> = ({ onSaveInput, defaultPrompt, renderMessages, inputPrompt, setInputPrompt }) => {
+
 
     const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setInputPrompt(event.target.value);

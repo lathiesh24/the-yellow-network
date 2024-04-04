@@ -12,14 +12,20 @@ import { FaHistory } from "react-icons/fa";
 
 interface LeftFrameProps {
     open: boolean;
+    inputPrompt: string
+    setInputPrompt: React.Dispatch<React.SetStateAction<string>>
 }
 
-const LeftFrame: React.FC<LeftFrameProps> = ({ open }) => {
+const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt }) => {
     const [activeTab, setActiveTab] = useState<string>('history');
 
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
     };
+
+    const handleHistorySelect = (value: string) => {
+        setInputPrompt(value);
+    }
 
     return (
         <div className='fixed left-0 top-0 w-1/5 shadow-md bg-white h-screen z-50'>
@@ -51,7 +57,7 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open }) => {
             </div>
             <div>
                 {activeTab === 'history' && <HistoryBar />}
-                {activeTab === 'recommended' && <RecommendedQueries />}
+                {activeTab === 'recommended' && <RecommendedQueries onSelectHistory={handleHistorySelect} />}
                 {activeTab === 'chat' && <ChatWindow />}
                 {activeTab === 'connects' && <Connects />}
                 {activeTab === 'spotlight' && <Spotlight />}
