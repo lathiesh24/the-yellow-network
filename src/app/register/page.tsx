@@ -24,20 +24,41 @@ const RegisterPage: React.FC = () => {
     formState: { errors, isSubmitted },
   } = useForm<FormData>();
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/user/register/",
-        data
-      );
-      console.log("response in register", response.data);
-      // Handle successful registration, navigate to login page
-      router.push("/");
-    } catch (error) {
-      console.error("error in registration", error);
-      // Handle registration error
-    }
+  
+ 
+
+  const onSubmit: SubmitHandler<FormData> = async (data, event) => {
+    event.preventDefault();
+    // try {
+    //   dispatch(registerUser.registerUser(data));
+    //   // router.push("/");
+    //   if(successMessage==="Registration successful"){
+    //    router.push("/")
+    //   }
+
+    // } catch (error) {
+    //   // Handle Firebase authentication errors
+    //   dispatch(registerUser.setErrorMessage(error.message));
+    // }
   };
+  
+  // useEffect(() => {
+  //   // Reset the email verification box state when the component mounts
+  //   // setShowEmailVerificationBox(false);
+  //   // const { registerStatus, emailVerificationStatus } = store.getState().registerUser;
+
+  //   // if (authenticated === true) {
+      
+  //   // }
+  //   // if (registerStatus  && !emailVerificationStatus) {
+  //   //   setShowEmailVerificationBox(true);
+  //   // }
+
+  // }, [registerStatus,emailVerificationStatus]);
+
+  // const closeEmailVerificationBox = () => {
+  //   setShowEmailVerificationBox(false);
+  // };
 
   return (
     <div className="h-screen flex flex-col md:flex-row bg-gradient-to-b from-yellow-100 to-yellow-400">
@@ -141,7 +162,10 @@ const RegisterPage: React.FC = () => {
 
           <button
             type="submit"
-            className="rounded-md bg-blue-500 text-sm px-4 py-2 text-white flex items-center justify-center uppercase font-semibold"
+            disabled={!isValid}
+            className={`rounded-md text-sm px-4 py-2 flex items-center justify-center uppercase font-semibold ${
+              isValid ? "bg-grey-200" : "bg-blue-500 text-white"
+            } ${isDirty ? "bg-grey-200" : " bg-blue-500 text-white"}`}
           >
             Register
           </button>

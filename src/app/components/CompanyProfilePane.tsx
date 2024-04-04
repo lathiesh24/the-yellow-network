@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 import { StartupType } from '../interfaces';
 import { GrFormClose } from "react-icons/gr";
-
-
-
+import axios from "axios";
 interface CompanyProfilePaneProps {
-    companyData: StartupType; 
+    companyData: StartupType;
     setOpenState: React.Dispatch<React.SetStateAction<boolean>>;
     openState: boolean
 }
@@ -25,6 +23,21 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
     const openPane = () => {
         setOpenState(false)
     }
+
+    const sendEmail = async () => {
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/api/email/send-email/', {
+                subject: 'Demo',
+                template_name: 'email_template.html',
+                context: { name: 'John Doe' },
+                recipient_list: 'lathiesh@theyellow.network',
+            });
+
+            console.log('Email sent successfully');
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
 
     console.log(openState, "companyData")
@@ -46,92 +59,94 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
                                                 <MdOutlineKeyboardDoubleArrowRight size={23} />
                                             </div >)}
                                         <div className='mx-4 cursor-pointer' onClick={openPane}>
-                                            <GrFormClose size={23}/>
+                                            <GrFormClose size={23} />
                                         </div>
-                                </div>
+                                    </div>
 
                                 <div className='flex flex-col gap-2 text-sm'>
                                         <div className='flex flex-row justify-between items-center -mt-3 text-blue-400 font-semibold text-xl'>
                                             <div>
                                                 {companyData?.startup_name}
                                             </div>
-                                            <div className='flex justify-center items-center px-4 py-1.5 bg-gray-400 rounded-md text-white font-semibold cursor-pointer'>
+                                            <div
+                                                className='flex justify-center items-center px-4 py-1.5 bg-gray-400 rounded-md text-white font-semibold cursor-pointer'
+                                                onClick={sendEmail}>
                                                 Connect
                                             </div>
                                         </div>
                                         <div className='border bg-white rounded-md px-4 py-4 shadow-sm'>
                                             {companyData?.startup_overview}
                                         </div>
+                                    </div>
                                 </div>
-                            </div> 
+                            </div>
+                            <div>
+                                {companyData?.startup_industry && (
+                                    <div className='flex flex-col gap-y-1.5 px-8'>
+                                        <div className='font-semibold'>Industry</div>
+                                        <div>{companyData?.startup_industry}</div>
+                                    </div>
+                                )}
+                                {companyData?.startup_technology && (
+                                    <div className='flex flex-col gap-y-1.5 px-8'>
+                                        <div className='font-semibold'>Technology</div>
+                                        <div>{companyData?.startup_technology}</div>
+                                    </div>
+                                )}
+                                {companyData?.startup_country && (
+                                    <div className='flex flex-col gap-y-1.5 px-8'>
+                                        <div className='font-semibold'>Country</div>
+                                        <div>{companyData?.startup_country}</div>
+                                    </div>
+                                )}
+                                {companyData?.startup_company_stage && (
+                                    <div className='flex flex-col gap-y-1.5 px-8'>
+                                        <div className='font-semibold'>Company Stage</div>
+                                        <div>{companyData?.startup_company_stage}</div>
+                                    </div>
+                                )}
+                                {companyData?.startup_url && (
+                                    <div className='flex flex-col gap-y-1.5 px-8'>
+                                        <div className='font-semibold'>Company profile</div>
+                                        <div>{companyData?.startup_url}</div>
+                                    </div>
+                                )}
+                                {companyData?.startup_description && (
+                                    <div className='flex flex-col gap-y-1.5 px-8'>
+                                        <div className='font-semibold'>Description</div>
+                                        <div>{companyData?.startup_description}</div>
+                                    </div>
+                                )}
+                                {companyData?.startup_solutions && (
+                                    <div className='flex flex-col gap-y-1.5 px-8'>
+                                        <div className='font-semibold'>Solutions provided</div>
+                                        <div>{companyData?.startup_solutions}</div>
+                                    </div>
+                                )}
+                                {companyData?.startup_usecases && (
+                                    <div className='flex flex-col gap-y-1.5 px-8'>
+                                        <div className='font-semibold'>Usecases</div>
+                                        <div>{companyData?.startup_usecases}</div>
+                                    </div>
+                                )}
+                                {companyData?.startup_founders_info && (
+                                    <div className='flex flex-col gap-y-1.5 px-8'>
+                                        <div className='font-semibold'>Founders Info</div>
+                                        <div>{companyData?.startup_founders_info}</div>
+                                    </div>
+                                )}
+                                {companyData?.startup_emails && (
+                                    <div className='flex flex-col gap-y-1.5 px-8'>
+                                        <div className='font-semibold'>Emails</div>
+                                        <div>{companyData?.startup_emails}</div>
+                                    </div>
+                                )}
+                            </div>
+
+                        </div>
                     </div>
-                    <div>
-                    {companyData?.startup_industry && (
-                            <div className='flex flex-col gap-y-1.5 px-8'>
-                                <div className='font-semibold'>Industry</div>
-                                <div>{companyData?.startup_industry}</div>
-                            </div>
-                        )}
-                    {companyData?.startup_technology && (
-                            <div className='flex flex-col gap-y-1.5 px-8'>
-                                <div className='font-semibold'>Technology</div>
-                                <div>{companyData?.startup_technology}</div>
-                            </div>
-                        )}
-                    {companyData?.startup_country && (
-                            <div className='flex flex-col gap-y-1.5 px-8'>
-                                <div className='font-semibold'>Country</div>
-                                <div>{companyData?.startup_country}</div>
-                            </div>
-                        )}
-                    {companyData?.startup_company_stage && (
-                            <div className='flex flex-col gap-y-1.5 px-8'>
-                                <div className='font-semibold'>Company Stage</div>
-                                <div>{companyData?.startup_company_stage}</div>
-                            </div>
-                    )}
-                    {companyData?.startup_url && (
-                            <div className='flex flex-col gap-y-1.5 px-8'>
-                                <div className='font-semibold'>Company profile</div>
-                                <div>{companyData?.startup_url}</div>
-                            </div>
-                        )}
-                    {companyData?.startup_description && (
-                            <div className='flex flex-col gap-y-1.5 px-8'>
-                                <div className='font-semibold'>Description</div>
-                                <div>{companyData?.startup_description}</div>
-                            </div>
-                    )}
-                    {companyData?.startup_solutions && (
-                            <div className='flex flex-col gap-y-1.5 px-8'>
-                                <div className='font-semibold'>Solutions provided</div>
-                                <div>{companyData?.startup_solutions}</div>
-                            </div>
-                    )}
-                    {companyData?.startup_usecases && (
-                            <div className='flex flex-col gap-y-1.5 px-8'>
-                                <div className='font-semibold'>Usecases</div>
-                                <div>{companyData?.startup_usecases}</div>
-                            </div>
-                    )}
-                    {companyData?.startup_founders_info && (
-                            <div className='flex flex-col gap-y-1.5 px-8'>
-                                <div className='font-semibold'>Founders Info</div>
-                                <div>{companyData?.startup_founders_info}</div>
-                            </div>
-                    )}
-                    {companyData?.startup_emails && (
-                            <div className='flex flex-col gap-y-1.5 px-8'>
-                                <div className='font-semibold'>Emails</div>
-                                <div>{companyData?.startup_emails}</div>
-                            </div>
-                    )}
-                    </div>
-                  
-                </div>
-            </div>
-            )
-           }
+                )
+            }
         </>
     );
 };

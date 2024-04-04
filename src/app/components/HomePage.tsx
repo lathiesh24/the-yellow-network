@@ -17,6 +17,7 @@ export default function HomePage() {
   const [open, setOpen] = useState<boolean>(false);
   const [selectedStartup, setSelectedStartup] = useState<StartupType>();
   const [openCompanyPane, setOpenCompanyPane] = useState<boolean>(true);
+  const [inputPrompt, setInputPrompt] = useState(defaultPrompt);
 
   const handleToggleHistory = () => {
     setOpen(!open);
@@ -132,29 +133,35 @@ export default function HomePage() {
         <div className="">
           {open && (
             <div className="w-1/4">
-              <LeftFrame open={open} />
+              < LeftFrame
+                open={open}
+                inputPrompt={inputPrompt}
+                setInputPrompt={setInputPrompt} />
             </div>
           )}
         </div>
 
-        <div className="">
+        <div className=''>
           <Prompt
             onSaveInput={handleSaveInput}
             defaultPrompt={defaultPrompt}
             renderMessages={renderMessages}
-          />
+            inputPrompt={inputPrompt}
+            setInputPrompt={setInputPrompt} />
         </div>
 
         <div>
-          {selectedStartup && (
-            <div>
-              <CompanyProfilePane
-                companyData={selectedStartup}
-                setOpenState={setOpenCompanyPane}
-                openState={openCompanyPane}
-              />
-            </div>
-          )}
+          {
+            selectedStartup && (
+              <div>
+                <CompanyProfilePane
+                  companyData={selectedStartup}
+                  setOpenState={setOpenCompanyPane}
+                  openState={openCompanyPane}
+                />
+              </div>
+            )
+          }
         </div>
       </div>
     </main>
