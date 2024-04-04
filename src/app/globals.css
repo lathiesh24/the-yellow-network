@@ -4,11 +4,20 @@
 
 .transition-all {
     transition: all 0.3s ease-in;
-    /* Adjust the duration (0.3s) and timing function (ease) as needed */
 }
 
 .transition-opacity {
     transition-property: opacity;
     transition-duration: 0.3s;
     transition-timing-function: ease;
+}
+
+.prompt-container {
+    height: calc(100vh - 200px);
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.prompt-container::-webkit-scrollbar {
+    display: none;
 }
