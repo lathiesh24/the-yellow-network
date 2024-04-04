@@ -19,7 +19,7 @@ const HistoryBar: React.FC<HistoryBarProps> = () => {
         <>
             <div className='h-screen overflow-y-auto'>
                 <div className='text-sm py-3 px-2 text-gray-400 font-semibold'>
-                    Chat History
+                    Query History
                 </div>
                 <div className=''>
                     {chatHistory.map((item, index) => {
