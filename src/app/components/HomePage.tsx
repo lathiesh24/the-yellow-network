@@ -18,6 +18,7 @@ export default function HomePage() {
   const [selectedStartup, setSelectedStartup] = useState<StartupType>();
   const [openCompanyPane, setOpenCompanyPane] = useState<boolean>(true);
   const [inputPrompt, setInputPrompt] = useState(defaultPrompt);
+  const [loader, setLoader] = useState<boolean>(false);
 
   const handleToggleHistory = () => {
     setOpen(!open);
@@ -33,11 +34,15 @@ export default function HomePage() {
     try {
       console.log("input in url", input);
       console.log("api is called");
+      setLoader(true)
       const response = await axios.post(
         "http://127.0.0.1:8000/api/prompt/ragsearch/",
         userquery
       );
       let startupResults = response.data;
+      if (response) {
+        setLoader(false);
+      }
       console.log("apiresponse", response);
       setSystemResponses((prevResponses) => [...prevResponses, startupResults]);
     } catch (error) {
@@ -52,6 +57,15 @@ export default function HomePage() {
 
   const renderMessages = () => {
     const messages = [];
+    let latestSystemResponseIndex = -1;
+
+    for (let j = systemResponses.length - 1; j >= 0; j--) {
+      if (systemResponses[j]) {
+        latestSystemResponseIndex = j;
+        break;
+      }
+    }
+    
     for (
       let i = 0;
       i < userMessages.length || i < systemResponses.length;
@@ -74,6 +88,14 @@ export default function HomePage() {
         );
       }
       if (systemResponses[i]) {
+       if(loader) {
+        messages.push(
+          <div>
+            Loading...
+          </div>
+        )
+       }
+       else {
         messages.push(
           <div
             key={`system-${i}`}
@@ -119,6 +141,8 @@ export default function HomePage() {
             </div>
           </div>
         );
+       }
+       
       }
     }
     return messages;
@@ -133,35 +157,35 @@ export default function HomePage() {
         <div className="">
           {open && (
             <div className="w-1/4">
-              < LeftFrame
+              <LeftFrame
                 open={open}
                 inputPrompt={inputPrompt}
-                setInputPrompt={setInputPrompt} />
+                setInputPrompt={setInputPrompt}
+              />
             </div>
           )}
         </div>
 
-        <div className=''>
+        <div className="">
           <Prompt
             onSaveInput={handleSaveInput}
             defaultPrompt={defaultPrompt}
             renderMessages={renderMessages}
             inputPrompt={inputPrompt}
-            setInputPrompt={setInputPrompt} />
+            setInputPrompt={setInputPrompt}
+          />
         </div>
 
         <div>
-          {
-            selectedStartup && (
-              <div>
-                <CompanyProfilePane
-                  companyData={selectedStartup}
-                  setOpenState={setOpenCompanyPane}
-                  openState={openCompanyPane}
-                />
-              </div>
-            )
-          }
+          {selectedStartup && (
+            <div>
+              <CompanyProfilePane
+                companyData={selectedStartup}
+                setOpenState={setOpenCompanyPane}
+                openState={openCompanyPane}
+              />
+            </div>
+          )}
         </div>
       </div>
     </main>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 import { StartupType } from '../interfaces';
 import { GrFormClose } from "react-icons/gr";
+import Link from 'next/link';
 import axios from "axios";
 interface CompanyProfilePaneProps {
     companyData: StartupType;
@@ -80,67 +81,67 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
                                     </div>
                                 </div>
                             </div>
-                            <div>
+                            <div className='flex flex-col gap-2'>
                                 {companyData?.startup_industry && (
-                                    <div className='flex flex-col gap-y-1.5 px-8'>
-                                        <div className='font-semibold'>Industry</div>
-                                        <div>{companyData?.startup_industry}</div>
+                                    <div className='flex flex-col px-8'>
+                                        <div className='font-semibold'>Industry : </div>
+                                        <div className='pl-4'>{companyData?.startup_industry}</div>
                                     </div>
                                 )}
                                 {companyData?.startup_technology && (
-                                    <div className='flex flex-col gap-y-1.5 px-8'>
-                                        <div className='font-semibold'>Technology</div>
-                                        <div>{companyData?.startup_technology}</div>
+                                    <div className='flex flex-col px-8'>
+                                        <div className='font-semibold'>Technology :</div>
+                                        <div className='pl-4'>{companyData?.startup_technology}</div>
                                     </div>
                                 )}
                                 {companyData?.startup_country && (
-                                    <div className='flex flex-col gap-y-1.5 px-8'>
-                                        <div className='font-semibold'>Country</div>
-                                        <div>{companyData?.startup_country}</div>
+                                    <div className='flex px-8'>
+                                        <div className='font-semibold'>Country : </div>
+                                        <div className='pl-4'>{companyData?.startup_country}</div>
                                     </div>
                                 )}
                                 {companyData?.startup_company_stage && (
-                                    <div className='flex flex-col gap-y-1.5 px-8'>
-                                        <div className='font-semibold'>Company Stage</div>
-                                        <div>{companyData?.startup_company_stage}</div>
+                                    <div className='flex px-8'>
+                                        <div className='font-semibold'>Company Stage :</div>
+                                        <div className='pl-4'>{companyData?.startup_company_stage}</div>
                                     </div>
                                 )}
                                 {companyData?.startup_url && (
-                                    <div className='flex flex-col gap-y-1.5 px-8'>
-                                        <div className='font-semibold'>Company profile</div>
-                                        <div>{companyData?.startup_url}</div>
+                                    <div className='flex flex-col px-8'>
+                                        <div className='font-semibold'>Company profile:</div>
+                                        <a href={companyData?.startup_url} className='pl-4 underline text-blue-500'>{companyData?.startup_url}</a>
                                     </div>
                                 )}
                                 {companyData?.startup_description && (
-                                    <div className='flex flex-col gap-y-1.5 px-8'>
-                                        <div className='font-semibold'>Description</div>
-                                        <div>{companyData?.startup_description}</div>
+                                    <div className='flex flex-col px-8'>
+                                        <div className='font-semibold'>Description:</div>
+                                        <div className='pl-4'>{companyData?.startup_description}</div>
                                     </div>
                                 )}
                                 {companyData?.startup_solutions && (
-                                    <div className='flex flex-col gap-y-1.5 px-8'>
-                                        <div className='font-semibold'>Solutions provided</div>
-                                        <div>{companyData?.startup_solutions}</div>
+                                    <div className='flex flex-col px-8'>
+                                        <div className='font-semibold'>Solutions:</div>
+                                        <div className='pl-4'>{companyData?.startup_solutions}</div>
                                     </div>
                                 )}
                                 {companyData?.startup_usecases && (
-                                    <div className='flex flex-col gap-y-1.5 px-8'>
-                                        <div className='font-semibold'>Usecases</div>
-                                        <div>{companyData?.startup_usecases}</div>
+                                    <div className='flex flex-col px-8'>
+                                        <div className='font-semibold'>Usecases:</div>
+                                        <div className='pl-4'>{companyData?.startup_usecases}</div>
                                     </div>
                                 )}
-                                {companyData?.startup_founders_info && (
-                                    <div className='flex flex-col gap-y-1.5 px-8'>
+                                {/* {companyData?.startup_founders_info && (
+                                    <div className='flex flex-col px-8'>
                                         <div className='font-semibold'>Founders Info</div>
-                                        <div>{companyData?.startup_founders_info}</div>
+                                        <div className='pl-4'>{companyData?.startup_founders_info}</div>
                                     </div>
                                 )}
                                 {companyData?.startup_emails && (
-                                    <div className='flex flex-col gap-y-1.5 px-8'>
+                                    <div className='flex flex-col px-8'>
                                         <div className='font-semibold'>Emails</div>
-                                        <div>{companyData?.startup_emails}</div>
+                                        <div className='pl-4'>{companyData?.startup_emails}</div>
                                     </div>
-                                )}
+                                )} */}
                             </div>
 
                         </div>
