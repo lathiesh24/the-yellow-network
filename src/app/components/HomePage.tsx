@@ -14,7 +14,7 @@ export default function HomePage() {
   const [userMessages, setUserMessages] = useState<string[]>([]);
   const [systemResponses, setSystemResponses] = useState([]);
   const [defaultPrompt, setDefaultPrompt] = useState<string>("");
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(true);
   const [selectedStartup, setSelectedStartup] = useState<StartupType>();
   const [openCompanyPane, setOpenCompanyPane] = useState<boolean>(true);
   const [inputPrompt, setInputPrompt] = useState(defaultPrompt);
