@@ -18,6 +18,7 @@ export default function HomePage() {
   const [selectedStartup, setSelectedStartup] = useState<StartupType>();
   const [openCompanyPane, setOpenCompanyPane] = useState<boolean>(true);
   const [inputPrompt, setInputPrompt] = useState(defaultPrompt);
+  const [loader, setLoader] = useState<boolean>(false);
   const [openRightFrame, setOpenRightFrame] = useState<boolean>(true);
 
   const handleToggleLeftFrame = () => {
@@ -38,11 +39,15 @@ export default function HomePage() {
     try {
       console.log("input in url", input);
       console.log("api is called");
+      setLoader(true)
       const response = await axios.post(
         "http://127.0.0.1:8000/api/prompt/ragsearch/",
         userquery
       );
       let startupResults = response.data;
+      if (response) {
+        setLoader(false);
+      }
       console.log("apiresponse", response);
       setSystemResponses((prevResponses) => [...prevResponses, startupResults]);
     } catch (error) {
@@ -57,6 +62,15 @@ export default function HomePage() {
 
   const renderMessages = () => {
     const messages = [];
+    let latestSystemResponseIndex = -1;
+
+    for (let j = systemResponses.length - 1; j >= 0; j--) {
+      if (systemResponses[j]) {
+        latestSystemResponseIndex = j;
+        break;
+      }
+    }
+
     for (
       let i = 0;
       i < userMessages.length || i < systemResponses.length;
@@ -79,51 +93,61 @@ export default function HomePage() {
         );
       }
       if (systemResponses[i]) {
-        messages.push(
-          <div
-            key={`system-${i}`}
-            className="flex flex-col gap-y-2 my-6 py-2 px-4 bg-white shadow-sm rounded-lg"
-          >
-            <div className="flex gap-x-1">
-              <div className="text-yellow-400">
-                <RxAvatar size={23} />
-              </div>
-              <div className="font-semibold text-black">Game plan</div>
+        if (loader) {
+          messages.push(
+            <div>
+              Loading...
             </div>
-            {systemResponses[i] &&
-              systemResponses[i]?.chainresult &&
-              systemResponses[i].results < 1 && (
-                <div>{systemResponses[i]?.chainresult}</div>
-              )}
-            <div className="text-black" key={`system-${i}`}>
-              <div>
-                {systemResponses[i] &&
-                  systemResponses[i].results.length >= 1 && (
-                    <div className="grid grid-cols-2 font-semibold text-base">
-                      <div>Startup Name</div>
-                      <div>Overview</div>
-                      {/* <div>Website</div> */}
-                    </div>
-                  )}
-                {systemResponses[i] &&
-                  systemResponses[i].results &&
-                  systemResponses[i].results.map(
-                    (result: StartupType, index: number) => (
-                      <div
-                        key={index}
-                        className="grid grid-cols-2 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
-                        onClick={() => handleClickItem(result)}
-                      >
-                        <div>{result?.startup_name}</div>
-                        <div>{result?.startup_overview}</div>
-                        {/* <div>{result?.startup_url}</div> */}
+          )
+        }
+        else {
+          messages.push(
+            <div
+              key={`system-${i}`}
+              className="flex flex-col gap-y-2 my-6 py-2 px-4 bg-white shadow-sm rounded-lg"
+            >
+              <div className="flex gap-x-1">
+                <div className="text-yellow-400">
+                  <RxAvatar size={23} />
+                </div>
+                <div className="font-semibold text-black">Game plan</div>
+              </div>
+              {systemResponses[i] &&
+                systemResponses[i]?.chainresult &&
+                systemResponses[i].results < 1 && (
+                  <div>{systemResponses[i]?.chainresult}</div>
+                )}
+              <div className="text-black" key={`system-${i}`}>
+                <div>
+                  {systemResponses[i] &&
+                    systemResponses[i].results.length >= 1 && (
+                      <div className="grid grid-cols-2 font-semibold text-base">
+                        <div>Startup Name</div>
+                        <div>Overview</div>
+                        {/* <div>Website</div> */}
                       </div>
-                    )
-                  )}
+                    )}
+                  {systemResponses[i] &&
+                    systemResponses[i].results &&
+                    systemResponses[i].results.map(
+                      (result: StartupType, index: number) => (
+                        <div
+                          key={index}
+                          className="grid grid-cols-2 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
+                          onClick={() => handleClickItem(result)}
+                        >
+                          <div>{result?.startup_name}</div>
+                          <div>{result?.startup_overview}</div>
+                          {/* <div>{result?.startup_url}</div> */}
+                        </div>
+                      )
+                    )}
+                </div>
               </div>
             </div>
-          </div>
-        );
+          );
+        }
+
       }
     }
     return messages;
@@ -138,21 +162,23 @@ export default function HomePage() {
         <div className="">
           {open && (
             <div className="w-1/4">
-              < LeftFrame
+              <LeftFrame
                 open={open}
                 inputPrompt={inputPrompt}
-                setInputPrompt={setInputPrompt} />
+                setInputPrompt={setInputPrompt}
+              />
             </div>
           )}
         </div>
 
-        <div className=''>
+        <div className="">
           <Prompt
             onSaveInput={handleSaveInput}
             defaultPrompt={defaultPrompt}
             renderMessages={renderMessages}
             inputPrompt={inputPrompt}
             setInputPrompt={setInputPrompt}
+
             open={open}
             handleToggleLeftFrame={handleToggleLeftFrame}
             openRightFrame={openRightFrame}
@@ -160,17 +186,15 @@ export default function HomePage() {
         </div>
 
         <div>
-          {
-            openRightFrame && selectedStartup && (
-              <div>
-                <CompanyProfilePane
-                  companyData={selectedStartup}
-                  setOpenState={setOpenCompanyPane}
-                  openState={openCompanyPane}
-                />
-              </div>
-            )
-          }
+          {openRightFrame && selectedStartup && (
+            <div>
+              <CompanyProfilePane
+                companyData={selectedStartup}
+                setOpenState={setOpenCompanyPane}
+                openState={openCompanyPane}
+              />
+            </div>
+          )}
         </div>
       </div>
     </main>
