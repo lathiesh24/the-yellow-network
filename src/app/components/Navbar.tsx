@@ -3,15 +3,15 @@ import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 interface NavbarProps {
     open: boolean;
-    handleToggleHistory: () => void;
+    handleToggleLeftFrame: () => void;
 }
 
-const NavBar: React.FC<NavbarProps> = ({ open, handleToggleHistory }) => {
+const NavBar: React.FC<NavbarProps> = ({ open, handleToggleLeftFrame }) => {
 
     return (
         <div
             className={`fixed flex bg-white h-max w-full items-center flex-row mt-3 cursor-pointer transition-all ${open ? 'ml-80' : 'ml-2'}`}
-            onClick={handleToggleHistory}>
+            onClick={handleToggleLeftFrame}>
             {open ? (
                 <div className={`${open ? '' : 'hidden'}`}>
                     <IoIosArrowBack size={23} />

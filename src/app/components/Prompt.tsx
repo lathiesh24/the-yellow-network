@@ -3,14 +3,18 @@ import { IoMdSend } from "react-icons/io";
 import DefaultCard from "./DefaultCard";
 
 interface PromptProps {
+  open: boolean;
   onSaveInput: (input: string) => void;
   defaultPrompt: string;
   renderMessages: () => JSX.Element[];
   inputPrompt: string;
   setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
+  handleToggleLeftFrame: () => void;
+  openRightFrame: boolean;
+  handleToggleRightFrame: () => void;
 }
 
-const Prompt: React.FC<PromptProps> = ({ onSaveInput, defaultPrompt, renderMessages, inputPrompt, setInputPrompt }) => {
+const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, renderMessages, inputPrompt, setInputPrompt, handleToggleLeftFrame, handleToggleRightFrame }) => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputPrompt(event.target.value);
@@ -23,6 +27,11 @@ const Prompt: React.FC<PromptProps> = ({ onSaveInput, defaultPrompt, renderMessa
 
   const handleCardSelect = (value: string) => {
     setInputPrompt(value);
+  };
+
+  const handleTextareaClick = () => {
+    handleToggleLeftFrame();
+    handleToggleRightFrame();
   };
 
   return (
@@ -53,6 +62,7 @@ const Prompt: React.FC<PromptProps> = ({ onSaveInput, defaultPrompt, renderMessa
             autoFocus
             value={inputPrompt}
             onChange={handleInputChange}
+            onClick={handleTextareaClick}
           />
           <div className='px-8 cursor-pointer' onClick={handleSendClick}>
             <IoMdSend size={23} />

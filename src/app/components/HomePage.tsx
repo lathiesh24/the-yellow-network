@@ -18,9 +18,14 @@ export default function HomePage() {
   const [selectedStartup, setSelectedStartup] = useState<StartupType>();
   const [openCompanyPane, setOpenCompanyPane] = useState<boolean>(true);
   const [inputPrompt, setInputPrompt] = useState(defaultPrompt);
+  const [openRightFrame, setOpenRightFrame] = useState<boolean>(true);
 
-  const handleToggleHistory = () => {
+  const handleToggleLeftFrame = () => {
     setOpen(!open);
+  };
+
+  const handleToggleRightFrame = () => {
+    setOpenRightFrame(!openRightFrame);
   };
 
   const handleSaveInput = async (input: string) => {
@@ -127,7 +132,7 @@ export default function HomePage() {
   return (
     <main className="">
       <div className="">
-        <NavBar open={open} handleToggleHistory={handleToggleHistory} />
+        <NavBar open={open} handleToggleLeftFrame={handleToggleLeftFrame} />
       </div>
       <div className="flex">
         <div className="">
@@ -147,12 +152,16 @@ export default function HomePage() {
             defaultPrompt={defaultPrompt}
             renderMessages={renderMessages}
             inputPrompt={inputPrompt}
-            setInputPrompt={setInputPrompt} />
+            setInputPrompt={setInputPrompt}
+            open={open}
+            handleToggleLeftFrame={handleToggleLeftFrame}
+            openRightFrame={openRightFrame}
+            handleToggleRightFrame={handleToggleRightFrame} />
         </div>
 
         <div>
           {
-            selectedStartup && (
+            openRightFrame && selectedStartup && (
               <div>
                 <CompanyProfilePane
                   companyData={selectedStartup}
