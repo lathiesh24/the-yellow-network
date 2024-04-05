@@ -31,10 +31,10 @@ const Prompt: React.FC<PromptProps> = ({ onSaveInput, defaultPrompt, renderMessa
         {renderMessages().length === 0 ?
           (
             <>
-              <div className="font-semibold text-2xl mb-4 md:mb-8 lg:mb-16">
+              <div className="flex justify-center items-center font-semibold text-2xl mt-12">
                 What problem are you trying to solve?
               </div>
-              <div className="mb-4 md:mb-8 lg:mb-16">
+              <div className="mt-28">
                 <DefaultCard onSelectCard={handleCardSelect} />
               </div>
             </>

@@ -17,7 +17,7 @@ interface LeftFrameProps {
 }
 
 const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt }) => {
-    const [activeTab, setActiveTab] = useState<string>('history');
+    const [activeTab, setActiveTab] = useState<string>('spotlight');
 
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
