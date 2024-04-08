@@ -10,6 +10,7 @@ import { LuLampDesk } from "react-icons/lu";
 import { BsFillSearchHeartFill } from "react-icons/bs";
 import { FaHistory } from "react-icons/fa";
 import { GrLogout } from "react-icons/gr";
+import { useRouter } from 'next/navigation';
 
 interface LeftFrameProps {
     open: boolean;
@@ -18,9 +19,11 @@ interface LeftFrameProps {
 }
 
 const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt }) => {
+    const [userInfo, setUserInfo] = useState<any>(null);
     const [activeTab, setActiveTab] = useState<string>('spotlight');
     const [isLogoutOpen, setIsLogoutOpen] = useState<boolean>(false);
     const logoutRef = useRef<HTMLDivElement>(null);
+    const navigate = useRouter();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -51,9 +54,18 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt
 
     const handleLogout = (event: React.MouseEvent) => {
         event.stopPropagation();
-        // Implement logout functionality here
-        setIsLogoutOpen(false); // Close the logout box after logout
+        localStorage.removeItem("userInfo");
+        setIsLogoutOpen(false);
+        navigate.push('/login');
     };
+
+    useEffect(() => {
+        const userInfoFromStorage = localStorage.getItem("userInfo");
+        if (userInfoFromStorage) {
+            const parsedUserInfo = JSON.parse(userInfoFromStorage);
+            setUserInfo(parsedUserInfo);
+        }
+    }, []);
 
     return (
         <div className='fixed left-0 top-0 w-1/5 h-screen z-50 flex flex-col bg-white'>
@@ -89,7 +101,7 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt
                 {activeTab === 'spotlight' && <Spotlight />}
             </div>
             <div className='px-8 py-3 shadow-md flex items-center justify-between z-20 cursor-pointer border' onClick={showDropdown} ref={logoutRef}>
-                Username
+                {userInfo?.first_name}
                 {isLogoutOpen && (
                     <div className="absolute flex justify-between bottom-0 left-0 mb-12 bg-white border  px-8 py-3 z-10 w-full" onClick={handleLogout}>
                         <div>Logout</div>
