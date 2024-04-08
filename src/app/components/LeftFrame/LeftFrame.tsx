@@ -9,6 +9,7 @@ import { FiLink } from "react-icons/fi";
 import { LuLampDesk } from "react-icons/lu";
 import { BsFillSearchHeartFill } from "react-icons/bs";
 import { FaHistory } from "react-icons/fa";
+import { GrLogout } from "react-icons/gr";
 
 interface LeftFrameProps {
     open: boolean;
@@ -87,11 +88,12 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt
                 {activeTab === 'connects' && <Connects />}
                 {activeTab === 'spotlight' && <Spotlight />}
             </div>
-            <div className='p-3 shadow-md flex items-center justify-between z-20 cursor-pointer' onClick={showDropdown} ref={logoutRef}>
+            <div className='px-8 py-3 shadow-md flex items-center justify-between z-20 cursor-pointer border' onClick={showDropdown} ref={logoutRef}>
                 Username
                 {isLogoutOpen && (
-                    <div className="absolute bottom-0 left-0 mb-12 bg-white border  p-3 z-10 w-full" onClick={handleLogout}>
-                        Logout
+                    <div className="absolute flex justify-between bottom-0 left-0 mb-12 bg-white border  px-8 py-3 z-10 w-full" onClick={handleLogout}>
+                        <div>Logout</div>
+                        <div><GrLogout size={23} /></div>
                     </div>
                 )}
             </div>
