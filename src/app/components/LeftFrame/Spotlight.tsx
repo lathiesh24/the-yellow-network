@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
 import { BsLinkedin } from 'react-icons/bs';
@@ -7,10 +7,12 @@ const Spotlight: React.FC = () => {
 
     const spotlightInfo = () => {
 
-    }
+    };
+
+
 
     return (
-        <div className='h-screen overflow-y-auto'>
+        <div className=''>
             <div className='text-sm py-3 px-2 text-gray-400 font-semibold'>
                 Spotlight
             </div>
@@ -37,16 +39,15 @@ const Spotlight: React.FC = () => {
                     If you have particular inquiries on startups or would like insights into the co-innovation ecosystem in a specific domain, we are happy to assist you.
                 </div>
                 <div className='flex flex-row mt-4 gap-x-3 justify-center'>
-                    <a
+                    {/* <a
                         className=""
                         href='https://www.linkedin.com/feed/update/urn:li:activity:7167401470131130368/'>
                         <BsLinkedin size={23} color="#0077B5" />
-                    </a>
+                    </a> */}
                     <div>
-                        <a className=' text-sky-700 font-medium' href='https://www.linkedin.com/feed/update/urn:li:activity:7167401470131130368/'>LinkedIn Post</a>
+                        <a className=' text-sky-700 font-medium' href='https://www.linkedin.com/feed/update/urn:li:activity:7167401470131130368/'>See more..</a>
                     </div>
                 </div>
-
             </div>
 
         </div>
