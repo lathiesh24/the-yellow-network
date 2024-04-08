@@ -48,11 +48,11 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt
                 <div className={` cursor-pointer ${activeTab === 'spotlight' ? 'text-gray-500' : 'text-yellow-500'}`} onClick={() => handleTabClick('spotlight')} title="Startup Spotlight">
                     <LuLampDesk size={23} />
                 </div>
-                <div className={` cursor-pointer ${activeTab === 'chat' ? 'text-gray-500' : 'text-yellow-500'}`} onClick={() => handleTabClick('chat')} title="Chat Window">
-                    <IoChatbubblesSharp size={23} />
-                </div>
                 <div className={` cursor-pointer ${activeTab === 'connects' ? 'text-gray-500' : 'text-yellow-500'}`} onClick={() => handleTabClick('connects')} title="Connects">
                     <FiLink size={23} />
+                </div>
+                <div className={` cursor-pointer ${activeTab === 'chat' ? 'text-gray-500' : 'text-yellow-500'}`} onClick={() => handleTabClick('chat')} title="Chat Window">
+                    <IoChatbubblesSharp size={23} />
                 </div>
             </div>
             <div>
