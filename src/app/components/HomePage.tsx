@@ -21,12 +21,20 @@ export default function HomePage() {
   const [openRightFrame, setOpenRightFrame] = useState<boolean>(true);
   const [messageId, setMessageId] = useState(0)
 
-  const handleToggleLeftFrame = () => {
+  const handleToggleLeftFrameNavbar = () => {
     setOpen(!open);
   };
 
+  const handleToggleLeftFrame = () => {
+    if (open) {
+      setOpen(!open);
+    }
+  };
+
   const handleToggleRightFrame = () => {
-    setOpenRightFrame(!openRightFrame);
+    if (openRightFrame) {
+      setOpenRightFrame(!openRightFrame);
+    }
   };
 
   const handleSaveInput = async (input: string) => {
@@ -119,7 +127,7 @@ export default function HomePage() {
   return (
     <main className="">
       <div className="">
-        <NavBar open={open} handleToggleLeftFrame={handleToggleLeftFrame} />
+        <NavBar open={open} handleToggleLeftFrame={handleToggleLeftFrameNavbar} />
       </div>
       <div className="flex">
         <div className="">
