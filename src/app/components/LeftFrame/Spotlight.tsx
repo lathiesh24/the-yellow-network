@@ -33,10 +33,6 @@ const Spotlight: React.FC = () => {
                 </div>
                 <div className='text-balance'>
                     We are excited to present our second startup spotlight & in this edition, we shine the spotlight on ThirdAI Corp. and its disruption in GenAi tech.
-
-                    Our emphasis is on showcasing innovative tech startups dedicated to addressing real-world challenges & we believe ThirdAi's commitment to democratize Ai is commendable by making AI more affordable and cost effective while retaining the latency & accuracy.
-
-                    If you have particular inquiries on startups or would like insights into the co-innovation ecosystem in a specific domain, we are happy to assist you.
                 </div>
                 <div className='flex flex-row mt-4 gap-x-3 justify-center'>
                     {/* <a

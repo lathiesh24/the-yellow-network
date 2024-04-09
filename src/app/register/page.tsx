@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
@@ -16,34 +17,30 @@ interface FormData {
 
 const RegisterPage: React.FC = () => {
   const router = useRouter();
-
-
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitted, isValid, isDirty },
+    formState: { errors, isSubmitted, isValid },
   } = useForm<FormData>();
 
-
   const [regsiterResponse, setRegisterResponse] = useState<string>(" ");
-  const [regsiterState, setRegisterState] = useState<User | undefined>(undefined)
+  const [regsiterState, setRegisterState] = useState<User | undefined>(
+    undefined
+  );
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-
-    console.log("dataforregister", data)
+    console.log("dataforregister", data);
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/user/register/",
         data
       );
       console.log("response in register", response.data);
-      // Handle successful registration, navigate to login page
       setRegisterResponse(response.data.message);
       setRegisterState(response.data.user);
       router.push("/");
     } catch (error) {
       setRegisterResponse(error?.response?.data?.message?.email[0]);
       console.error("error in registration", error);
-      // Handle registration error
     }
   };
 
@@ -54,15 +51,15 @@ const RegisterPage: React.FC = () => {
   }, [regsiterState]);
 
   return (
-    <div className="h-screen flex flex-col md:flex-row bg-gradient-to-b from-yellow-100 to-yellow-400">
-      <div className="w-full md:w-1/2 h-full flex items-center justify-center order-1 md:order-1">
+    <div className="h-screen flex justify-evenly items-center bg-gradient-to-b from-yellow-100 to-yellow-400">
+      <div className="w-7/12 h-screen flex items-center justify-center">
         <div>
           <Image
             src="/tyn-login.png"
             alt="tyn-login"
             width={440}
             height={10}
-            className="w-full md:max-w-xs md:max-h-xs"
+            className=""
           />
         </div>
       </div>
@@ -70,7 +67,7 @@ const RegisterPage: React.FC = () => {
         <div className="flex items-start justify-start flex-col gap-4 pt-4 md:pt-20">
           <h2 className="font-bold text-3xl md:text-5xl">Get started</h2>
           <p className="font-light text-base md:text-xl text-gray-400">
-            Create your own account with us to get started.
+            Start your journey by creating an account
           </p>
         </div>
 
@@ -154,7 +151,7 @@ const RegisterPage: React.FC = () => {
           </div>
 
           {isSubmitted && regsiterResponse && (
-              <p className="text-blue-500 capitalize">{regsiterResponse}</p>
+            <p className="text-blue-500 capitalize">{regsiterResponse}</p>
           )}
 
           <button
@@ -165,13 +162,12 @@ const RegisterPage: React.FC = () => {
             Register
           </button>
         </form>
-        <div className="flex flex-col items-center gap-2 mt-4 md:mt-10">
+        <div className="flex justify-center items-center gap-2 mt-8 md:mt-10">
           <div>Already have an account?</div>
-          <Link href="/" className="underline">
+          <Link href="/login" className="underline">
             Sign-in
           </Link>
         </div>
-        <div className="border-b border-solid border-gray-300 pr-4 md:pr-40 mt-4 md:mt-6"></div>
       </div>
     </div>
   );

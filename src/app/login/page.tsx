@@ -5,7 +5,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { User } from "../interfaces";
 
 interface FormData {
@@ -15,6 +15,7 @@ interface FormData {
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
+
   const {
     handleSubmit,
     register,
@@ -42,8 +43,6 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  console.log("loginResponse", loginResponse);
-  console.log("loginState", loginState);
 
   useEffect(() => {
     if (loginState) {
@@ -52,7 +51,6 @@ const LoginPage: React.FC = () => {
   }, [loginState]);
 
   return (
-    <div>
       <div className="h-screen flex justify-evenly items-center bg-gradient-to-b from-yellow-100 to-yellow-400">
         <div className="w-7/12 h-screen flex items-center justify-center">
           <div>
@@ -138,7 +136,6 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
