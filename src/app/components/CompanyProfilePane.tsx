@@ -4,15 +4,22 @@ import { StartupType } from '../interfaces';
 import { GrFormClose } from "react-icons/gr";
 import Link from 'next/link';
 import axios from "axios";
+
+interface userInfo {
+    email: string;
+    first_name: string;
+}
 interface CompanyProfilePaneProps {
     companyData: StartupType;
     setOpenState: React.Dispatch<React.SetStateAction<boolean>>;
     openState: boolean
+    userInfo: userInfo
 }
 const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
     companyData,
     setOpenState,
-    openState
+    openState,
+    userInfo
 }) => {
     const [expanded, setExpanded] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -30,7 +37,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
             await axios.post('http://127.0.0.1:8000/api/email/send-email/', {
                 subject: 'Demo',
                 template_name: 'email_template.html',
-                context: { name: 'John Doe' },
+                context: { userInfo },
                 recipient_list: 'lathiesh@theyellow.network',
             });
             setIsModalOpen(true);

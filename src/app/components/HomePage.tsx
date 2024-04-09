@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RxAvatar } from "react-icons/rx";
 import NavBar from "./Navbar";
 import Prompt from "./Prompt";
@@ -16,6 +16,19 @@ export default function HomePage() {
   const [openCompanyPane, setOpenCompanyPane] = useState<boolean>(true);
   const [inputPrompt, setInputPrompt] = useState(defaultPrompt);
   const [openRightFrame, setOpenRightFrame] = useState<boolean>(true);
+  const [userInfo, setUserInfo] = useState<any>(null);
+
+  useEffect(() => {
+    const userInfoFromStorage = localStorage.getItem("userInfo");
+    if (userInfoFromStorage) {
+      const parsedUserInfo = JSON.parse(userInfoFromStorage);
+      setUserInfo(parsedUserInfo);
+    }
+  }, []);
+
+  useEffect(() => {
+    const promptStorage = localStorage.setItem("promptStorage", inputPrompt)
+  }, []);
 
   const handleToggleLeftFrameNavbar = () => {
     setOpen(!open);
@@ -33,34 +46,33 @@ export default function HomePage() {
     }
   };
 
-  console.log("openRightFrame",openRightFrame)
-
   const handleSaveInput = async (input: string) => {
+
 
     let userquery = { userquery: input };
 
-
-    setMessages(prevMessages => [...prevMessages, { question : input , response : "Loading"}]);
+    setMessages(prevMessages => [...prevMessages, { question: input, response: "Loading" }]);
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/prompt/ragsearch/",
         userquery
       );
-      setMessages([...messages, { question : input , response : response.data}]);
+      setMessages([...messages, { question: input, response: response.data }]);
 
     } catch (error) {
       console.log("erroringettingstartups", error);
     }
   };
 
+
   const handleClickItem = (item: StartupType) => {
     setSelectedStartup(item);
     setOpenRightFrame(true)
   };
 
-  console.log("messages",messages)
+  console.log("messages", messages)
   const renderMessages = () => {
-    return messages.map((message: any, index:number) => (
+    return messages.map((message: any, index: number) => (
       <div key={index} className=" justify-between mb-4 text-[16px] px-6">
         <div className=" p-6 text-left border-l-4 border-orange-100">
           <span className="font-semibold text-[17px] text-black block mb-1">You:</span>
@@ -74,39 +86,37 @@ export default function HomePage() {
             </div>
           ) : (
             <div>
-            <span>
-              {message?.response?.chainresult}
-            </span>
-            <div>
-            <div className="grid grid-cols-2 font-semibold text-base">
-                        <div>Startup Name</div>
-                        <div>Overview</div>
-            </div>
+              <span>
+                {message?.response?.chainresult}
+              </span>
+              <div>
+                <div className="grid grid-cols-2 font-semibold text-base">
+                  <div>Startup Name</div>
+                  <div>Overview</div>
+                </div>
 
-            {message?.response?.results && message?.response?.results.map((result:any, indexofresult:number)=> {
-              return (
-                <div
-                key={indexofresult}
-                className="grid grid-cols-2 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
-                onClick={() => handleClickItem(result)}
-              >
-                <div>{result?.startup_name}</div>
-                <div>{result?.startup_overview}</div>
+                {message?.response?.results && message?.response?.results.map((result: any, indexofresult: number) => {
+                  return (
+                    <div
+                      key={indexofresult}
+                      className="grid grid-cols-2 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
+                      onClick={() => handleClickItem(result)}
+                    >
+                      <div>{result?.startup_name}</div>
+                      <div>{result?.startup_overview}</div>
+                    </div>
+                  )
+                })}
               </div>
-              )
-            })}
-            </div>
 
             </div>
-            
+
           )}
         </div>
       </div>
     ));
   };
-  
-  
-  
+
 
   return (
     <main className="">
@@ -121,6 +131,7 @@ export default function HomePage() {
                 open={open}
                 inputPrompt={inputPrompt}
                 setInputPrompt={setInputPrompt}
+                userInfo={userInfo}
               />
             </div>
           )}
@@ -146,6 +157,7 @@ export default function HomePage() {
                 companyData={selectedStartup}
                 setOpenState={setOpenRightFrame}
                 openState={openRightFrame}
+                userInfo={userInfo}
               />
             </div>
           )}
