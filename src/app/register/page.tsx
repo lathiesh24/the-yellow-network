@@ -1,10 +1,11 @@
 "use client"
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { User } from "../interfaces";
 
 interface FormData {
   first_name: string;
@@ -16,12 +17,16 @@ interface FormData {
 const RegisterPage: React.FC = () => {
   const router = useRouter();
 
+
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitted, isValid, isDirty },
   } = useForm<FormData>();
 
+
+  const [regsiterResponse, setRegisterResponse] = useState<string>(" ");
+  const [regsiterState, setRegisterState] = useState<User | undefined>(undefined)
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       const response = await axios.post(
@@ -30,12 +35,21 @@ const RegisterPage: React.FC = () => {
       );
       console.log("response in register", response.data);
       // Handle successful registration, navigate to login page
+      setRegisterResponse(response.data.message);
+      setRegisterState(response.data.user);
       router.push("/");
     } catch (error) {
+      setRegisterResponse(error?.response?.data?.message?.email[0]);
       console.error("error in registration", error);
       // Handle registration error
     }
   };
+
+  useEffect(() => {
+    if (regsiterState) {
+      localStorage.setItem("userInfo", JSON.stringify(regsiterState));
+    }
+  }, [regsiterState]);
 
   return (
     <div className="h-screen flex flex-col md:flex-row bg-gradient-to-b from-yellow-100 to-yellow-400">
@@ -136,6 +150,10 @@ const RegisterPage: React.FC = () => {
               </p>
             )}
           </div>
+
+          {isSubmitted && regsiterResponse && (
+              <p className="text-blue-500 capitalize">{regsiterResponse}</p>
+          )}
 
           <button
             type="submit"

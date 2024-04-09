@@ -16,4 +16,9 @@ export interface StartupType {
     startup_founders_info: string | null;
     startup_emails:string | null;
   }
+
+export interface User {
+    email: string;
+    first_name: string;
+}
   

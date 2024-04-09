@@ -6,15 +6,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios, { AxiosResponse } from "axios";
+import { User } from "../interfaces";
 
 interface FormData {
   email: string;
   password: string;
-}
-
-interface User {
-  email: string;
-  first_name: string;
 }
 
 const LoginPage: React.FC = () => {
