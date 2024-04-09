@@ -45,7 +45,7 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
               <div className="flex justify-center items-center font-semibold text-2xl mt-12">
                 What problem are you trying to solve?
               </div>
-              <div className="mt-28">
+              <div className="xl:mt-28 lg:mt-16">
                 <DefaultCard onSelectCard={handleCardSelect} />
               </div>
             </>
