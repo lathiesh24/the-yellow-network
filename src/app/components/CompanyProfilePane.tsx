@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
-import { StartupType } from '../interfaces';
+import React, { useState } from "react";
+import {
+    MdOutlineKeyboardDoubleArrowLeft,
+    MdOutlineKeyboardDoubleArrowRight,
+} from "react-icons/md";
+import { StartupType } from "../interfaces";
 import { GrFormClose } from "react-icons/gr";
-import Link from 'next/link';
 import axios from "axios";
 
 interface userInfo {
@@ -12,14 +14,14 @@ interface userInfo {
 interface CompanyProfilePaneProps {
     companyData: StartupType;
     setOpenState: React.Dispatch<React.SetStateAction<boolean>>;
-    openState: boolean
+    openState: boolean;
     userInfo: userInfo
 }
 const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
     companyData,
     setOpenState,
     openState,
-    userInfo
+    userInfo,
 }) => {
     const [expanded, setExpanded] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -29,8 +31,8 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
     };
 
     const openPane = () => {
-        setOpenState(false)
-    }
+        setOpenState(false);
+    };
 
     const sendEmail = async () => {
         try {

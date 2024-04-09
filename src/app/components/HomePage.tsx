@@ -9,7 +9,7 @@ import { StartupType } from "../interfaces";
 import LeftFrame from "./LeftFrame/LeftFrame";
 
 export default function HomePage() {
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState([]);
   const [defaultPrompt, setDefaultPrompt] = useState<string>("");
   const [open, setOpen] = useState<boolean>(true);
   const [selectedStartup, setSelectedStartup] = useState<StartupType>();
@@ -46,19 +46,22 @@ export default function HomePage() {
     }
   };
 
-  const handleSaveInput = async (input: string) => {
+  console.log("openRightFrame", openRightFrame);
 
+  const handleSaveInput = async (input: string) => {
 
     let userquery = { userquery: input };
 
-    setMessages(prevMessages => [...prevMessages, { question: input, response: "Loading" }]);
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { question: input, response: "Loading" },
+    ]);
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/prompt/ragsearch/",
         userquery
       );
       setMessages([...messages, { question: input, response: response.data }]);
-
     } catch (error) {
       console.log("erroringettingstartups", error);
     }
@@ -67,48 +70,61 @@ export default function HomePage() {
 
   const handleClickItem = (item: StartupType) => {
     setSelectedStartup(item);
-    setOpenRightFrame(true)
+    setOpenRightFrame(true);
   };
 
-  console.log("messages", messages)
+  console.log("messages", messages);
   const renderMessages = () => {
     return messages.map((message: any, index: number) => (
       <div key={index} className=" justify-between mb-4 text-[16px] px-6">
         <div className=" p-6 text-left border-l-4 border-orange-100">
-          <span className="font-semibold text-[17px] text-black block mb-1">You:</span>
-          <span className='text-[17px]'>{message.question}</span>
+          <span className="font-semibold text-[17px] text-black block mb-1">
+            You:
+          </span>
+          <span className="text-[17px]">{message.question}</span>
         </div>
         <div className=" p-6  text-left border-l-4 border-blue-100">
           <span className="font-semibold text-black block mb-3">GamePlan:</span>
           {message?.response === "Loading" ? (
-            <div>
-              Loading..
-            </div>
+            <div>Loading..</div>
           ) : (
             <div>
               <span>
-                {message?.response?.chainresult}
+                {message?.response?.descriptions !== undefined &&
+                  message?.response?.descriptions.length === 0
+                  ? message?.response?.chainresult
+                  : message?.response?.descriptions?.map((item, index) => (
+                    <div key={index}>{item}</div>
+                  ))}
               </span>
+
               <div>
-                <div className="grid grid-cols-2 font-semibold text-base">
-                  <div>Startup Name</div>
-                  <div>Overview</div>
-                </div>
-
-                {message?.response?.results && message?.response?.results.map((result: any, indexofresult: number) => {
-                  return (
-                    <div
-                      key={indexofresult}
-                      className="grid grid-cols-2 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
-                      onClick={() => handleClickItem(result)}
-                    >
-                      <div>{result?.startup_name}</div>
-                      <div>{result?.startup_overview}</div>
+                {message?.response?.results &&
+                  message.response.results.length > 0 && (
+                    <div className="grid grid-cols-3 font-semibold text-base">
+                      <div>Startup Name</div>
+                      <div>Overview</div>
                     </div>
-                  )
-                })}
-              </div>
+                  )}
 
+                {message?.response?.results?.length > 0 &&
+                  message.response.results.map(
+                    (result: any, indexofresult: number) => {
+                      return (
+                        <div
+                          key={indexofresult}
+                          className="grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
+                          onClick={() => handleClickItem(result)}
+                        >
+                          <div className="text-sm">{result?.startup_name}</div>
+                          <div className="text-sm col-span-2">
+                            {result?.startup_overview}
+                          </div>
+                        </div>
+                      );
+                    }
+                  )}
+              </div>
             </div>
 
           )}
@@ -121,7 +137,10 @@ export default function HomePage() {
   return (
     <main className="">
       <div className="">
-        <NavBar open={open} handleToggleLeftFrame={handleToggleLeftFrameNavbar} />
+        <NavBar
+          open={open}
+          handleToggleLeftFrame={handleToggleLeftFrameNavbar}
+        />
       </div>
       <div className="flex">
         <div className="">
@@ -147,7 +166,8 @@ export default function HomePage() {
             open={open}
             handleToggleLeftFrame={handleToggleLeftFrame}
             openRightFrame={openRightFrame}
-            handleToggleRightFrame={handleToggleRightFrame} />
+            handleToggleRightFrame={handleToggleRightFrame}
+          />
         </div>
 
         <div>
