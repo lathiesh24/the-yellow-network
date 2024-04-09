@@ -9,7 +9,7 @@ import axios from "axios";
 interface FormData {
   first_name: string;
   email: string;
-  organization: string;
+  organization_name: string;
   password: string;
 }
 
@@ -23,6 +23,8 @@ const RegisterPage: React.FC = () => {
   } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+
+    console.log("dataforregister", data)
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/user/register/",
@@ -122,7 +124,7 @@ const RegisterPage: React.FC = () => {
             <label htmlFor="organization">Organization Name</label>
             <input
               type="text"
-              {...register("organization", {
+              {...register("organization_name", {
                 required: "Organization name is required",
               })}
               autoComplete="off"
@@ -130,9 +132,9 @@ const RegisterPage: React.FC = () => {
               placeholder="Enter your organization"
               className="text-base placeholder-text-base px-5 py-3 h-10 outline-none rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] placeholder-text-gray-300 border border-solid w-80"
             />
-            {errors.organization && isSubmitted && (
+            {errors.organization_name && isSubmitted && (
               <p className="text-red-500 capitalize">
-                {errors.organization.message}
+                {errors.organization_name.message}
               </p>
             )}
           </div>
