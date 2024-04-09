@@ -51,7 +51,7 @@ const RegisterPage: React.FC = () => {
   }, [regsiterState]);
 
   return (
-    <div className="h-screen flex justify-evenly items-center bg-gradient-to-b from-yellow-100 to-yellow-400">
+    <div className=" flex justify-evenly items-center bg-gradient-to-b from-yellow-100 to-yellow-400">
       <div className="w-7/12 h-screen flex items-center justify-center">
         <div>
           <Image
@@ -63,17 +63,17 @@ const RegisterPage: React.FC = () => {
           />
         </div>
       </div>
-      <div className="w-full md:w-1/2 h-full bg-white p-4 md:p-10 order-2 md:order-2">
-        <div className="flex items-start justify-start flex-col gap-4 pt-4 md:pt-20">
-          <h2 className="font-bold text-3xl md:text-5xl">Get started</h2>
-          <p className="font-light text-base md:text-xl text-gray-400">
+      <div className="w-5/12  bg-white order-2 md:order-2 h-screen">
+        <div className="flex items-start justify-start flex-col gap-y-2 xl:gap-4 p-8">
+          <h2 className="font-bold text-3xl xl:text-5xl">Get started</h2>
+          <p className="font-light text-base xl:text-xl text-gray-400">
             Start your journey by creating an account
           </p>
         </div>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-8 px-10 justify-center items-center pt-8"
+          className="flex flex-col gap-4 xl:gap-8 px-10 justify-center items-center  xl:pt-8"
         >
           <div className="flex flex-col items-start justify-start gap-2">
             <label htmlFor="first_name">Full Name</label>
