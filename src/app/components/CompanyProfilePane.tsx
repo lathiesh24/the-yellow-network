@@ -1,38 +1,45 @@
 import React, { useState } from "react";
 import {
-  MdOutlineKeyboardDoubleArrowLeft,
-  MdOutlineKeyboardDoubleArrowRight,
+    MdOutlineKeyboardDoubleArrowLeft,
+    MdOutlineKeyboardDoubleArrowRight,
 } from "react-icons/md";
 import { StartupType } from "../interfaces";
 import { GrFormClose } from "react-icons/gr";
 import axios from "axios";
+
+interface userInfo {
+    email: string;
+    first_name: string;
+}
 interface CompanyProfilePaneProps {
-  companyData: StartupType;
-  setOpenState: React.Dispatch<React.SetStateAction<boolean>>;
-  openState: boolean;
+    companyData: StartupType;
+    setOpenState: React.Dispatch<React.SetStateAction<boolean>>;
+    openState: boolean;
+    userInfo: userInfo
 }
 const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
-  companyData,
-  setOpenState,
-  openState,
+    companyData,
+    setOpenState,
+    openState,
+    userInfo,
 }) => {
     const [expanded, setExpanded] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const toggleWidth = () => {
-    setExpanded(!expanded);
-  };
+    const toggleWidth = () => {
+        setExpanded(!expanded);
+    };
 
-  const openPane = () => {
-    setOpenState(false);
-  };
+    const openPane = () => {
+        setOpenState(false);
+    };
 
     const sendEmail = async () => {
         try {
             await axios.post('http://127.0.0.1:8000/api/email/send-email/', {
                 subject: 'Demo',
                 template_name: 'email_template.html',
-                context: { name: 'John Doe' },
+                context: { userInfo },
                 recipient_list: 'lathiesh@theyellow.network',
             });
             setIsModalOpen(true);
@@ -50,13 +57,13 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
 
     return (
         <>
-           {openState &&
-            (
-                <div className={`fixed top-0 right-0 bg-white shadow-md min-h-screen ${expanded ? 'w-[1000px]' : 'max-w-96'}`}>
-                <div className='flex flex-col gap-y-4 py-8 overflow-auto h-screen'>
-                    <div className=''>
-                            <div className='mx-6 flex flex-col -mt-5 gap-6'>
-                                <div className='flex justify-between'>
+            {openState &&
+                (
+                    <div className={`fixed top-0 right-0 bg-white shadow-md min-h-screen ${expanded ? 'w-[1000px]' : 'max-w-96'}`}>
+                        <div className='flex flex-col gap-y-4 py-8 overflow-auto h-screen'>
+                            <div className=''>
+                                <div className='mx-6 flex flex-col -mt-5 gap-6'>
+                                    <div className='flex justify-between'>
                                         {!expanded ?
                                             (<div className=' -ml-2 cursor-pointer' onClick={toggleWidth}>
                                                 <MdOutlineKeyboardDoubleArrowLeft size={23} />

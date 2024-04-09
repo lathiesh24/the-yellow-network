@@ -34,7 +34,7 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
     handleToggleRightFrame();
   };
 
-  console.log("Inputprompt",inputPrompt)
+  console.log("Inputprompt", inputPrompt)
 
   return (
     <div className="fixed bottom-0 w-full flex flex-col items-center justify-center mb-6 md:mb-12 lg:mb-24">

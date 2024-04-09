@@ -12,14 +12,21 @@ import { FaHistory } from "react-icons/fa";
 import { GrLogout } from "react-icons/gr";
 import { useRouter } from 'next/navigation';
 
+interface UserInfo {
+    email: string;
+    first_name: string;
+}
+
 interface LeftFrameProps {
     open: boolean;
     inputPrompt: string;
     setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
+    userInfo: UserInfo;
 }
 
-const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt }) => {
-    const [userInfo, setUserInfo] = useState<any>(null);
+
+const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt, userInfo }) => {
+
     const [activeTab, setActiveTab] = useState<string>('spotlight');
     const [isLogoutOpen, setIsLogoutOpen] = useState<boolean>(false);
     const logoutRef = useRef<HTMLDivElement>(null);
@@ -59,13 +66,7 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt
         navigate.push('/login');
     };
 
-    useEffect(() => {
-        const userInfoFromStorage = localStorage.getItem("userInfo");
-        if (userInfoFromStorage) {
-            const parsedUserInfo = JSON.parse(userInfoFromStorage);
-            setUserInfo(parsedUserInfo);
-        }
-    }, []);
+
 
     return (
         <div className='fixed left-0 top-0 w-1/5 h-screen z-50 flex flex-col bg-white'>

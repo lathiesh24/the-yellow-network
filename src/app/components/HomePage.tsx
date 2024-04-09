@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RxAvatar } from "react-icons/rx";
 import NavBar from "./Navbar";
 import Prompt from "./Prompt";
@@ -16,6 +16,19 @@ export default function HomePage() {
   const [openCompanyPane, setOpenCompanyPane] = useState<boolean>(true);
   const [inputPrompt, setInputPrompt] = useState(defaultPrompt);
   const [openRightFrame, setOpenRightFrame] = useState<boolean>(true);
+  const [userInfo, setUserInfo] = useState<any>(null);
+
+  useEffect(() => {
+    const userInfoFromStorage = localStorage.getItem("userInfo");
+    if (userInfoFromStorage) {
+      const parsedUserInfo = JSON.parse(userInfoFromStorage);
+      setUserInfo(parsedUserInfo);
+    }
+  }, []);
+
+  useEffect(() => {
+    const promptStorage = localStorage.setItem("promptStorage", inputPrompt)
+  }, []);
 
   const handleToggleLeftFrameNavbar = () => {
     setOpen(!open);
@@ -36,6 +49,7 @@ export default function HomePage() {
   console.log("openRightFrame", openRightFrame);
 
   const handleSaveInput = async (input: string) => {
+
     let userquery = { userquery: input };
 
     setMessages((prevMessages) => [
@@ -52,6 +66,7 @@ export default function HomePage() {
       console.log("erroringettingstartups", error);
     }
   };
+
 
   const handleClickItem = (item: StartupType) => {
     setSelectedStartup(item);
@@ -76,11 +91,11 @@ export default function HomePage() {
             <div>
               <span>
                 {message?.response?.descriptions !== undefined &&
-                message?.response?.descriptions.length === 0
+                  message?.response?.descriptions.length === 0
                   ? message?.response?.chainresult
                   : message?.response?.descriptions?.map((item, index) => (
-                      <div key={index}>{item}</div>
-                    ))}
+                    <div key={index}>{item}</div>
+                  ))}
               </span>
 
               <div>
@@ -111,11 +126,13 @@ export default function HomePage() {
                   )}
               </div>
             </div>
+
           )}
         </div>
       </div>
     ));
   };
+
 
   return (
     <main className="">
@@ -133,6 +150,7 @@ export default function HomePage() {
                 open={open}
                 inputPrompt={inputPrompt}
                 setInputPrompt={setInputPrompt}
+                userInfo={userInfo}
               />
             </div>
           )}
@@ -159,6 +177,7 @@ export default function HomePage() {
                 companyData={selectedStartup}
                 setOpenState={setOpenRightFrame}
                 openState={openRightFrame}
+                userInfo={userInfo}
               />
             </div>
           )}
