@@ -31,7 +31,7 @@ const RegisterPage: React.FC = () => {
     console.log("dataforregister", data);
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/user/register/",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/register/`,
         data
       );
       console.log("response in register", response.data);

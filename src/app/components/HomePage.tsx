@@ -58,7 +58,7 @@ export default function HomePage() {
     ]);
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/prompt/ragsearch/",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/prompt/ragsearch/`,
         userquery
       );
       setMessages([...messages, { question: input, response: response.data }]);

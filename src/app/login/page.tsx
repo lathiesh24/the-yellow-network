@@ -29,7 +29,7 @@ const LoginPage: React.FC = () => {
     try {
       console.log(data, "data");
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/user/login/",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/login/`,
         data
       );
       console.log("responseinlogin", response.data);
