@@ -68,7 +68,8 @@ export default function HomePage() {
   };
 
 
-  const handleClickItem = (item: StartupType) => {
+  const handleClickItem = (item: StartupType, messages:any) => {
+    console.log("messsageofcompany",messages)
     setSelectedStartup(item);
     setOpenRightFrame(true);
   };
@@ -114,7 +115,7 @@ export default function HomePage() {
                         <div
                           key={indexofresult}
                           className="grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
-                          onClick={() => handleClickItem(result)}
+                          onClick={() => handleClickItem(result,messages)}
                         >
                           <div className="text-sm">{result?.startup_name}</div>
                           <div className="text-sm col-span-2">
