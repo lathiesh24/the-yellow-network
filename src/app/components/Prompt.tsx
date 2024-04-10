@@ -37,7 +37,7 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
   console.log("Inputprompt", inputPrompt)
 
   return (
-    <div className="fixed bottom-0 w-full flex flex-col items-center justify-center mb-6 md:mb-12 lg:mb-24">
+    <div className=" flex flex-col w-full items-center justify-center ">
       <div className="prompt-container overflow-y-auto">
         {renderMessages().length === 0 ?
           (
@@ -55,7 +55,7 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
             </div>
           )}
       </div>
-      <div className="bg-white w-[656px] rounded-lg shadow-lg ">
+      <div className="bg-white w-4/6 rounded-lg shadow-lg ">
         <div className="flex items-center ">
           <textarea
             className="flex-1 focus:outline-none py-4 px-4 rounded-md resize-none overflow-hidden text-[14px]"

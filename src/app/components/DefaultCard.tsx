@@ -19,7 +19,7 @@ const DefaultCard: React.FC<DefaultCardProps> = ({ onSelectCard }) => {
 
     return (
         <div className="flex justify-center mb-12 gap-x-4 text-[12px] ">
-            <div className="flex flex-col w-[356px]">
+            <div className="flex flex-col">
                 {cardData.slice(0, 2).map((item, index) => {
                     return (
                         <div
@@ -32,7 +32,7 @@ const DefaultCard: React.FC<DefaultCardProps> = ({ onSelectCard }) => {
                     )
                 })}
             </div>
-            <div className="flex flex-col w-[356px] ">
+            <div className="flex flex-col">
                 {cardData.slice(2).map((item, index) => {
                     return (
                         <div

@@ -10,14 +10,18 @@ const NavBar: React.FC<NavbarProps> = ({ open, handleToggleLeftFrame }) => {
 
     return (
         <div
-            className={`fixed flex bg-white h-max w-full items-center flex-row mt-3 cursor-pointer transition-all ${open ? 'lg:ml-52 xl:ml-[264px]' : 'ml-2'}`}
-            onClick={handleToggleLeftFrame}>
+            className={`flex bg-white items-center flex-row  cursor-pointer transition-all pt-4 ${open ? 'ml-[312px] ' : 'ml-2'}`}
+        >
             {open ? (
-                <div className={`${open ? '' : 'hidden'}`}>
+                <div
+                    className={`${open ? '' : 'hidden'}`}
+                    onClick={handleToggleLeftFrame}>
                     <IoIosArrowBack size={23} />
                 </div>
             ) : (
-                <div className={`${!open ? '' : 'hidden'}`}>
+                <div
+                    className={`${!open ? '' : 'hidden'}`}
+                    onClick={handleToggleLeftFrame}>
                     <IoIosArrowForward size={23} />
                 </div>
             )}

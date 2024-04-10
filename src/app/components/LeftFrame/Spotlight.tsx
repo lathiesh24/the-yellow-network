@@ -9,10 +9,8 @@ const Spotlight: React.FC = () => {
 
     };
 
-
-
     return (
-        <div className=''>
+        <>
             <div className='text-sm py-3 px-2 text-gray-400 font-semibold'>
                 Spotlight
             </div>
@@ -45,8 +43,7 @@ const Spotlight: React.FC = () => {
                     </div>
                 </div>
             </div>
-
-        </div>
+        </>
     );
 };
 

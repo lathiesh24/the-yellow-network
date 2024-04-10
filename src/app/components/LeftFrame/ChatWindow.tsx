@@ -9,7 +9,7 @@ const ChatWindow: React.FC = () => {
     ];
 
     return (
-        <div className=''>
+        <>
             <div className='text-sm py-3 px-2 text-gray-400 font-semibold'>
                 Chat Window
             </div>
@@ -26,7 +26,7 @@ const ChatWindow: React.FC = () => {
                     </div>
                 ))}
             </div>
-        </div>
+        </>
     );
 };
 

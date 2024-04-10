@@ -17,6 +17,7 @@ export default function HomePage() {
   const [inputPrompt, setInputPrompt] = useState(defaultPrompt);
   const [openRightFrame, setOpenRightFrame] = useState<boolean>(true);
   const [userInfo, setUserInfo] = useState<any>(null);
+  const [expanded, setExpanded] = useState<boolean>(false);
 
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("userInfo");
@@ -39,6 +40,11 @@ export default function HomePage() {
       setOpen(!open);
     }
   };
+
+  const toggleWidth = () => {
+    setExpanded(!expanded);
+  };
+
 
   const handleToggleRightFrame = () => {
     if (openRightFrame) {
@@ -126,7 +132,6 @@ export default function HomePage() {
                   )}
               </div>
             </div>
-
           )}
         </div>
       </div>
@@ -135,28 +140,27 @@ export default function HomePage() {
 
 
   return (
-    <main className="">
-      <div className="">
+    <main className="relative">
+      <div className="absolute">
         <NavBar
           open={open}
           handleToggleLeftFrame={handleToggleLeftFrameNavbar}
         />
       </div>
-      <div className="flex">
-        <div className="">
-          {open && (
-            <div className="w-1/4">
-              <LeftFrame
-                open={open}
-                inputPrompt={inputPrompt}
-                setInputPrompt={setInputPrompt}
-                userInfo={userInfo}
-              />
-            </div>
-          )}
-        </div>
+      <div className="flex flex-row gap-x-4 w-full">
 
-        <div className="">
+        {open && (
+          <div className="w-1/5">
+            <LeftFrame
+              open={open}
+              inputPrompt={inputPrompt}
+              setInputPrompt={setInputPrompt}
+              userInfo={userInfo}
+            />
+          </div>
+        )}
+
+        <div className="flex-grow pt-12">
           <Prompt
             onSaveInput={handleSaveInput}
             defaultPrompt={defaultPrompt}
@@ -170,19 +174,19 @@ export default function HomePage() {
           />
         </div>
 
-        <div>
-          {openRightFrame && selectedStartup && (
-            <div>
-              <CompanyProfilePane
-                companyData={selectedStartup}
-                setOpenState={setOpenRightFrame}
-                openState={openRightFrame}
-                userInfo={userInfo}
-              />
-            </div>
-          )}
-        </div>
+        {openRightFrame && selectedStartup && (
+          <div className={`${expanded ? '' : 'w-1/4'}`}>
+            <CompanyProfilePane
+              companyData={selectedStartup}
+              setOpenState={setOpenRightFrame}
+              openState={openRightFrame}
+              userInfo={userInfo}
+              expanded={expanded}
+              toggleWidth={toggleWidth}
+            />
+          </div>
+        )}
       </div>
-    </main>
+    </main >
   );
 }

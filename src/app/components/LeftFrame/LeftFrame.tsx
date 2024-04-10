@@ -66,10 +66,8 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt
         navigate.push('/login');
     };
 
-
-
     return (
-        <div className='fixed left-0 top-0 w-1/5 h-screen z-50 flex flex-col bg-white'>
+        <div className='h-screen z-50 flex flex-col bg-white relative top-0 left-0'>
             <div className='flex justify-center items-center bg-white shadow-md p-4 z-20'>
                 <img
                     src='/tyn-logo.png'
