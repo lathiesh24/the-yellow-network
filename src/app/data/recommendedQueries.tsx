@@ -9,7 +9,7 @@ interface RecommendedQuery {
 const recommendedQueries: RecommendedQuery[] = [
     { "shortName": "AI Maintenance for Manufacturing", "prompt": "Startups offering AI-driven predictive maintenance for manufacturing" },
     { "shortName": "Blockchain in Supply Chain", "prompt": "Blockchain solutions for secure, transparent supply chain management" },
-    { "shortName": "AI in Healthcare Diagnosis", "prompt": "AI platforms improving patient diagnosis accuracy in healthcare" },
+    { "shortName": "Multi Cloud Management", "prompt": "I need a platform which is capable to manage 'n' number of clouds in single platform and migration should be simple to do" },
     { "shortName": "IoT for Smart Home Security", "prompt": "IoT solutions to enhance smart home security" },
     { "shortName": "AR in Online Retail", "prompt": "AR tools for immersive online retail experiences" },
     { "shortName": "Multi-cloud Management", "prompt": "Startups simplifying multi-cloud management and integration" },

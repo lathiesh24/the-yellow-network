@@ -29,15 +29,16 @@ const RegisterPage: React.FC = () => {
   );
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log("dataforregister", data);
+    let urlforregister = `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/register/`
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/register/`,
+        urlforregister,
         data
       );
       console.log("response in register", response.data);
       setRegisterResponse(response.data.message);
-      setRegisterState(response.data.user);
       router.push("/");
+      setRegisterState(response.data.user);
     } catch (error) {
       setRegisterResponse(error?.response?.data?.message?.email[0]);
       console.error("error in registration", error);

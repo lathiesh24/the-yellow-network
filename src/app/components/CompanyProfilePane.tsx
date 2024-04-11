@@ -5,6 +5,7 @@ import {
 } from "react-icons/md";
 import { StartupType } from "../interfaces";
 import { GrFormClose } from "react-icons/gr";
+import { FaSpinner } from "react-icons/fa";
 import axios from "axios";
 
 interface userInfo {
@@ -29,7 +30,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
 }) => {
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const openPane = () => {
         setOpenState(false);
@@ -37,6 +38,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
 
     const sendEmail = async () => {
         try {
+            setIsLoading(true);
             await axios.post('http://127.0.0.1:8000/api/email/send-email/', {
                 subject: 'Demo',
                 template_name: 'email_template.html',
@@ -46,6 +48,8 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
             setIsModalOpen(true);
         } catch (error) {
             console.error('Error:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -83,13 +87,17 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
                                     <div
                                         className='flex justify-center items-center px-4 py-1.5 bg-gray-400 rounded-md text-white font-semibold cursor-pointer'
                                         onClick={sendEmail}>
-                                        Connect
+                                        {isLoading ? (
+                                            <FaSpinner className="animate-spin" />
+                                        ) : (
+                                            <div>Connect</div>
+                                        )}
                                     </div>
                                     {/* Modal */}
                                     {isModalOpen && (
                                         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75">
                                             <div className="bg-white p-8 rounded-lg">
-                                                <p>Email has been sent to TYN consultant.</p>
+                                                <p>Email has been sent to TYN consultant.We will reach you in short span of time</p>
                                                 <button onClick={closeModal} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                                     Close
                                                 </button>
@@ -131,7 +139,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
                             {companyData?.startup_url && (
                                 <div className='flex flex-col px-8'>
                                     <div className='font-semibold'>Company profile:</div>
-                                    <a href={companyData?.startup_url} className='pl-4 underline text-blue-500'>{companyData?.startup_url}</a>
+                                    <a href={companyData?.startup_url} target="_blank" className='pl-4 underline text-blue-500'>{companyData?.startup_url}</a>
                                 </div>
                             )}
                             {companyData?.startup_description && (

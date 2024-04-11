@@ -7,10 +7,10 @@ interface DefaultCardProps {
 const DefaultCard: React.FC<DefaultCardProps> = ({ onSelectCard }) => {
 
     const cardData = [
-        "Need AI platforms improving patient diagnosis accuracy in healthcare.",
-        "Looking for IoT solutions to enhance smart home security.",
+        "Give me list of startups leveraging AI in Quantumcomputing",
+        "Seeking AI-driven platforms for talent acquisition and HR analytics.",
         "Looking for platforms enhancing remote collaboration with VR.",
-        "Seeking startups improving pharmaceutical R&D with machine learning."
+        "Which company contribute to seamless health information integration?"
     ];
 
     const handleCardClick = (value: string) => {
