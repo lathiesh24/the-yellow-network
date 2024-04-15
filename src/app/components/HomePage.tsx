@@ -28,7 +28,7 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    const promptStorage = localStorage.setItem("promptStorage", inputPrompt)
+    const promptStorage = localStorage.setItem("promptStorage", inputPrompt);
   }, []);
 
   const handleToggleLeftFrameNavbar = () => {
@@ -45,7 +45,6 @@ export default function HomePage() {
     setExpanded(!expanded);
   };
 
-
   const handleToggleRightFrame = () => {
     if (openRightFrame) {
       setOpenRightFrame(!openRightFrame);
@@ -55,7 +54,6 @@ export default function HomePage() {
   console.log("openRightFrame", openRightFrame);
 
   const handleSaveInput = async (input: string) => {
-
     let userquery = { userquery: input };
 
     setMessages((prevMessages) => [
@@ -73,9 +71,8 @@ export default function HomePage() {
     }
   };
 
-
-  const handleClickItem = (item: StartupType, messages:any) => {
-    console.log("messsageofcompany",messages)
+  const handleClickItem = (item: StartupType, messages: any) => {
+    console.log("messsageofcompany", messages);
     setSelectedStartup(item);
     setOpenRightFrame(true);
   };
@@ -96,37 +93,46 @@ export default function HomePage() {
             <div>Loading..</div>
           ) : (
             <div>
-              <span>
-                {message?.response?.descriptions !== undefined &&
-                  message?.response?.descriptions.length === 0
-                  ? message?.response?.chainresult
-                  : message?.response?.descriptions?.map((item, index) => (
-                    <div key={index}>{item}</div>
-                  ))}
-              </span>
+
+
+            <span>
+              {typeof message?.response === 'string' ? (
+                JSON.parse(message?.response).map((startup, index) => (
+                  <div key={index}>{startup}</div>
+                ))
+              ) : (
+                message?.response?.results.length === 0 &&
+                message?.response?.chainresult &&
+                message?.response?.chainresult
+              )}
+            </span>
 
               <div>
                 {message?.response?.results &&
                   message.response.results.length > 0 && (
                     <div className="grid grid-cols-3 font-semibold text-base">
                       <div>Startup Name</div>
-                      <div>Overview</div>
+                      <div>Reason</div>
                     </div>
                   )}
 
                 {message?.response?.results?.length > 0 &&
                   message.response.results.map(
                     (result: any, indexofresult: number) => {
+                      // Split the description by colon and take the second part
+                      const reason = message?.response?.descriptions[
+                        indexofresult
+                      ]
+                        .split(":")[1]
+                        .trim();
                       return (
                         <div
                           key={indexofresult}
                           className="grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
-                          onClick={() => handleClickItem(result,messages)}
+                          onClick={() => handleClickItem(result, messages)}
                         >
                           <div className="text-sm">{result?.startup_name}</div>
-                          <div className="text-sm col-span-2">
-                            {result?.startup_overview}
-                          </div>
+                          <div className="text-sm col-span-2">{reason}</div>
                         </div>
                       );
                     }
@@ -139,7 +145,6 @@ export default function HomePage() {
     ));
   };
 
-
   return (
     <main className="relative">
       <div className="absolute">
@@ -149,7 +154,6 @@ export default function HomePage() {
         />
       </div>
       <div className="flex flex-row gap-x-4 w-full">
-
         {open && (
           <div className="w-1/5">
             <LeftFrame
@@ -176,7 +180,7 @@ export default function HomePage() {
         </div>
 
         {openRightFrame && selectedStartup && (
-          <div className={`${expanded ? '' : 'w-1/4'}`}>
+          <div className={`${expanded ? "" : "w-1/4"}`}>
             <CompanyProfilePane
               companyData={selectedStartup}
               setOpenState={setOpenRightFrame}
@@ -188,6 +192,6 @@ export default function HomePage() {
           </div>
         )}
       </div>
-    </main >
+    </main>
   );
 }
