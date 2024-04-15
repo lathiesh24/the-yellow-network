@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { IoMdSend } from "react-icons/io";
 import DefaultCard from "./DefaultCard";
 
@@ -18,6 +18,11 @@ interface PromptProps {
 
 const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, renderMessages, inputPrompt, setInputPrompt, handleToggleLeftFrame, handleToggleRightFrame, isInputEmpty, setIsInputEmpty }) => {
 
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [renderMessages]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputPrompt(event.target.value);
@@ -31,6 +36,12 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
       setIsInputEmpty(true);
     }
   };
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }
 
   const handleCardSelect = (value: string) => {
     setInputPrompt(value);
@@ -63,6 +74,7 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
           ) : (
             <div className="w-[656px] mb-8 md:mb-16">
               {renderMessages()}
+              <div ref={messagesEndRef} />
             </div>
           )}
       </div>
