@@ -85,7 +85,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
                                         {companyData?.startup_name}
                                     </div>
                                     <div
-                                        className='flex justify-center items-center px-4 py-1.5 bg-gray-400 rounded-md text-white font-semibold cursor-pointer'
+                                        className='flex justify-center items-center px-4 py-1.5 bg-gray-400 rounded-md text-white font-semibold cursor-pointer lg:w-5/12 lg:text-sm xl:text-xl xl:w-5/12 '
                                         onClick={sendEmail}>
                                         {isLoading ? (
                                             <FaSpinner className="animate-spin" />
@@ -97,8 +97,8 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
                                     {isModalOpen && (
                                         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75">
                                             <div className="bg-white p-8 rounded-lg">
-                                                <p>Email has been sent to TYN consultant.We will reach you in short span of time</p>
-                                                <button onClick={closeModal} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                                <p className="text-blue-500">Email has been sent to TYN consultant.We will reach you in short span of time</p>
+                                                <button onClick={closeModal} className="mt-4 bg-blue-500 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded">
                                                     Close
                                                 </button>
                                             </div>
@@ -114,31 +114,31 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
                         <div className='flex flex-col gap-2'>
                             {companyData?.startup_industry && (
                                 <div className='flex flex-col px-8'>
-                                    <div className='font-semibold'>Industry : </div>
+                                    <div className='font-semibold'>Industry: </div>
                                     <div className='pl-4'>{companyData?.startup_industry}</div>
                                 </div>
                             )}
                             {companyData?.startup_technology && (
                                 <div className='flex flex-col px-8'>
-                                    <div className='font-semibold'>Technology :</div>
+                                    <div className='font-semibold'>Technology:</div>
                                     <div className='pl-4'>{companyData?.startup_technology}</div>
                                 </div>
                             )}
                             {companyData?.startup_country && (
                                 <div className='flex px-8'>
-                                    <div className='font-semibold'>Country : </div>
-                                    <div className='pl-4'>{companyData?.startup_country}</div>
+                                    <div className='font-semibold'>Country: </div>
+                                    <div className='pl-2'>{companyData?.startup_country}</div>
                                 </div>
                             )}
                             {companyData?.startup_company_stage && (
                                 <div className='flex px-8'>
-                                    <div className='font-semibold'>Company Stage :</div>
-                                    <div className='pl-4'>{companyData?.startup_company_stage}</div>
+                                    <div className='font-semibold'>Company Stage:</div>
+                                    <div className='pl-2'>{companyData?.startup_company_stage}</div>
                                 </div>
                             )}
                             {companyData?.startup_url && (
                                 <div className='flex flex-col px-8'>
-                                    <div className='font-semibold'>Company profile:</div>
+                                    <div className='font-semibold'>Website:</div>
                                     <a href={companyData?.startup_url} target="_blank" className='pl-4 underline text-blue-500'>{companyData?.startup_url}</a>
                                 </div>
                             )}

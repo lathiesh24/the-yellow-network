@@ -10,7 +10,7 @@ const NavBar: React.FC<NavbarProps> = ({ open, handleToggleLeftFrame }) => {
 
     return (
         <div
-            className={`flex bg-white items-center flex-row  cursor-pointer transition-all pt-4 ${open ? 'ml-[312px] ' : 'ml-2'}`}
+            className={`flex bg-white items-center flex-row  cursor-pointer transition-all pt-4 ${open ? 'xl:pl-[310px]' : 'pl-2'}`}
         >
             {open ? (
                 <div

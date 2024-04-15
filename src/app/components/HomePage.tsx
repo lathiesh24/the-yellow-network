@@ -18,6 +18,7 @@ export default function HomePage() {
   const [openRightFrame, setOpenRightFrame] = useState<boolean>(true);
   const [userInfo, setUserInfo] = useState<any>(null);
   const [expanded, setExpanded] = useState<boolean>(false);
+  const [isInputEmpty, setIsInputEmpty] = useState<boolean>(true);
 
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("userInfo");
@@ -74,8 +75,8 @@ export default function HomePage() {
   };
 
 
-  const handleClickItem = (item: StartupType, messages:any) => {
-    console.log("messsageofcompany",messages)
+  const handleClickItem = (item: StartupType, messages: any) => {
+    console.log("messsageofcompany", messages)
     setSelectedStartup(item);
     setOpenRightFrame(true);
   };
@@ -121,7 +122,7 @@ export default function HomePage() {
                         <div
                           key={indexofresult}
                           className="grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
-                          onClick={() => handleClickItem(result,messages)}
+                          onClick={() => handleClickItem(result, messages)}
                         >
                           <div className="text-sm">{result?.startup_name}</div>
                           <div className="text-sm col-span-2">
@@ -156,6 +157,8 @@ export default function HomePage() {
               open={open}
               inputPrompt={inputPrompt}
               setInputPrompt={setInputPrompt}
+              isInputEmpty={isInputEmpty}
+              setIsInputEmpty={setIsInputEmpty}
               userInfo={userInfo}
             />
           </div>
@@ -172,6 +175,8 @@ export default function HomePage() {
             handleToggleLeftFrame={handleToggleLeftFrame}
             openRightFrame={openRightFrame}
             handleToggleRightFrame={handleToggleRightFrame}
+            isInputEmpty={isInputEmpty}
+            setIsInputEmpty={setIsInputEmpty}
           />
         </div>
 
