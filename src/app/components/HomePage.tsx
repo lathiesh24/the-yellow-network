@@ -18,6 +18,7 @@ export default function HomePage() {
   const [openRightFrame, setOpenRightFrame] = useState<boolean>(true);
   const [userInfo, setUserInfo] = useState<any>(null);
   const [expanded, setExpanded] = useState<boolean>(false);
+  const [isInputEmpty, setIsInputEmpty] = useState<boolean>(true);
 
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("userInfo");
@@ -62,7 +63,7 @@ export default function HomePage() {
     ]);
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/prompt/ragsearch/`,
+        `http://127.0.0.1:8000/api/prompt/ragsearch/`,
         userquery
       );
       setMessages([...messages, { question: input, response: response.data }]);
@@ -80,64 +81,60 @@ export default function HomePage() {
   console.log("messages", messages);
   const renderMessages = () => {
     return messages.map((message: any, index: number) => (
-      <div key={index} className=" justify-between mb-4 text-[16px] px-6">
-        <div className=" p-6 text-left border-l-4 border-orange-100">
+      <div key={index} className="justify-between mb-4 text-[16px] px-6">
+        <div className="p-6 text-left border-l-4 border-orange-100">
           <span className="font-semibold text-[17px] text-black block mb-1">
             You:
           </span>
           <span className="text-[17px]">{message.question}</span>
         </div>
-        <div className=" p-6  text-left border-l-4 border-blue-100">
+        <div className="p-6 text-left border-l-4 border-blue-100">
           <span className="font-semibold text-black block mb-3">GamePlan:</span>
           {message?.response === "Loading" ? (
             <div>Loading..</div>
           ) : (
             <div>
+              <span>
+                {typeof message?.response === "string"
+                  ? JSON.parse(message?.response).map((startup, index) => (
+                      <div key={index}>{startup}</div>
+                    ))
+                  : message?.response?.results.length === 0 &&
+                    message?.response?.chainresult &&
+                    message?.response?.chainresult}
+              </span>
 
-
-            <span>
-              {typeof message?.response === 'string' ? (
-                JSON.parse(message?.response).map((startup, index) => (
-                  <div key={index}>{startup}</div>
-                ))
-              ) : (
-                message?.response?.results.length === 0 &&
-                message?.response?.chainresult &&
-                message?.response?.chainresult
+              {message?.response?.results?.length > 0 && (
+                <div className="grid grid-cols-3 font-semibold text-base">
+                  <div>Startup Name</div>
+                  <div>Reason</div>
+                </div>
               )}
-            </span>
 
-              <div>
-                {message?.response?.results &&
-                  message.response.results.length > 0 && (
-                    <div className="grid grid-cols-3 font-semibold text-base">
-                      <div>Startup Name</div>
-                      <div>Reason</div>
-                    </div>
-                  )}
-
-                {message?.response?.results?.length > 0 &&
-                  message.response.results.map(
-                    (result: any, indexofresult: number) => {
-                      // Split the description by colon and take the second part
-                      const reason = message?.response?.descriptions[
-                        indexofresult
-                      ]
-                        .split(":")[1]
-                        .trim();
-                      return (
-                        <div
-                          key={indexofresult}
-                          className="grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
-                          onClick={() => handleClickItem(result, messages)}
-                        >
-                          <div className="text-sm">{result?.startup_name}</div>
-                          <div className="text-sm col-span-2">{reason}</div>
-                        </div>
-                      );
+              {message?.response?.results?.length > 0 &&
+                message.response.results.map(
+                  (result: any, indexofresult: number) => {
+                    const description =
+                      message?.response?.descriptions[indexofresult];
+                    let reason = "";
+                    if (description) {
+                      reason = description.split(":")[1].trim();
+                    } else if (result.startup_overview) {
+                      // Use startup_overview if description is not available
+                      reason = result.startup_overview;
                     }
-                  )}
-              </div>
+                    return (
+                      <div
+                        key={indexofresult}
+                        className="grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
+                        onClick={() => handleClickItem(result, messages)}
+                      >
+                        <div className="text-sm">{result?.startup_name}</div>
+                        <div className="text-sm col-span-2">{reason}</div>
+                      </div>
+                    );
+                  }
+                )}
             </div>
           )}
         </div>
@@ -160,6 +157,8 @@ export default function HomePage() {
               open={open}
               inputPrompt={inputPrompt}
               setInputPrompt={setInputPrompt}
+              isInputEmpty={isInputEmpty}
+              setIsInputEmpty={setIsInputEmpty}
               userInfo={userInfo}
             />
           </div>
@@ -176,6 +175,8 @@ export default function HomePage() {
             handleToggleLeftFrame={handleToggleLeftFrame}
             openRightFrame={openRightFrame}
             handleToggleRightFrame={handleToggleRightFrame}
+            isInputEmpty={isInputEmpty}
+            setIsInputEmpty={setIsInputEmpty}
           />
         </div>
 
