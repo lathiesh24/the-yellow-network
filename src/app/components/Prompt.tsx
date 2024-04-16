@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { IoMdSend } from "react-icons/io";
 import DefaultCard from "./DefaultCard";
 
@@ -12,18 +12,36 @@ interface PromptProps {
   handleToggleLeftFrame: () => void;
   openRightFrame: boolean;
   handleToggleRightFrame: () => void;
+  isInputEmpty: boolean;
+  setIsInputEmpty: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, renderMessages, inputPrompt, setInputPrompt, handleToggleLeftFrame, handleToggleRightFrame }) => {
+const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, renderMessages, inputPrompt, setInputPrompt, handleToggleLeftFrame, handleToggleRightFrame, isInputEmpty, setIsInputEmpty }) => {
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [renderMessages]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputPrompt(event.target.value);
+    setIsInputEmpty(event.target.value.trim() === '');
   };
 
   const handleSendClick = () => {
-    onSaveInput(inputPrompt);
-    setInputPrompt("");
+    if (!isInputEmpty) {
+      onSaveInput(inputPrompt);
+      setInputPrompt("");
+      setIsInputEmpty(true);
+    }
   };
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }
 
   const handleCardSelect = (value: string) => {
     setInputPrompt(value);
@@ -46,12 +64,17 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
                 What problem are you trying to solve?
               </div>
               <div className="xl:mt-28 lg:mt-16">
-                <DefaultCard onSelectCard={handleCardSelect} />
+                <DefaultCard
+                  onSelectCard={handleCardSelect}
+                  isInputEmpty={isInputEmpty}
+                  setIsInputEmpty={setIsInputEmpty}
+                />
               </div>
             </>
           ) : (
             <div className="w-[656px] mb-8 md:mb-16">
               {renderMessages()}
+              <div ref={messagesEndRef} />
             </div>
           )}
       </div>
@@ -65,10 +88,22 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
             value={inputPrompt}
             onChange={handleInputChange}
             onClick={handleTextareaClick}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendClick();
+              }
+            }}
           />
-          <div className='px-8 cursor-pointer' onClick={handleSendClick}>
-            <IoMdSend size={23} />
-          </div>
+          {isInputEmpty ? (
+            <div className='px-8 opacity-50'>
+              <IoMdSend size={23} />
+            </div>
+          ) : (
+            <div className='px-8 cursor-pointer' onClick={handleSendClick}>
+              <IoMdSend size={23} />
+            </div>
+          )}
         </div>
       </div>
     </div>

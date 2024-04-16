@@ -22,10 +22,12 @@ interface LeftFrameProps {
     inputPrompt: string;
     setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
     userInfo: UserInfo;
+    isInputEmpty: boolean;
+    setIsInputEmpty: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
-const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt, userInfo }) => {
+const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt, userInfo, isInputEmpty, setIsInputEmpty }) => {
 
     const [activeTab, setActiveTab] = useState<string>('spotlight');
     const [isLogoutOpen, setIsLogoutOpen] = useState<boolean>(false);
@@ -52,6 +54,7 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt
 
     const handleHistorySelect = (value: string) => {
         setInputPrompt(value);
+        setIsInputEmpty(false);
     };
 
     const showDropdown = (event: React.MouseEvent) => {
@@ -93,8 +96,16 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt
                         <IoChatbubblesSharp size={23} />
                     </div>
                 </div>
-                {activeTab === 'history' && <HistoryBar onSelectHistory={handleHistorySelect} />}
-                {activeTab === 'recommended' && <RecommendedQueries onSelectHistory={handleHistorySelect} />}
+                {activeTab === 'history' &&
+                    <HistoryBar
+                        onSelectHistory={handleHistorySelect}
+                    />
+                }
+                {activeTab === 'recommended' &&
+                    <RecommendedQueries
+                        onSelectHistory={handleHistorySelect}
+                    />
+                }
                 {activeTab === 'chat' && <ChatWindow />}
                 {activeTab === 'connects' && <Connects />}
                 {activeTab === 'spotlight' && <Spotlight />}
