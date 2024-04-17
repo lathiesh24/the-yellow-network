@@ -26,7 +26,7 @@ USER node
 COPY --chown=node:node . .
 
 # Expose the port the application listens on
-EXPOSE 3000:80
+EXPOSE 3000
 
 # Command to run the application
 CMD ["npm", "run", "dev"]  # Consider changing to ["npm", "start"] for production environments
