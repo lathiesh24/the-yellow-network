@@ -19,14 +19,18 @@ interface CompanyProfilePaneProps {
     userInfo: userInfo
     expanded: boolean;
     toggleWidth: () => void;
+    mailData: any;
+    setMailData: React.Dispatch<React.SetStateAction<any>>;
 }
+
 const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
     companyData,
     setOpenState,
     openState,
     userInfo,
     expanded,
-    toggleWidth
+    toggleWidth,
+    mailData
 }) => {
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -42,7 +46,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
             await axios.post('http://127.0.0.1:8000/api/email/send-email/', {
                 subject: 'Demo',
                 template_name: 'email_template.html',
-                context: { userInfo },
+                context: { userInfo, mailData, companyData },
                 recipient_list: 'lathiesh@theyellow.network',
             });
             setIsModalOpen(true);
@@ -53,12 +57,16 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
         }
     };
 
+
     const closeModal = () => {
         setIsModalOpen(false);
     };
 
 
     console.log(openState, "companyData")
+    console.log("mailDataaaaaa", mailData)
+    console.log("userInfoooo--->", userInfo)
+    console.log("companyData", companyData)
 
     return (
         <>
