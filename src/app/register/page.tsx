@@ -29,12 +29,9 @@ const RegisterPage: React.FC = () => {
   );
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log("dataforregister", data);
-    let urlforregister = `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/register/`
+    let urlforregister = `http://127.0.0.1:8000/api/user/register/`;
     try {
-      const response = await axios.post(
-        urlforregister,
-        data
-      );
+      const response = await axios.post(urlforregister, data);
       console.log("response in register", response.data);
       setRegisterResponse(response.data.message);
       router.push("/");

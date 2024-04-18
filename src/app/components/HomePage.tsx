@@ -31,7 +31,7 @@ export default function HomePage() {
 
 
   useEffect(() => {
-    const promptStorage = localStorage.setItem("promptStorage", inputPrompt)
+    const promptStorage = localStorage.setItem("promptStorage", inputPrompt);
   }, []);
 
   const handleToggleLeftFrameNavbar = () => {
@@ -48,7 +48,6 @@ export default function HomePage() {
     setExpanded(!expanded);
   };
 
-
   const handleToggleRightFrame = () => {
     if (openRightFrame) {
       setOpenRightFrame(!openRightFrame);
@@ -58,7 +57,6 @@ export default function HomePage() {
   console.log("openRightFrame", openRightFrame);
 
   const handleSaveInput = async (input: string) => {
-
     let userquery = { userquery: input };
 
     setMessages((prevMessages) => [
@@ -67,7 +65,7 @@ export default function HomePage() {
     ]);
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/prompt/ragsearch/`,
+        `http://127.0.0.1:8000/api/prompt/ragsearch/`,
         userquery
       );
       setMessages([...messages, { question: input, response: response.data }]);
@@ -76,10 +74,9 @@ export default function HomePage() {
     }
   };
 
-
   const handleSendStartupData = (item: StartupType, message: any) => {
     console.log("mailmessage", message)
-    setMailMessage(message);
+    setMailMessage(message);;
     setSelectedStartup(item);
     setOpenRightFrame(true);
   };
@@ -88,62 +85,66 @@ export default function HomePage() {
 
   const renderMessages = () => {
     return messages.map((message: any, index: number) => (
-      <div key={index} className=" justify-between mb-4 text-[16px] px-6">
-        <div className=" p-6 text-left border-l-4 border-orange-100">
+      <div key={index} className="justify-between mb-4 text-[16px] px-6">
+        <div className="p-6 text-left border-l-4 border-orange-100">
           <span className="font-semibold text-[17px] text-black block mb-1">
             You:
           </span>
           <span className="text-[17px]">{message.question}</span>
         </div>
-        <div className=" p-6  text-left border-l-4 border-blue-100">
+        <div className="p-6 text-left border-l-4 border-blue-100">
           <span className="font-semibold text-black block mb-3">GamePlan:</span>
           {message?.response === "Loading" ? (
             <div>Loading..</div>
           ) : (
             <div>
               <span>
-                {message?.response?.descriptions !== undefined &&
-                  message?.response?.descriptions.length === 0
-                  ? message?.response?.chainresult
-                  : message?.response?.descriptions?.map((item, index) => (
-                    <div key={index}>{item}</div>
-                  ))}
+                {typeof message?.response === "string"
+                  ? JSON.parse(message?.response).map((startup, index) => (
+                    <div key={index}>{startup}</div>
+                  ))
+                  : message?.response?.results.length === 0 &&
+                  message?.response?.chainresult &&
+                  message?.response?.chainresult}
               </span>
 
-              <div>
-                {message?.response?.results &&
-                  message.response.results.length > 0 && (
-                    <div className="grid grid-cols-3 font-semibold text-base">
-                      <div>Startup Name</div>
-                      <div>Overview</div>
-                    </div>
-                  )}
+              {message?.response?.results?.length > 0 && (
+                <div className="grid grid-cols-3 font-semibold text-base">
+                  <div>Startup Name</div>
+                  <div>Reason</div>
+                </div>
+              )}
 
-                {message?.response?.results?.length > 0 &&
-                  message.response.results.map(
-                    (result: any, indexofresult: number) => {
-                      return (
-                        <div
-                          key={indexofresult}
-                          className="grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
-                          onClick={() => handleSendStartupData(result, message)}
-                        >
-                          <div className="text-sm">{result?.startup_name}</div>
-                          <div className="text-sm col-span-2">
-                            {result?.startup_overview}
-                          </div>
-                        </div>
-                      );
+              {message?.response?.results?.length > 0 &&
+                message.response.results.map(
+                  (result: any, indexofresult: number) => {
+                    const description =
+                      message?.response?.descriptions[indexofresult];
+                    let reason = "";
+                    if (description) {
+                      reason = description.split(":")[1].trim();
+                    } else if (result.startup_overview) {
+                      // Use startup_overview if description is not available
+                      reason = result.startup_overview;
                     }
-                  )}
-              </div>
+                    return (
+                      <div
+                        key={indexofresult}
+                        className="grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
+                        onClick={() => handleSendStartupData(result, message)}
+                      >
+                        <div className="text-sm">{result?.startup_name}</div>
+                        <div className="text-sm col-span-2">{reason}</div>
+                      </div>
+                    );
+                  }
+                )}
             </div>
           )}
         </div>
       </div>
     ));
   };
-
 
   return (
     <main className="relative">
@@ -154,7 +155,6 @@ export default function HomePage() {
         />
       </div>
       <div className="flex flex-row gap-x-4 w-full">
-
         {open && (
           <div className="w-1/5">
             <LeftFrame
@@ -185,7 +185,7 @@ export default function HomePage() {
         </div>
 
         {openRightFrame && selectedStartup && (
-          <div className={`${expanded ? '' : 'w-1/4'}`}>
+          <div className={`${expanded ? "" : "w-1/4"}`}>
             <CompanyProfilePane
               companyData={selectedStartup}
               setOpenState={setOpenRightFrame}
@@ -199,6 +199,6 @@ export default function HomePage() {
           </div>
         )}
       </div>
-    </main >
+    </main>
   );
 }
