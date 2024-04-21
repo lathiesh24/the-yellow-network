@@ -19,6 +19,7 @@ export default function HomePage() {
   const [userInfo, setUserInfo] = useState<any>(null);
   const [expanded, setExpanded] = useState<boolean>(false);
   const [isInputEmpty, setIsInputEmpty] = useState<boolean>(true);
+  const [mailMessage, setMailMessage] = useState<any>(null);
 
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("userInfo");
@@ -27,6 +28,7 @@ export default function HomePage() {
       setUserInfo(parsedUserInfo);
     }
   }, []);
+
 
   useEffect(() => {
     const promptStorage = localStorage.setItem("promptStorage", inputPrompt);
@@ -72,13 +74,15 @@ export default function HomePage() {
     }
   };
 
-  const handleClickItem = (item: StartupType, messages: any) => {
-    console.log("messsageofcompany", messages);
+  const handleSendStartupData = (item: StartupType, message: any) => {
+    console.log("mailmessage", message)
+    setMailMessage(message);;
     setSelectedStartup(item);
     setOpenRightFrame(true);
   };
 
-  console.log("messages", messages);
+  // console.log("messages", messages);
+
   const renderMessages = () => {
     return messages.map((message: any, index: number) => (
       <div key={index} className="justify-between mb-4 text-[16px] px-6">
@@ -97,11 +101,11 @@ export default function HomePage() {
               <span>
                 {typeof message?.response === "string"
                   ? JSON.parse(message?.response).map((startup, index) => (
-                      <div key={index}>{startup}</div>
-                    ))
+                    <div key={index}>{startup}</div>
+                  ))
                   : message?.response?.results.length === 0 &&
-                    message?.response?.chainresult &&
-                    message?.response?.chainresult}
+                  message?.response?.chainresult &&
+                  message?.response?.chainresult}
               </span>
 
               {message?.response?.results?.length > 0 && (
@@ -127,7 +131,7 @@ export default function HomePage() {
                       <div
                         key={indexofresult}
                         className="grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
-                        onClick={() => handleClickItem(result, messages)}
+                        onClick={() => handleSendStartupData(result, message)}
                       >
                         <div className="text-sm">{result?.startup_name}</div>
                         <div className="text-sm col-span-2">{reason}</div>
@@ -189,6 +193,8 @@ export default function HomePage() {
               userInfo={userInfo}
               expanded={expanded}
               toggleWidth={toggleWidth}
+              mailData={mailMessage}
+              setMailData={setMailMessage}
             />
           </div>
         )}
