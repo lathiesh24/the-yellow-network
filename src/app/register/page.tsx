@@ -30,7 +30,7 @@ const RegisterPage: React.FC = () => {
   );
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log("dataforregister", data);
-    let urlforregister = `/api/user/register/`;
+    let urlforregister = `http://172.174.112.166:8000/api/user/register/`;
     try {
       const response = await api.post(urlforregister, data);
       console.log("response in register", response.data);

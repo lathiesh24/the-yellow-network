@@ -29,8 +29,8 @@ const LoginPage: React.FC = () => {
   const onSubmit: SubmitHandler<FormData> = async (data, event) => {
     try {
       console.log(data, "data");
-      const response = await api.post(
-        `/api/user/login/`,
+      const response = await axios.post(
+        `http://172.174.112.166:8000/api/user/login/`,
         data
       );
       console.log("responseinlogin", response.data);

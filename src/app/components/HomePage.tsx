@@ -30,7 +30,6 @@ export default function HomePage() {
     }
   }, []);
 
-
   useEffect(() => {
     const promptStorage = localStorage.setItem("promptStorage", inputPrompt);
   }, []);
@@ -65,8 +64,8 @@ export default function HomePage() {
       { question: input, response: "Loading" },
     ]);
     try {
-      const response = await api.post(
-        `/api/prompt/ragsearch/`,
+      const response = await axios.post(
+        `http://172.174.112.166:8000/api/prompt/ragsearch/`,
         userquery
       );
       setMessages([...messages, { question: input, response: response.data }]);
@@ -76,8 +75,8 @@ export default function HomePage() {
   };
 
   const handleSendStartupData = (item: StartupType, message: any) => {
-    console.log("mailmessage", message)
-    setMailMessage(message);;
+    console.log("mailmessage", message);
+    setMailMessage(message);
     setSelectedStartup(item);
     setOpenRightFrame(true);
   };
@@ -102,11 +101,11 @@ export default function HomePage() {
               <span>
                 {typeof message?.response === "string"
                   ? JSON.parse(message?.response).map((startup, index) => (
-                    <div key={index}>{startup}</div>
-                  ))
+                      <div key={index}>{startup}</div>
+                    ))
                   : message?.response?.results.length === 0 &&
-                  message?.response?.chainresult &&
-                  message?.response?.chainresult}
+                    message?.response?.chainresult &&
+                    message?.response?.chainresult}
               </span>
 
               {message?.response?.results?.length > 0 && (
