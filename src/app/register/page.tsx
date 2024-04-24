@@ -33,6 +33,10 @@ const RegisterPage: React.FC = () => {
     try {
       const response = await axios.post(urlforregister, data);
       console.log("response in register", response.data);
+      const { accessToken, refreshToken, user } = response.data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("user", JSON.stringify(user));
       setRegisterResponse(response.data.message);
       router.push("/");
       setRegisterState(response.data.user);
