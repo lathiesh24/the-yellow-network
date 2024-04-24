@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { User } from "../interfaces";
+import api from "../components/Axios";
 
 interface FormData {
   first_name: string;
@@ -31,8 +32,12 @@ const RegisterPage: React.FC = () => {
     console.log("dataforregister", data);
     let urlforregister = `http://172.174.112.166:8000/api/user/register/`;
     try {
-      const response = await axios.post(urlforregister, data);
+      const response = await api.post(urlforregister, data);
       console.log("response in register", response.data);
+      const { accessToken, refreshToken, user } = response.data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("user", JSON.stringify(user));
       setRegisterResponse(response.data.message);
       router.push("/");
       setRegisterState(response.data.user);

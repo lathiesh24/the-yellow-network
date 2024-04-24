@@ -6,8 +6,7 @@ import {
 import { StartupType } from "../interfaces";
 import { GrFormClose } from "react-icons/gr";
 import { FaSpinner } from "react-icons/fa";
-import axios from "axios";
-
+import api from "./Axios"
 interface userInfo {
   email: string;
   first_name: string;

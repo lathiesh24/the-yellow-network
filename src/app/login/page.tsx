@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { User } from "../interfaces";
+import api from "../components/Axios";
 
 interface FormData {
   email: string;
@@ -33,9 +34,11 @@ const LoginPage: React.FC = () => {
         data
       );
       console.log("responseinlogin", response.data);
+      const { access_token, refresh_token } = response.data.tokens;
+      localStorage.setItem('accessToken', access_token);
+      localStorage.setItem('refreshToken', refresh_token);
       setLoginResponse(response.data.message);
       setLoginState(response.data.user);
-
       router.push("/");
     } catch (error) {
       setLoginResponse(error?.response?.data?.message);

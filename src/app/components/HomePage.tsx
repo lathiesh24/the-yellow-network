@@ -7,6 +7,7 @@ import axios from "axios";
 import CompanyProfilePane from "./CompanyProfilePane";
 import { StartupType } from "../interfaces";
 import LeftFrame from "./LeftFrame/LeftFrame";
+import api from "./Axios";
 
 export default function HomePage() {
   const [messages, setMessages] = useState([]);
