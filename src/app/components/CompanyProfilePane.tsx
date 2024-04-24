@@ -11,6 +11,8 @@ interface userInfo {
   email: string;
   first_name: string;
 }
+import axios from 'axios'
+
 interface CompanyProfilePaneProps {
   companyData: StartupType;
   setOpenState: React.Dispatch<React.SetStateAction<boolean>>;
