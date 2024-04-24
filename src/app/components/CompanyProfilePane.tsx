@@ -6,14 +6,13 @@ import {
 import { StartupType } from "../interfaces";
 import { GrFormClose } from "react-icons/gr";
 import { FaSpinner } from "react-icons/fa";
-import axios from "axios";
-
+import api from "./Axios"
 interface userInfo {
     email: string;
     first_name: string;
 }
 interface CompanyProfilePaneProps {
-    companyData: StartupType;
+    companyData: StartupType
     setOpenState: React.Dispatch<React.SetStateAction<boolean>>;
     openState: boolean;
     userInfo: userInfo
@@ -43,7 +42,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
     const sendEmail = async () => {
         try {
             setIsLoading(true);
-            await axios.post('http://127.0.0.1:8000/api/email/send-email/', {
+            await api.post('/api/email/send-email/', {
                 subject: 'Demo',
                 template_name: 'email_template.html',
                 context: { userInfo, mailData, companyData },

@@ -7,6 +7,7 @@ import axios from "axios";
 import CompanyProfilePane from "./CompanyProfilePane";
 import { StartupType } from "../interfaces";
 import LeftFrame from "./LeftFrame/LeftFrame";
+import api from "./Axios";
 
 export default function HomePage() {
   const [messages, setMessages] = useState([]);
@@ -64,8 +65,8 @@ export default function HomePage() {
       { question: input, response: "Loading" },
     ]);
     try {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/api/prompt/ragsearch/`,
+      const response = await api.post(
+        `/api/prompt/ragsearch/`,
         userquery
       );
       setMessages([...messages, { question: input, response: response.data }]);

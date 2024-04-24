@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { User } from "../interfaces";
+import api from "../components/Axios";
 
 interface FormData {
   email: string;
@@ -28,8 +29,8 @@ const LoginPage: React.FC = () => {
   const onSubmit: SubmitHandler<FormData> = async (data, event) => {
     try {
       console.log(data, "data");
-      const response = await axios.post(
-        `http://127.0.0.1:8000/api/user/login/`,
+      const response = await api.post(
+        `/api/user/login/`,
         data
       );
       console.log("responseinlogin", response.data);
