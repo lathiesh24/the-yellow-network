@@ -59,9 +59,8 @@ const RegisterPage: React.FC = () => {
           <Image
             src="/tyn-login.png"
             alt="tyn-login"
-            width={440}
-            height={10}
-            className=""
+            width={400}
+            height={400}
           />
         </div>
       </div>
