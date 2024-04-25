@@ -101,11 +101,11 @@ export default function HomePage() {
               <span>
                 {typeof message?.response === "string"
                   ? JSON.parse(message?.response).map((startup, index) => (
-                      <div key={index}>{startup}</div>
-                    ))
+                    <div key={index}>{startup}</div>
+                  ))
                   : message?.response?.results.length === 0 &&
-                    message?.response?.chainresult &&
-                    message?.response?.chainresult}
+                  message?.response?.chainresult &&
+                  message?.response?.chainresult}
               </span>
 
               {message?.response?.results?.length > 0 && (

@@ -1,7 +1,9 @@
-"use client";
+"use client"
+
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import HomePage from "./components/HomePage";
+import LoginPage from "./login/page";
 
 export default function Page() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -13,18 +15,22 @@ export default function Page() {
 
     if (parsedUserInfo) {
       setIsLoggedIn(true);
-    } else if(!isLoggedIn) {
-      router.push("/login"); 
+    } else {
+      router.push("/login");
     }
   }, []);
 
-  console.log("isLoggedIn", !isLoggedIn);
+  console.log("isLoggedIn", isLoggedIn);
 
   return (
     <main className="">
-      <div className="">
-        <HomePage />
-      </div>
+      {isLoggedIn ? (
+        <div className="">
+          <HomePage />
+        </div>
+      ) : (
+        <LoginPage />
+      )}
     </main>
   );
 }

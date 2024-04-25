@@ -34,12 +34,12 @@ const LoginPage: React.FC = () => {
         data
       );
       console.log("responseinlogin", response.data);
-      const { access_token, refresh_token } = response.data.tokens;
-      localStorage.setItem('accessToken', access_token);
-      localStorage.setItem('refreshToken', refresh_token);
       setLoginResponse(response.data.message);
       setLoginState(response.data.user);
       router.push("/");
+      const { access_token, refresh_token } = response.data.tokens;
+      localStorage.setItem('accessToken', access_token);
+      localStorage.setItem('refreshToken', refresh_token);
     } catch (error) {
       setLoginResponse(error?.response?.data?.message);
       console.log("errorinlogin", error);
