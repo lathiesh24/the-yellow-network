@@ -30,7 +30,7 @@ const RegisterPage: React.FC = () => {
   );
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log("dataforregister", data);
-    let urlforregister = `https://theyellow.group/api/user/register/`;
+    let urlforregister = `http://theyellow.group:8000//api/user/register/`;
     try {
       const response = await api.post(urlforregister, data);
       setRegisterResponse(response.data.message);

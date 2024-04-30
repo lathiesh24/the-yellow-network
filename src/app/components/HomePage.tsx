@@ -65,7 +65,7 @@ export default function HomePage() {
     ]);
     try {
       const response = await axios.post(
-        `https://theyellow.group/api/prompt/ragsearch/`,
+        `http://theyellow.group:8000//api/prompt/ragsearch/`,
         userquery
       );
       setMessages([...messages, { question: input, response: response.data }]);
