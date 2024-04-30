@@ -30,7 +30,7 @@ const LoginPage: React.FC = () => {
     try {
       console.log(data, "data");
       const response = await axios.post(
-        `http://172.174.112.166:8000/api/user/login/`,
+        `https://theyellow.group/api/user/login/`,
         data
       );
       console.log("responseinlogin", response.data);
@@ -38,8 +38,8 @@ const LoginPage: React.FC = () => {
       setLoginState(response.data.user);
       router.push("/");
       const { access_token, refresh_token } = response.data.tokens;
-      localStorage.setItem('accessToken', access_token);
-      localStorage.setItem('refreshToken', refresh_token);
+      localStorage.setItem("accessToken", access_token);
+      localStorage.setItem("refreshToken", refresh_token);
     } catch (error) {
       setLoginResponse(error?.response?.data?.message);
       console.log("errorinlogin", error);

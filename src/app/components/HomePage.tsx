@@ -65,7 +65,7 @@ export default function HomePage() {
     ]);
     try {
       const response = await axios.post(
-        `http://172.174.112.166:8000/api/prompt/ragsearch/`,
+        `https://theyellow.group/api/prompt/ragsearch/`,
         userquery
       );
       setMessages([...messages, { question: input, response: response.data }]);
@@ -101,11 +101,11 @@ export default function HomePage() {
               <span>
                 {typeof message?.response === "string"
                   ? JSON.parse(message?.response).map((startup, index) => (
-                    <div key={index}>{startup}</div>
-                  ))
+                      <div key={index}>{startup}</div>
+                    ))
                   : message?.response?.results.length === 0 &&
-                  message?.response?.chainresult &&
-                  message?.response?.chainresult}
+                    message?.response?.chainresult &&
+                    message?.response?.chainresult}
               </span>
 
               {message?.response?.results?.length > 0 && (

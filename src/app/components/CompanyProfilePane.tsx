@@ -6,12 +6,12 @@ import {
 import { StartupType } from "../interfaces";
 import { GrFormClose } from "react-icons/gr";
 import { FaSpinner } from "react-icons/fa";
-import api from "./Axios"
+import api from "./Axios";
 interface userInfo {
   email: string;
   first_name: string;
 }
-import axios from 'axios'
+import axios from "axios";
 
 interface CompanyProfilePaneProps {
   companyData: StartupType;
@@ -43,7 +43,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   const sendEmail = async () => {
     try {
       setIsLoading(true);
-      await axios.post("http://172.174.112.166:8000/api/email/send-email/", {
+      await axios.post("https://theyellow.group/api/email/send-email/", {
         subject: "Demo",
         template_name: "email_template.html",
         context: { userInfo, mailData, companyData },
@@ -70,8 +70,9 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
     <>
       {openState && (
         <div
-          className={`h-screen bg-white shadow-md flex flex-col gap-y-4 py-8 overflow-auto ${expanded ? "absolute right-0 lg:w-[500px] xl:w-[900px]" : ""
-            } `}
+          className={`h-screen bg-white shadow-md flex flex-col gap-y-4 py-8 overflow-auto ${
+            expanded ? "absolute right-0 lg:w-[500px] xl:w-[900px]" : ""
+          } `}
         >
           <div className="mx-6 flex flex-col -mt-5 gap-6">
             <div className="flex justify-between">
