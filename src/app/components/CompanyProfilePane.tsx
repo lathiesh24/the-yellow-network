@@ -35,7 +35,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   toggleWidth,
   mailData,
   connectionStatus,
-  setConnectionStatus
+  setConnectionStatus,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -45,12 +45,11 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   };
 
   const handleConnect = async () => {
-    if (connectionStatus === 'Connect') {
+    if (connectionStatus === "Connect") {
       await sendEmail();
-      connectStatusChange()
+      connectStatusChange();
     }
-
-  }
+  };
 
   const sendEmail = async () => {
     try {
@@ -70,25 +69,28 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   };
 
   const connectStatusChange = async () => {
-    const jwtAccessToken = localStorage.getItem('jwtAccessToken');
+    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
     if (jwtAccessToken) {
-      const response = await axios.post('http://127.0.0.1:8000/api/connects/',
+      const response = await axios.post(
+        "https://theyellow.group/api/connects/",
         {
-          startup_id: companyData?.startup_id
+          startup_id: companyData?.startup_id,
         },
         {
           headers: {
             Authorization: `Bearer ${jwtAccessToken}`,
           },
-        });
-      console.log("responseeeeeeeeeeeeeeeeeeeeeeeeee->>>>>>>>>>>", response.data)
-      setConnectionStatus('Requested');
+        }
+      );
+      console.log(
+        "responseeeeeeeeeeeeeeeeeeeeeeeeee->>>>>>>>>>>",
+        response.data
+      );
+      setConnectionStatus("Requested");
     } else {
       console.error("JWT token not found in localStorage");
     }
-  }
-
-
+  };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -98,8 +100,9 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
     <>
       {openState && (
         <div
-          className={`h-screen bg-white shadow-md flex flex-col gap-y-4 py-8 overflow-auto ${expanded ? "absolute right-0 lg:w-[500px] xl:w-[900px]" : ""
-            } `}
+          className={`h-screen bg-white shadow-md flex flex-col gap-y-4 py-8 overflow-auto ${
+            expanded ? "absolute right-0 lg:w-[500px] xl:w-[900px]" : ""
+          } `}
         >
           <div className="mx-6 flex flex-col -mt-5 gap-6">
             <div className="flex justify-between">
@@ -121,7 +124,11 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
               <div className="flex flex-row justify-between items-center -mt-3 text-blue-400 font-semibold text-xl">
                 <div>{companyData?.startup_name}</div>
                 <div
-                  className={`flex justify-center items-center px-4 py-1.5 bg-gray-400 rounded-md text-white font-semibold  lg:w-5/12 lg:text-sm xl:text-xl xl:w-5/12 ${connectionStatus === "Connect" ? "hover:bg-yellow-400 cursor-pointer" : "cursor-default bg-yellow-400"}`}
+                  className={`flex justify-center items-center px-4 py-1.5 bg-gray-400 rounded-md text-white font-semibold  lg:w-5/12 lg:text-sm xl:text-xl xl:w-5/12 ${
+                    connectionStatus === "Connect"
+                      ? "hover:bg-yellow-400 cursor-pointer"
+                      : "cursor-default bg-yellow-400"
+                  }`}
                   onClick={handleConnect}
                 >
                   {isLoading ? (

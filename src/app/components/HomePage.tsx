@@ -21,7 +21,7 @@ export default function HomePage() {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [isInputEmpty, setIsInputEmpty] = useState<boolean>(true);
   const [mailMessage, setMailMessage] = useState<any>(null);
-  const [connectionStatus, setConnectionStatus] = useState<string>('Connect');
+  const [connectionStatus, setConnectionStatus] = useState<string>("Connect");
 
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("userInfo");
@@ -74,10 +74,10 @@ export default function HomePage() {
   };
 
   const fetchConnectStatus = async (startupId) => {
-    const jwtAccessToken = localStorage.getItem('jwtAccessToken');
+    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
     console.log("Fetching status for startupId:", startupId);
     if (jwtAccessToken && startupId) {
-      const url = `http://127.0.0.1:8000/api/connects/${startupId}/`;
+      const url = `https://theyellow.group/api/connects/${startupId}/`;
       try {
         const response = await axios.get(url, {
           headers: {
@@ -89,21 +89,19 @@ export default function HomePage() {
       } catch (error) {
         console.error("Error fetching connection status:", error);
       }
-
     } else {
       console.error("Missing JWT token or startup ID");
     }
-  }
+  };
 
   const handleSendStartupData = (item: StartupType, message: any) => {
     console.log("mailmessage", message);
     setMailMessage(message);
     setSelectedStartup(item);
-    console.log("selectedStartup", selectedStartup)
+    console.log("selectedStartup", selectedStartup);
     setOpenRightFrame(true);
     fetchConnectStatus(item.startup_id);
   };
-
 
   const renderMessages = () => {
     return messages.map((message: any, index: number) => (
@@ -123,11 +121,11 @@ export default function HomePage() {
               <span>
                 {typeof message?.response === "string"
                   ? JSON.parse(message?.response).map((startup, index) => (
-                    <div key={index}>{startup}</div>
-                  ))
+                      <div key={index}>{startup}</div>
+                    ))
                   : message?.response?.results.length === 0 &&
-                  message?.response?.chainresult &&
-                  message?.response?.chainresult}
+                    message?.response?.chainresult &&
+                    message?.response?.chainresult}
               </span>
 
               {message?.response?.results?.length > 0 && (
