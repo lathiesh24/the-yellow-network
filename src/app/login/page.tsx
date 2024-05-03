@@ -30,7 +30,7 @@ const LoginPage: React.FC = () => {
     try {
       console.log(data, "data");
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/user/login/`,
+        `https://theyellow.group/api/user/login/`,
         data
       );
       setLoginResponse(response.data.message);
@@ -58,9 +58,8 @@ const LoginPage: React.FC = () => {
           <Image
             src="/tyn-login.png"
             alt="tyn-login"
-            width={440}
-            height={10}
-            className=""
+            width={400}
+            height={400}
           />
         </div>
       </div>

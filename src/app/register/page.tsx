@@ -29,7 +29,8 @@ const RegisterPage: React.FC = () => {
     undefined
   );
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    let urlforregister = `http://127.0.0.1:8000/api/user/register/`;
+    console.log("dataforregister", data);
+    let urlforregister = `https://theyellow.group/api/user/register/`;
     try {
       const response = await axios.post(urlforregister, data);
       setRegisterResponse(response.data.message);
@@ -58,9 +59,8 @@ const RegisterPage: React.FC = () => {
           <Image
             src="/tyn-login.png"
             alt="tyn-login"
-            width={440}
-            height={10}
-            className=""
+            width={400}
+            height={400}
           />
         </div>
       </div>
