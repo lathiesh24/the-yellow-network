@@ -30,15 +30,16 @@ const RegisterPage: React.FC = () => {
   );
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log("dataforregister", data);
-    let urlforregister = `https://theyellow.group/api/user/register/`;
+    let urlforregister = `http://127.0.0.1:8000/user/register/`;
     try {
       const response = await axios.post(urlforregister, data);
       setRegisterResponse(response.data.message);
       setRegisterState(response.data.user);
       router.push("/");
-      const { accessToken, refreshToken, user } = response.data;
-      localStorage.setItem("jwtAccessToken", accessToken);
-      localStorage.setItem("jwtRefreshToken", refreshToken);
+      const { access_token, refresh_token } = response.data.tokens;
+      const user = response.data.user;
+      localStorage.setItem("jwtAccessToken", access_token);
+      localStorage.setItem("jwtRefreshToken", refresh_token);
       localStorage.setItem("user", JSON.stringify(user));
     } catch (error) {
       setRegisterResponse(error?.response?.data?.message?.email[0]);
