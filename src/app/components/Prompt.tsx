@@ -17,8 +17,18 @@ interface PromptProps {
   setIsInputEmpty: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, renderMessages, inputPrompt, setInputPrompt, handleToggleLeftFrame, handleToggleRightFrame, isInputEmpty, setIsInputEmpty }) => {
-
+const Prompt: React.FC<PromptProps> = ({
+  open,
+  onSaveInput,
+  defaultPrompt,
+  renderMessages,
+  inputPrompt,
+  setInputPrompt,
+  handleToggleLeftFrame,
+  handleToggleRightFrame,
+  isInputEmpty,
+  setIsInputEmpty,
+}) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,7 +37,7 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputPrompt(event.target.value);
-    setIsInputEmpty(event.target.value.trim() === '');
+    setIsInputEmpty(event.target.value.trim() === "");
   };
 
   const handleSendClick = async () => {
@@ -40,17 +50,19 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
   };
 
   const savedQueryData = async (query: string) => {
-    const jwtAccessToken = localStorage.getItem('jwtAccessToken');
+    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
     if (jwtAccessToken) {
-      const response = await axios.post('http://127.0.0.1:8000/api/queryhistory/save/',
+      const response = await axios.post(
+        "https://theyellow.group/api/queryhistory/save/",
         {
-          userquery: query
+          userquery: query,
         },
         {
           headers: {
             Authorization: `Bearer ${jwtAccessToken}`,
           },
-        });
+        }
+      );
     } else {
       console.error("JWT token not found in localStorage");
     }
@@ -60,7 +72,7 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }
+  };
 
   const handleCardSelect = (value: string) => {
     setInputPrompt(value);
@@ -74,26 +86,25 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
   return (
     <div className=" flex flex-col w-full items-center justify-center ">
       <div className="prompt-container overflow-y-auto">
-        {renderMessages().length === 0 ?
-          (
-            <>
-              <div className="flex justify-center items-center font-semibold text-2xl mt-12">
-                What problem are you trying to solve?
-              </div>
-              <div className="xl:mt-28 lg:mt-16">
-                <DefaultCard
-                  onSelectCard={handleCardSelect}
-                  isInputEmpty={isInputEmpty}
-                  setIsInputEmpty={setIsInputEmpty}
-                />
-              </div>
-            </>
-          ) : (
-            <div className="w-[656px] mb-8 md:mb-16">
-              {renderMessages()}
-              <div ref={messagesEndRef} />
+        {renderMessages().length === 0 ? (
+          <>
+            <div className="flex justify-center items-center font-semibold text-2xl mt-12">
+              What problem are you trying to solve?
             </div>
-          )}
+            <div className="xl:mt-28 lg:mt-16">
+              <DefaultCard
+                onSelectCard={handleCardSelect}
+                isInputEmpty={isInputEmpty}
+                setIsInputEmpty={setIsInputEmpty}
+              />
+            </div>
+          </>
+        ) : (
+          <div className="w-[656px] mb-8 md:mb-16">
+            {renderMessages()}
+            <div ref={messagesEndRef} />
+          </div>
+        )}
       </div>
       <div className="bg-white w-4/6 rounded-lg shadow-lg ">
         <div className="flex items-center ">
@@ -106,18 +117,18 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
             onChange={handleInputChange}
             onClick={handleTextareaClick}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
+              if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 handleSendClick();
               }
             }}
           />
           {isInputEmpty ? (
-            <div className='px-8 opacity-50'>
+            <div className="px-8 opacity-50">
               <IoMdSend size={23} />
             </div>
           ) : (
-            <div className='px-8 cursor-pointer' onClick={handleSendClick}>
+            <div className="px-8 cursor-pointer" onClick={handleSendClick}>
               <IoMdSend size={23} />
             </div>
           )}
@@ -125,6 +136,6 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
       </div>
     </div>
   );
-}
+};
 
 export default Prompt;
