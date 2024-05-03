@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MdOutlineKeyboardDoubleArrowLeft,
   MdOutlineKeyboardDoubleArrowRight,
@@ -22,6 +22,8 @@ interface CompanyProfilePaneProps {
   toggleWidth: () => void;
   mailData: any;
   setMailData: React.Dispatch<React.SetStateAction<any>>;
+  connectionStatus: string;
+  setConnectionStatus: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
@@ -32,6 +34,8 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   expanded,
   toggleWidth,
   mailData,
+  connectionStatus,
+  setConnectionStatus
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -40,10 +44,18 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
     setOpenState(false);
   };
 
+  const handleConnect = async () => {
+    if (connectionStatus === 'Connect') {
+      await sendEmail();
+      connectStatusChange()
+    }
+
+  }
+
   const sendEmail = async () => {
     try {
       setIsLoading(true);
-      await axios.post("http://172.174.112.166:8000/api/email/send-email/", {
+      await axios.post("http://127.0.0.1:8000/api/email/send-email/", {
         subject: "Demo",
         template_name: "email_template.html",
         context: { userInfo, mailData, companyData },
@@ -57,14 +69,30 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
     }
   };
 
+  const connectStatusChange = async () => {
+    const jwtAccessToken = localStorage.getItem('jwtAccessToken');
+    if (jwtAccessToken) {
+      const response = await axios.post('http://127.0.0.1:8000/api/connects/',
+        {
+          startup_id: companyData?.startup_id
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtAccessToken}`,
+          },
+        });
+      console.log("responseeeeeeeeeeeeeeeeeeeeeeeeee->>>>>>>>>>>", response.data)
+      setConnectionStatus('Requested');
+    } else {
+      console.error("JWT token not found in localStorage");
+    }
+  }
+
+
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
-  console.log(openState, "companyData");
-  console.log("mailDataaaaaa", mailData);
-  console.log("userInfoooo--->", userInfo);
-  console.log("companyData", companyData);
 
   return (
     <>
@@ -93,13 +121,13 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
               <div className="flex flex-row justify-between items-center -mt-3 text-blue-400 font-semibold text-xl">
                 <div>{companyData?.startup_name}</div>
                 <div
-                  className="flex justify-center items-center px-4 py-1.5 bg-gray-400 rounded-md text-white font-semibold cursor-pointer lg:w-5/12 lg:text-sm xl:text-xl xl:w-5/12 "
-                  onClick={sendEmail}
+                  className={`flex justify-center items-center px-4 py-1.5 bg-gray-400 rounded-md text-white font-semibold  lg:w-5/12 lg:text-sm xl:text-xl xl:w-5/12 ${connectionStatus === "Connect" ? "hover:bg-yellow-400 cursor-pointer" : "cursor-default bg-yellow-400"}`}
+                  onClick={handleConnect}
                 >
                   {isLoading ? (
                     <FaSpinner className="animate-spin" />
                   ) : (
-                    <div>Connect</div>
+                    <div>{connectionStatus}</div>
                   )}
                 </div>
                 {/* Modal */}

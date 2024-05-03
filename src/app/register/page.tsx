@@ -29,16 +29,15 @@ const RegisterPage: React.FC = () => {
     undefined
   );
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log("dataforregister", data);
-    let urlforregister = `http://172.174.112.166:8000/api/user/register/`;
+    let urlforregister = `http://127.0.0.1:8000/api/user/register/`;
     try {
-      const response = await api.post(urlforregister, data);
+      const response = await axios.post(urlforregister, data);
       setRegisterResponse(response.data.message);
       setRegisterState(response.data.user);
       router.push("/");
       const { accessToken, refreshToken, user } = response.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("jwtAccessToken", accessToken);
+      localStorage.setItem("jwtRefreshToken", refreshToken);
       localStorage.setItem("user", JSON.stringify(user));
     } catch (error) {
       setRegisterResponse(error?.response?.data?.message?.email[0]);

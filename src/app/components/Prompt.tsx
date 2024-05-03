@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { IoMdSend } from "react-icons/io";
 import DefaultCard from "./DefaultCard";
+import axios from "axios";
 
 interface PromptProps {
   open: boolean;
@@ -29,11 +30,29 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
     setIsInputEmpty(event.target.value.trim() === '');
   };
 
-  const handleSendClick = () => {
+  const handleSendClick = async () => {
     if (!isInputEmpty) {
       onSaveInput(inputPrompt);
       setInputPrompt("");
       setIsInputEmpty(true);
+      await savedQueryData(inputPrompt); // Pass the input prompt value to saveQueryData
+    }
+  };
+
+  const savedQueryData = async (query: string) => {
+    const jwtAccessToken = localStorage.getItem('jwtAccessToken');
+    if (jwtAccessToken) {
+      const response = await axios.post('http://127.0.0.1:8000/api/queryhistory/save/',
+        {
+          userquery: query
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtAccessToken}`,
+          },
+        });
+    } else {
+      console.error("JWT token not found in localStorage");
     }
   };
 
@@ -51,8 +70,6 @@ const Prompt: React.FC<PromptProps> = ({ open, onSaveInput, defaultPrompt, rende
     handleToggleLeftFrame();
     handleToggleRightFrame();
   };
-
-  console.log("Inputprompt", inputPrompt)
 
   return (
     <div className=" flex flex-col w-full items-center justify-center ">

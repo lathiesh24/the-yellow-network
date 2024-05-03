@@ -21,6 +21,7 @@ export default function HomePage() {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [isInputEmpty, setIsInputEmpty] = useState<boolean>(true);
   const [mailMessage, setMailMessage] = useState<any>(null);
+  const [connectionStatus, setConnectionStatus] = useState<string>('Connect');
 
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("userInfo");
@@ -54,8 +55,6 @@ export default function HomePage() {
     }
   };
 
-  console.log("openRightFrame", openRightFrame);
-
   const handleSaveInput = async (input: string) => {
     let userquery = { userquery: input };
 
@@ -65,7 +64,7 @@ export default function HomePage() {
     ]);
     try {
       const response = await axios.post(
-        `http://172.174.112.166:8000/api/prompt/ragsearch/`,
+        `http://127.0.0.1:8000/api/prompt/ragsearch/`,
         userquery
       );
       setMessages([...messages, { question: input, response: response.data }]);
@@ -74,14 +73,37 @@ export default function HomePage() {
     }
   };
 
+  const fetchConnectStatus = async (startupId) => {
+    const jwtAccessToken = localStorage.getItem('jwtAccessToken');
+    console.log("Fetching status for startupId:", startupId);
+    if (jwtAccessToken && startupId) {
+      const url = `http://127.0.0.1:8000/api/connects/${startupId}/`;
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${jwtAccessToken}`,
+          },
+        });
+        console.log("Fetching status response", response.data);
+        setConnectionStatus(response.data.status);
+      } catch (error) {
+        console.error("Error fetching connection status:", error);
+      }
+
+    } else {
+      console.error("Missing JWT token or startup ID");
+    }
+  }
+
   const handleSendStartupData = (item: StartupType, message: any) => {
     console.log("mailmessage", message);
     setMailMessage(message);
     setSelectedStartup(item);
+    console.log("selectedStartup", selectedStartup)
     setOpenRightFrame(true);
+    fetchConnectStatus(item.startup_id);
   };
 
-  // console.log("messages", messages);
 
   const renderMessages = () => {
     return messages.map((message: any, index: number) => (
@@ -195,6 +217,8 @@ export default function HomePage() {
               toggleWidth={toggleWidth}
               mailData={mailMessage}
               setMailData={setMailMessage}
+              connectionStatus={connectionStatus}
+              setConnectionStatus={setConnectionStatus}
             />
           </div>
         )}

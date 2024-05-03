@@ -20,11 +20,9 @@ export default function Page() {
         router.push("/login");
       }
 
-      setIsInitialCheckDone(true); 
+      setIsInitialCheckDone(true);
     }
   }, []);
-
-  console.log("isLoggedIn", isLoggedIn);
 
   return (
     <main className="">
