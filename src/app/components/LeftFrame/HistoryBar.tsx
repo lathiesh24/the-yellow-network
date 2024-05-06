@@ -20,7 +20,7 @@ const HistoryBar: React.FC<HistoryBarProps> = ({ onSelectHistory }) => {
         const jwtAccessToken = localStorage.getItem('jwtAccessToken');
 
         if (jwtAccessToken) {
-            const response = await axios.get('https://theyellow.group/api/queryhistory/retrieve/', {
+            const response = await axios.get('http://127.0.0.1:8000/queryhistory/retrieve/', {
                 headers: {
                     Authorization: `Bearer ${jwtAccessToken}`,
                 },
