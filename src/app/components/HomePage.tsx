@@ -167,14 +167,9 @@ export default function HomePage() {
   };
 
   return (
-    <main className="relative">
-      <div className="absolute">
-        <NavBar
-          open={open}
-          handleToggleLeftFrame={handleToggleLeftFrameNavbar}
-        />
-      </div>
-      <div className="flex flex-row gap-x-4 w-full">
+    <main className="">
+    
+      <div className="flex flex-row  w-full">
         {open && (
           <div className="w-1/5">
             <LeftFrame
@@ -187,8 +182,9 @@ export default function HomePage() {
             />
           </div>
         )}
+         
 
-        <div className="flex-grow pt-12">
+        <div className="relative flex-grow pt-12">
           <Prompt
             onSaveInput={handleSaveInput}
             defaultPrompt={defaultPrompt}
@@ -202,8 +198,13 @@ export default function HomePage() {
             isInputEmpty={isInputEmpty}
             setIsInputEmpty={setIsInputEmpty}
           />
+           <div className="absolute left-2 top-2">
+           <NavBar
+          open={open}
+          handleToggleLeftFrame={handleToggleLeftFrameNavbar}
+        />
+      </div>
         </div>
-
         {openRightFrame && selectedStartup && (
           <div className={`${expanded ? "" : "w-1/4"}`}>
             <CompanyProfilePane
