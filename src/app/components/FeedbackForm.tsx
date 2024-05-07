@@ -48,9 +48,9 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ isOpen, onRequestClose }) =
             ariaHideApp={false}
             className="fixed inset-0 flex items-center justify-center"
         >
-            <div className="bg-zinc-300 w-1/3 h-1/3 text-center pt-6 px-4 rounded-sm relative">
+            <div className="bg-blue-100 w-[600px] h-[250px] text-center pt-6  rounded-sm relative">
                 <button
-                    className="absolute top-1 right-1 text-white"
+                    className="absolute top-0.5 right-1 text-white"
                     onClick={onRequestClose}
                 >
                     <MdClose size={20} />
