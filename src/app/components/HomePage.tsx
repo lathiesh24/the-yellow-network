@@ -64,7 +64,7 @@ export default function HomePage() {
     ]);
     try {
       const response = await axios.post(
-        `https://theyellow.group/api/prompt/ragsearch/`,
+        `http://127.0.0.1:8000/prompt/ragsearch/`,
         userquery
       );
       setMessages([...messages, { question: input, response: response.data }]);
@@ -77,7 +77,7 @@ export default function HomePage() {
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
     console.log("Fetching status for startupId:", startupId);
     if (jwtAccessToken && startupId) {
-      const url = `https://theyellow.group/api/connects/${startupId}/`;
+      const url = `http://127.0.0.1:8000/connects/${startupId}/`;
       try {
         const response = await axios.get(url, {
           headers: {
@@ -94,15 +94,19 @@ export default function HomePage() {
     }
   };
 
-  const handleSendStartupData = (item: StartupType, message: any) => {
-    console.log("mailmessage", message);
+  const handleSendStartupData = (item: any, message: any) => {
+    // console.log("itemofhandlem", message.response.results);
     setMailMessage(message);
-    setSelectedStartup(item);
-    console.log("selectedStartup", selectedStartup);
+    // console.log("itemofhandle",item.name)
+    const choosenFilterStartup = message.response.results.find((startup:any)=> startup.startup_name === item.name)
+    // console.log("choosenFilterStartup",choosenFilterStartup)
+    setSelectedStartup(choosenFilterStartup);
+    // console.log("selectedStartup", selectedStartup);
     setOpenRightFrame(true);
-    fetchConnectStatus(item.startup_id);
+    fetchConnectStatus(item?.startup_id);
   };
 
+  console.log("messages for trends",messages[0]?.message?.response)
   const renderMessages = () => {
     return messages.map((message: any, index: number) => (
       <div key={index} className="justify-between mb-4 text-[16px] px-6">
@@ -110,7 +114,7 @@ export default function HomePage() {
           <span className="font-semibold text-[17px] text-black block mb-1">
             You:
           </span>
-          <span className="text-[17px]">{message.question}</span>
+          <span className="text-[17px]">{message?.question}</span>
         </div>
         <div className="p-6 text-left border-l-4 border-blue-100">
           <span className="font-semibold text-black block mb-3">GamePlan:</span>
@@ -128,6 +132,13 @@ export default function HomePage() {
                     message?.response?.chainresult}
               </span>
 
+
+              {message?.response?.trend && (
+                <div className="mb-4 leading-7">
+                  <div>{message?.response?.trend}</div>
+                </div>
+              )}
+
               {message?.response?.results?.length > 0 && (
                 <div className="grid grid-cols-3 font-semibold text-base">
                   <div>Startup Name</div>
@@ -135,26 +146,18 @@ export default function HomePage() {
                 </div>
               )}
 
-              {message?.response?.results?.length > 0 &&
-                message.response.results.map(
-                  (result: any, indexofresult: number) => {
-                    const description =
-                      message?.response?.descriptions[indexofresult];
-                    let reason = "";
-                    if (description) {
-                      reason = description.split(":")[1].trim();
-                    } else if (result.startup_overview) {
-                      // Use startup_overview if description is not available
-                      reason = result.startup_overview;
-                    }
+            
+              {message?.response?.startups?.length > 0 &&
+                message.response.startups.map(
+                  (startup: any, indexofresult: number) => {                  
                     return (
                       <div
                         key={indexofresult}
                         className="grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
-                        onClick={() => handleSendStartupData(result, message)}
+                        onClick={() => handleSendStartupData(startup, message)}
                       >
-                        <div className="text-sm">{result?.startup_name}</div>
-                        <div className="text-sm col-span-2">{reason}</div>
+                        <div className="text-sm">{startup?.name}</div>
+                        <div className="text-sm col-span-2">{startup?.description}</div>
                       </div>
                     );
                   }

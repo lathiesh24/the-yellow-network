@@ -54,7 +54,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   const sendEmail = async () => {
     try {
       setIsLoading(true);
-      await axios.post("https://theyellow.group/api/email/send-email/", {
+      await axios.post("http://127.0.0.1:8000/email/send-email/", {
         subject: "Demo",
         template_name: "email_template.html",
         context: { userInfo, mailData, companyData },
@@ -72,7 +72,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
     if (jwtAccessToken) {
       const response = await axios.post(
-        "https://theyellow.group/api/connects/",
+        "http://127.0.0.1:8000/connects/",
         {
           startup_id: companyData?.startup_id,
         },
