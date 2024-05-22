@@ -64,7 +64,7 @@ export default function HomePage() {
     ]);
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/prompt/ragsearch/`,
+        `http://172.174.112.166:8000//prompt/ragsearch/`,
         userquery
       );
       setMessages([...messages, { question: input, response: response.data }]);
@@ -77,7 +77,7 @@ export default function HomePage() {
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
     console.log("Fetching status for startupId:", startupId);
     if (jwtAccessToken && startupId) {
-      const url = `http://127.0.0.1:8000/connects/${startupId}/`;
+      const url = `http://172.174.112.166:8000//connects/${startupId}/`;
       try {
         const response = await axios.get(url, {
           headers: {
@@ -98,7 +98,9 @@ export default function HomePage() {
     // console.log("itemofhandlem", message.response.results);
     setMailMessage(message);
     // console.log("itemofhandle",item.name)
-    const choosenFilterStartup = message.response.results.find((startup:any)=> startup.startup_name === item.name)
+    const choosenFilterStartup = message.response.results.find(
+      (startup: any) => startup.startup_name === item.name
+    );
     // console.log("choosenFilterStartup",choosenFilterStartup)
     setSelectedStartup(choosenFilterStartup);
     // console.log("selectedStartup", selectedStartup);
@@ -106,7 +108,7 @@ export default function HomePage() {
     fetchConnectStatus(item?.startup_id);
   };
 
-  console.log("messages for trends",messages[0]?.message?.response)
+  console.log("messages for trends", messages[0]?.message?.response);
   const renderMessages = () => {
     return messages.map((message: any, index: number) => (
       <div key={index} className="justify-between mb-4 text-[16px] px-6">
@@ -132,7 +134,6 @@ export default function HomePage() {
                     message?.response?.chainresult}
               </span>
 
-
               {message?.response?.trend && (
                 <div className="mb-4 leading-7">
                   <div>{message?.response?.trend}</div>
@@ -146,10 +147,9 @@ export default function HomePage() {
                 </div>
               )}
 
-            
               {message?.response?.startups?.length > 0 &&
                 message.response.startups.map(
-                  (startup: any, indexofresult: number) => {                  
+                  (startup: any, indexofresult: number) => {
                     return (
                       <div
                         key={indexofresult}
@@ -157,7 +157,9 @@ export default function HomePage() {
                         onClick={() => handleSendStartupData(startup, message)}
                       >
                         <div className="text-sm">{startup?.name}</div>
-                        <div className="text-sm col-span-2">{startup?.description}</div>
+                        <div className="text-sm col-span-2">
+                          {startup?.description}
+                        </div>
                       </div>
                     );
                   }
