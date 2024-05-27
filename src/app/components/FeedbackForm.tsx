@@ -23,7 +23,7 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({
     if (jwtAccessToken) {
       try {
         const response = await axios.post(
-          "http://172.174.112.166:8000//feedback/",
+          "http://172.174.112.166:8000///feedback/",
           {
             message: feedback,
           },

@@ -63,7 +63,7 @@ const Prompt: React.FC<PromptProps> = ({
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
     if (jwtAccessToken) {
       const response = await axios.post(
-        "http://172.174.112.166:8000//queryhistory/save/",
+        "http://172.174.112.166:8000///queryhistory/save/",
         {
           userquery: query,
         },

@@ -64,7 +64,7 @@ export default function HomePage() {
     ]);
     try {
       const response = await axios.post(
-        `http://172.174.112.166:8000//prompt/ragsearch/`,
+        `http://172.174.112.166:8000///prompt/ragsearch/`,
         userquery
       );
       setMessages([...messages, { question: input, response: response.data }]);
@@ -77,7 +77,7 @@ export default function HomePage() {
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
     console.log("Fetching status for startupId:", startupId);
     if (jwtAccessToken && startupId) {
-      const url = `http://172.174.112.166:8000//connects/${startupId}/`;
+      const url = `http://172.174.112.166:8000///connects/${startupId}/`;
       try {
         const response = await axios.get(url, {
           headers: {
@@ -127,11 +127,11 @@ export default function HomePage() {
               <span>
                 {typeof message?.response === "string"
                   ? JSON.parse(message?.response).map((startup, index) => (
-                      <div key={index}>{startup}</div>
-                    ))
+                    <div key={index}>{startup}</div>
+                  ))
                   : message?.response?.results.length === 0 &&
-                    message?.response?.chainresult &&
-                    message?.response?.chainresult}
+                  message?.response?.chainresult &&
+                  message?.response?.chainresult}
               </span>
 
               {message?.response?.trend && (

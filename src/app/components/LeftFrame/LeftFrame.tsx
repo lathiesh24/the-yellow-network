@@ -11,6 +11,7 @@ import { BsFillSearchHeartFill } from "react-icons/bs";
 import { FaHistory } from "react-icons/fa";
 import { GrLogout } from "react-icons/gr";
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 interface UserInfo {
     email: string;
@@ -26,13 +27,21 @@ interface LeftFrameProps {
     setIsInputEmpty: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-
 const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt, userInfo, isInputEmpty, setIsInputEmpty }) => {
-
-    const [activeTab, setActiveTab] = useState<string>('spotlight');
+    const [historyData, setHistoryData] = useState([]);
+    const [activeTab, setActiveTab] = useState<string>(() => {
+        // Retrieve the active tab from localStorage if available
+        const savedActiveTab = localStorage.getItem('activeTab');
+        return savedActiveTab ? savedActiveTab : 'spotlight';
+    });
     const [isLogoutOpen, setIsLogoutOpen] = useState<boolean>(false);
+    const [currentMenu, setCurrentMenu] = useState<string>(activeTab); // Initialize currentMenu with activeTab
     const logoutRef = useRef<HTMLDivElement>(null);
     const navigate = useRouter();
+
+    useEffect(() => {
+        handleQueryHistory();
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -48,8 +57,34 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt
         };
     }, []);
 
+    useEffect(() => {
+        // Save the active tab to localStorage when it changes
+        localStorage.setItem('activeTab', activeTab);
+    }, [activeTab]);
+
+    const handleQueryHistory = async () => {
+        const jwtAccessToken = localStorage.getItem('jwtAccessToken');
+
+        if (jwtAccessToken) {
+            try {
+                const response = await axios.get('http://172.174.112.166:8000//queryhistory/retrieve/', {
+                    headers: {
+                        Authorization: `Bearer ${jwtAccessToken}`,
+                    },
+                });
+                const queries = response.data;
+                setHistoryData(queries);
+            } catch (error) {
+                console.error("Error fetching query history:", error);
+            }
+        } else {
+            console.error("JWT token not found in localStorage");
+        }
+    };
+
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
+        setCurrentMenu(tab);
     };
 
     const handleHistorySelect = (value: string) => {
@@ -99,6 +134,7 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt
                 {activeTab === 'history' &&
                     <HistoryBar
                         onSelectHistory={handleHistorySelect}
+                        historyData={historyData}
                     />
                 }
                 {activeTab === 'recommended' &&
@@ -123,4 +159,4 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt
     );
 }
 
-export default LeftFrame;
+export default LeftFrame
