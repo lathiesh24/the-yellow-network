@@ -12,7 +12,6 @@ import { FaHistory } from "react-icons/fa";
 import { GrLogout } from "react-icons/gr";
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-
 interface UserInfo {
     email: string;
     first_name: string;
@@ -104,6 +103,11 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt
         navigate.push('/login');
     };
 
+    const handleDashboardRoute = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        navigate.push("/totalRequests")
+    }
+
     return (
         <div className='h-screen z-50 flex flex-col bg-white relative top-0 left-0'>
             <div className='flex justify-center items-center bg-white shadow-md p-4 z-20'>
@@ -147,13 +151,21 @@ const LeftFrame: React.FC<LeftFrameProps> = ({ open, inputPrompt, setInputPrompt
                 {activeTab === 'spotlight' && <Spotlight />}
             </div>
             <div className='px-8 py-3 shadow-md flex items-center justify-between z-20 cursor-pointer border' onClick={showDropdown} ref={logoutRef}>
-                {userInfo?.first_name}
+                <div>
+                    {userInfo?.first_name}
+                </div>
                 {isLogoutOpen && (
-                    <div className="absolute flex justify-between bottom-0 left-0 mb-12 bg-white border  px-8 py-3 z-10 w-full" onClick={handleLogout}>
-                        <div>Logout</div>
-                        <div><GrLogout size={23} /></div>
+                    <div>
+                        <div className="absolute flex justify-between bottom-0 left-0 mb-24 bg-white border  px-8 py-3 z-10 w-full" onClick={handleLogout}>
+                            <div>Logout</div>
+                            <div><GrLogout size={23} /></div>
+                        </div>
+                        <div className="absolute flex justify-between bottom-0 left-0 mb-12 bg-white border  px-8 py-3 z-10 w-full hover:text-yellow-500" onClick={handleDashboardRoute}>
+                            View Dashboard
+                        </div>
                     </div>
                 )}
+
             </div>
         </div>
     );
