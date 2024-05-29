@@ -1,8 +1,8 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import NavBar from "../components/ConsultantScreen/Navbar";
-import { IoPerson } from 'react-icons/io5';
-import { LuArrowLeftRight } from 'react-icons/lu';
+import { IoPerson } from "react-icons/io5";
+import { LuArrowLeftRight } from "react-icons/lu";
 import { IoIosArrowBack } from "react-icons/io";
 import { VscTriangleRight } from "react-icons/vsc";
 import axios from "axios";
