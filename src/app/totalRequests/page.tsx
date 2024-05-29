@@ -22,6 +22,11 @@ const TotalRequests: React.FC = () => {
             });
     }, []);
 
+    const formatDate = (dateString: string) => {
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+
     return (
         <div className="flex flex-col h-screen">
             <NavBar />
@@ -54,7 +59,7 @@ const TotalRequests: React.FC = () => {
                                 <div className="flex items-center justify-center">{request.id}</div>
                                 <div className="flex items-center justify-center">{request.from_user.first_name}</div>
                                 <div className="flex items-center justify-center">{request.to_growthtechfirm.startup_name}</div>
-                                <div className="flex items-center justify-center">{request.created_at}</div>
+                                <div className="flex items-center justify-center">{formatDate(request.created_at)}</div>
                                 <div className="flex items-center justify-center">{request.user_query.query}</div>
                                 <div className="flex items-center justify-center">
                                     <select
