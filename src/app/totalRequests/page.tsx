@@ -20,16 +20,20 @@ const TotalRequests: React.FC = () => {
   const [requests, setRequests] = useState([]);
   const [assignToMeOpen, setAssignToMeOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/partnerconnect/")
-      .then((response) => {
-        setRequests(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the data!", error);
-      });
-  }, []);
+    useEffect(() => {
+        axios.get("http://127.0.0.1:8000/partnerconnect/")
+            .then(response => {
+                setRequests(response.data);
+            })
+            .catch(error => {
+                console.error("There was an error fetching the data!", error);
+            });
+    }, []);
+
+    const formatDate = (dateString: string) => {
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    };
 
   return (
     <div className="flex flex-col h-screen">
