@@ -51,8 +51,8 @@ const TotalRequests: React.FC = () => {
   return (
     <div className="flex flex-col h-screen">
       <NavBar />
-      <div className="flex-grow flex flex-row">
-        <div className="flex flex-col gap-4 bg-white shadow-md w-12 items-center">
+      <div className="flex-grow flex flex-row bg-red-500">
+        <div className="flex flex-col gap-4 bg-blue-100 shadow-md w-20 items-center">
           <div
             className={`mt-5 cursor-pointer ${
               view === "allRequests" ? "text-yellow-500" : "text-gray-400"
