@@ -52,11 +52,8 @@ const TotalRequests: React.FC = () => {
     <div className="flex flex-col h-screen">
       <NavBar />
 
-     
-
       <div className="flex-grow flex flex-row">
-    
-      <div className="flex flex-col gap-4 bg-blue-100 shadow-md w-20 h-screen z-10 items-center">
+        <div className="flex flex-col gap-4  shadow-md px-6 z-10 items-center">
           <div
             className={`mt-5 cursor-pointer ${
               view === "allRequests" ? "text-yellow-500" : "text-gray-400"
@@ -75,29 +72,29 @@ const TotalRequests: React.FC = () => {
           </div>
         </div>
 
-
-
-        <div>{view === "allRequests" 
-        ? <AllRequests
-        requests={requests} 
-        newlyAddedOpen={newlyAddedOpen}  
-        toggleNewlyAdded={toggleNewlyAdded}
-        toggleInProgress={toggleInProgress}
-        completedOpen ={completedOpen}
-        inProgressOpen={inProgressOpen}
-        toggleCompleted={toggleCompleted}
-        />
-        :<MyRequests 
-         requests={requests} 
-         newlyAddedOpen={newlyAddedOpen}  
-         toggleNewlyAdded={toggleNewlyAdded}
-         toggleInProgress={toggleInProgress}
-         completedOpen ={completedOpen}
-         inProgressOpen={inProgressOpen}
-         toggleCompleted={toggleCompleted}
-         />
-         }
-         </div>
+        <div>
+          {view === "allRequests" ? (
+            <AllRequests
+              requests={requests}
+              newlyAddedOpen={newlyAddedOpen}
+              toggleNewlyAdded={toggleNewlyAdded}
+              toggleInProgress={toggleInProgress}
+              completedOpen={completedOpen}
+              inProgressOpen={inProgressOpen}
+              toggleCompleted={toggleCompleted}
+            />
+          ) : (
+            <MyRequests
+              requests={requests}
+              newlyAddedOpen={newlyAddedOpen}
+              toggleNewlyAdded={toggleNewlyAdded}
+              toggleInProgress={toggleInProgress}
+              completedOpen={completedOpen}
+              inProgressOpen={inProgressOpen}
+              toggleCompleted={toggleCompleted}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
