@@ -22,7 +22,7 @@ const MyRequests = ({toggleNewlyAdded,newlyAddedOpen, requests, toggleInProgress
         </div>
   
         {/* header of table */}
-        <div className="w-[97vw] grid grid-cols-12 py-2.5 px-2 text-center text-xs font-bold bg-gray-200 rounded-lg my-2">
+        <div className="grid grid-cols-12 py-2.5 px-2 text-center uppercase text-sm text-gray-400 font-bold my-2">
           <div className="col-span-1">Request ID</div>
           <div className="col-span-1">From</div>
           <div className="col-span-1">To</div>
@@ -46,7 +46,7 @@ const MyRequests = ({toggleNewlyAdded,newlyAddedOpen, requests, toggleInProgress
               .map((request, index) => (
                 <div
                   key={index}
-                  className="w-[97vw] grid grid-cols-12 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
+                  className="w-[95vw] grid grid-cols-12 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
                 >
                   <div className="col-span-1">{request?.id}</div>
                   <div className="col-span-1">{request?.from_user.first_name}</div>
@@ -76,7 +76,7 @@ const MyRequests = ({toggleNewlyAdded,newlyAddedOpen, requests, toggleInProgress
               .map((request, index) => (
                 <div
                   key={index}
-                  className="w-[97vw] grid grid-cols-12 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
+                  className="w-[95vw] grid grid-cols-12 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
                 >
                   <div className="col-span-1">{request?.id}</div>
                   <div className="col-span-1">{request?.from_user.first_name}</div>
@@ -106,7 +106,7 @@ const MyRequests = ({toggleNewlyAdded,newlyAddedOpen, requests, toggleInProgress
               .map((request, index) => (
                 <div
                   key={index}
-                  className="w-[97vw] grid grid-cols-12 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
+                  className="w-[95vw] grid grid-cols-12 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
                 >
                   <div className="col-span-1">{request?.id}</div>
                   <div className="col-span-1">{request?.from_user.first_name}</div>
@@ -123,6 +123,6 @@ const MyRequests = ({toggleNewlyAdded,newlyAddedOpen, requests, toggleInProgress
         </div>
       </div>
     );
-  };
+};
 
 export default MyRequests;

@@ -14,7 +14,7 @@ const TotalRequests: React.FC = () => {
   const [newlyAddedOpen, setNewlyAddedOpen] = useState<boolean>(true);
   const [inProgressOpen, setInProgressOpen] = useState<boolean>(true);
   const [completedOpen, setCompletedOpen] = useState<boolean>(true);
-  const [assignToMeOpen, setAssignToMeOpen] = useState<boolean>(false);
+
   const [view, setView] = useState<string>("allRequests");
 
   useEffect(() => {
@@ -51,8 +51,12 @@ const TotalRequests: React.FC = () => {
   return (
     <div className="flex flex-col h-screen">
       <NavBar />
-      <div className="flex-grow flex flex-row bg-red-500">
-        <div className="flex flex-col gap-4 bg-blue-100 shadow-md w-20 items-center">
+
+     
+
+      <div className="flex-grow flex flex-row">
+    
+      <div className="flex flex-col gap-4 bg-blue-100 shadow-md w-20 h-screen z-10 items-center">
           <div
             className={`mt-5 cursor-pointer ${
               view === "allRequests" ? "text-yellow-500" : "text-gray-400"
@@ -70,6 +74,8 @@ const TotalRequests: React.FC = () => {
             <IoPerson size={23} />
           </div>
         </div>
+
+
 
         <div>{view === "allRequests" 
         ? <AllRequests
