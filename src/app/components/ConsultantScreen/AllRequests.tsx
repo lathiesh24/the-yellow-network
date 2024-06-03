@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { VscTriangleRight, VscTriangleDown } from "react-icons/vsc";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const AllRequests = ({
   toggleNewlyAdded,
@@ -14,6 +15,7 @@ const AllRequests = ({
   completedOpen,
 }) => {
   const [assignToMeOpen, setAssignToMeOpen] = useState<boolean>(false);
+  const router = useRouter()
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const day = date.getDate();
@@ -35,11 +37,14 @@ const AllRequests = ({
     // axios.put("http://127.0.0.1:8000",)
   }
 
+  const handleBackButton = () => {
+    router.push('/')
+  }
 
   return (
     <div className="p-4 flex flex-col w-full">
       <div className="flex flex-row items-center text-2xl text-blue-400 gap-4 mb-4">
-        <IoIosArrowBack size={23} />
+        <IoIosArrowBack size={23} onClick={handleBackButton} className="cursor-pointer" />
         <div>User Request Management - My Request</div>
       </div>
 

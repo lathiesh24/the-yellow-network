@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { VscTriangleRight, VscTriangleDown } from "react-icons/vsc";
 import { CiEdit } from "react-icons/ci";
+import { useRouter } from "next/navigation";
 
 const MyRequests = ({toggleNewlyAdded,newlyAddedOpen, requests, toggleInProgress, inProgressOpen, toggleCompleted, completedOpen }) => {
-
+    const router = useRouter()
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         const day = date.getDate();
@@ -14,10 +15,13 @@ const MyRequests = ({toggleNewlyAdded,newlyAddedOpen, requests, toggleInProgress
         return `${day}-${month}-${year}`;
       };
     
+      const handleBackButton = () => {
+        router.push('/')
+      }
     return (
       <div className="p-4 flex flex-col w-full">
         <div className="flex flex-row items-center text-2xl text-blue-400 gap-4 mb-4">
-          <IoIosArrowBack size={23} />
+        <IoIosArrowBack size={23} onClick={handleBackButton} className="cursor-pointer" />
           <div>User Request Management - My Request</div>
         </div>
   
