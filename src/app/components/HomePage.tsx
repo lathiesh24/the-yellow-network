@@ -73,18 +73,20 @@ export default function HomePage() {
     }
   };
 
+  let jwtAccessToken = localStorage.getItem("jwtAccessToken");
+
+  console.log("jwtAccessToken",jwtAccessToken)
   const fetchConnectStatus = async (startupId) => {
-    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
     console.log("Fetching status for startupId:", startupId);
     if (jwtAccessToken && startupId) {
-      const url = `http://127.0.0.1:8000//connects/${startupId}/`;
+      const url = `http://127.0.0.1:8000/connects/${startupId}/`;
       try {
         const response = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${jwtAccessToken}`,
           },
         });
-        console.log("Fetching status response", response.data);
+        console.log("Fetching status response", response.data.status);
         setConnectionStatus(response.data.status);
       } catch (error) {
         console.error("Error fetching connection status:", error);
@@ -98,17 +100,24 @@ export default function HomePage() {
     // console.log("itemofhandlem", message.response.results);
     setMailMessage(message);
     // console.log("itemofhandle",item.name)
+    console.log("adanguda",item)
     const choosenFilterStartup = message.response.results.find(
       (startup: any) => startup.startup_name === item.name
     );
+
+    const startupId = message.response.results.find(
+      (startup) => startup.startup_name === item.name
+    )?.startup_id;
+
+    console.log("startupId",startupId)
     // console.log("choosenFilterStartup",choosenFilterStartup)
     setSelectedStartup(choosenFilterStartup);
     // console.log("selectedStartup", selectedStartup);
     setOpenRightFrame(true);
-    fetchConnectStatus(item?.startup_id);
+    fetchConnectStatus(startupId);
   };
 
-  console.log("messages for trends", messages[0]?.message?.response);
+  console.log("messages for trends", messages);
   const renderMessages = () => {
     return messages.map((message: any, index: number) => (
       <div key={index} className="justify-between mb-4 text-[16px] px-6">
@@ -154,7 +163,7 @@ export default function HomePage() {
                       <div
                         key={indexofresult}
                         className="grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
-                        onClick={() => handleSendStartupData(startup, message)}
+                        onClick={() => handleSendStartupData(startup, message, )}
                       >
                         <div className="text-sm">{startup?.name}</div>
                         <div className="text-sm col-span-2">

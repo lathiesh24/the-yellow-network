@@ -40,6 +40,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  console.log("companyData",companyData)
   const openPane = () => {
     setOpenState(false);
   };
@@ -72,7 +73,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
     if (jwtAccessToken) {
       const response = await axios.post(
-        "http://127.0.0.1:8000//connects/",
+        "http://127.0.0.1:8000/connects/",
         {
           startup_id: companyData?.startup_id,
         },
@@ -127,7 +128,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
                   className={`flex justify-center items-center px-4 py-1.5 bg-gray-400 rounded-md text-white font-semibold  lg:w-5/12 lg:text-sm xl:text-xl xl:w-5/12 ${
                     connectionStatus === "Connect"
                       ? "hover:bg-yellow-400 cursor-pointer"
-                      : "cursor-default bg-yellow-400"
+                      : "cursor-default bg-red-400"
                   }`}
                   onClick={handleConnect}
                 >
