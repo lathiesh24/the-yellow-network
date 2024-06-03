@@ -121,6 +121,11 @@ const LeftFrame: React.FC<LeftFrameProps> = ({
     navigate.push("/totalRequests");
   };
 
+  // Check if the email is from theyellow.network
+  const isYellowNetworkEmail = (email: string) => {
+    return email.endsWith("@theyellow.network") || email.endsWith("mahendran99@gmail.com");
+  };
+
   return (
     <div className="h-screen z-50 flex flex-col bg-white relative top-0 left-0">
       <div className="flex justify-center items-center bg-white shadow-md p-4 z-20">
@@ -195,20 +200,22 @@ const LeftFrame: React.FC<LeftFrameProps> = ({
         <div>{userInfo?.first_name}</div>
         {isLogoutOpen && (
           <div>
+            {isYellowNetworkEmail(userInfo.email) && (
+              <div
+                className="absolute flex justify-between bottom-0 left-0 mb-24 bg-white border  px-8 py-3 z-10 w-full hover:text-yellow-500"
+                onClick={handleDashboardRoute}
+              >
+                View Dashboard
+              </div>
+            )}
             <div
-              className="absolute flex justify-between bottom-0 left-0 mb-24 bg-white border  px-8 py-3 z-10 w-full"
+              className="absolute flex justify-between bottom-0 left-0 mb-12 bg-white border  px-8 py-3 z-10 w-full hover:text-yellow-500"
               onClick={handleLogout}
             >
               <div>Logout</div>
               <div>
                 <GrLogout size={23} />
               </div>
-            </div>
-            <div
-              className="absolute flex justify-between bottom-0 left-0 mb-12 bg-white border  px-8 py-3 z-10 w-full hover:text-yellow-500"
-              onClick={handleDashboardRoute}
-            >
-              View Dashboard
             </div>
           </div>
         )}
