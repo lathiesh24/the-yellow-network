@@ -86,14 +86,18 @@ const AllRequests = ({
                     {request?.query_status}
                   </div>
                   <div className="">
-                    <button
-                      className="bg-blue-500 text-white py-1 px-4 rounded"
-                      onClick={() => setAssignToMeOpen(true)}
-                    >
-                      {request?.assignedStatus == null
-                        ? "Assign To me"
-                        : request?.assignedStatus}
-                    </button>
+                    {request?.assigned_status == null ? (
+                      <button
+                        className="bg-blue-500 text-white py-1 px-4 rounded"
+                        onClick={() => setAssignToMeOpen(true)}
+                      >
+                        Assign To me
+                      </button>
+                    ) : (
+                      <div className="bg-blue-500 text-white py-1 px-4 rounded">
+                        {request.assigned_to.first_name}
+                      </div>
+                    )}
                     {assignToMeOpen ? (
                       <AssignToMe
                         assignToMeOpen={assignToMeOpen}

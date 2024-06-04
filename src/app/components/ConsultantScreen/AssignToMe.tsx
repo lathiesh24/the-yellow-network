@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { TiTickOutline } from "react-icons/ti";
+import { FaSpinner } from "react-icons/fa";
 import axios from "axios";
 
 interface Request {
@@ -51,8 +52,11 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
   assignToMeOpen,
   request,
 }) => {
+  const [loading, setLoading] = useState(false);
+  const [assigned, setAssigned] = useState(request.assigned_status);
+
   const handleAssignToMe = (id: number) => {
-    setAssignToMeOpen(false);
+    setLoading(true);
     axios
       .put(`http://127.0.0.1:8000/partnerconnect/${id}`, {
         assigned_status: true,
@@ -60,9 +64,13 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
       })
       .then((response) => {
         console.log(response.data);
+        setAssigned(true);
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -150,15 +158,26 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
             </div>
 
             <div className="flex items-center justify-center gap-10 p-6 rounded-b">
+              {assigned ? (
+                <div className="bg-blue-400 rounded-lg text-lg text-white font-semibold px-6 py-1.5 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">
+                  Assigned
+                </div>
+              ) : (
+                <button
+                  className="bg-blue-400 rounded-lg text-lg text-white background-transparent font-semibold px-6 py-1.5 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  type="button"
+                  onClick={() => handleAssignToMe(request.id)}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <FaSpinner className="animate-spin" size={24} />
+                  ) : (
+                    "Assign to me"
+                  )}
+                </button>
+              )}
               <button
-                className="bg-blue-400 rounded-lg text-lg text-white background-transparent font-semibold  px-6 py-1.5 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="button"
-                onClick={() => handleAssignToMe(request.id)}
-              >
-                Assign to me
-              </button>
-              <button
-                className="bg-white text-blue-400 rounded-lg text-lg border border-blue-400  font-semibold  px-6 py-1.5 shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="bg-white text-blue-400 rounded-lg text-lg border border-blue-400 font-semibold px-6 py-1.5 shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={() => setAssignToMeOpen(false)}
               >
