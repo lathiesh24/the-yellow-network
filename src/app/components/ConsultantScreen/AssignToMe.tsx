@@ -11,7 +11,12 @@ interface AssignToMeProps {
   updateAssignedStatus: (
     id: number,
     status: boolean,
-    assignedTo: number
+    assignedTo: {
+      id: number;
+      first_name: string;
+      email: string;
+      organization_name: string;
+    }
   ) => void;
 }
 
@@ -24,6 +29,11 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
   const [loading, setLoading] = useState(false);
   const [assigned, setAssigned] = useState(request.assigned_status);
 
+  const userInfo = localStorage.getItem("userInfo");
+  const userEmail = userInfo["email"];
+  const userCompany = userInfo["organization_name"];
+  const userName = userInfo["first_name"];
+
   const changeAssignToMe = async (id: number) => {
     setLoading(true);
     try {
@@ -31,11 +41,21 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
         `http://127.0.0.1:8000/partnerconnect/${id}`,
         {
           assigned_status: true,
-          assigned_to: 1,
+          assigned_to: {
+            first_name: userName,
+            email: userCompany,
+            organization_name: userEmail,
+          },
         }
       );
       setAssigned(true);
-      updateAssignedStatus(id, true, 1);
+      updateAssignedStatus(id, true, {
+        id: 1,
+        first_name: "John",
+        email: "lathiesh@theyellow.network",
+        organization_name: "The Yellow Network",
+      });
+      setAssignToMeOpen(false); // Close the modal after assigning
     } catch (error) {
       console.error(error);
     } finally {

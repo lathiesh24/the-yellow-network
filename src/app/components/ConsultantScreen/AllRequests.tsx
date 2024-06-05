@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { VscTriangleRight, VscTriangleDown } from "react-icons/vsc";
@@ -20,16 +19,11 @@ const AllRequests = ({
   const router = useRouter();
 
   useEffect(() => {
-    let userInfo = localStorage.getItem("userInfo");
-    userInfo = JSON.parse(userInfo);
-    console.log("userInfo", userInfo);
-  }, []);
-
-  useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/partnerconnect/")
       .then((response) => {
         setRequests(response.data);
+        console.log("Fetched requests:", response.data);
       })
       .catch((error) => {
         console.error("There was an error fetching the data!", error);
@@ -47,7 +41,12 @@ const AllRequests = ({
   const updateAssignedStatus = (
     id: number,
     status: boolean,
-    assignedTo: number
+    assignedTo: {
+      id: number;
+      first_name: string;
+      email: string;
+      organization_name: string;
+    }
   ) => {
     setRequests((prevRequests) =>
       prevRequests.map((request) =>
@@ -177,7 +176,6 @@ const AllRequests = ({
                   <div className="col-span-4">
                     {truncateText(request?.user_query?.query, 60)}
                   </div>
-                  <div className="">{request?.user_query?.query}</div>
                   <div className=" bg-zinc-300 text-gray-800 py-1 rounded capitalize">
                     {request?.query_status}
                   </div>
@@ -218,7 +216,6 @@ const AllRequests = ({
                   <div className="col-span-4">
                     {truncateText(request?.user_query?.query, 60)}
                   </div>
-                  <div className="">{request?.user_query?.query}</div>
                   <div className=" bg-zinc-300 text-gray-800 py-1 rounded capitalize">
                     {request?.query_status}
                   </div>
