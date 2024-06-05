@@ -3,37 +3,44 @@ import { TiTickOutline } from "react-icons/ti";
 import { FaSpinner } from "react-icons/fa";
 import axios from "axios";
 import { Request } from "../../interfaces";
+
 interface AssignToMeProps {
   assignToMeOpen: boolean;
   setAssignToMeOpen: React.Dispatch<React.SetStateAction<boolean>>;
   request: Request;
+  updateAssignedStatus: (
+    id: number,
+    status: boolean,
+    assignedTo: number
+  ) => void;
 }
 
 const AssignToMe: React.FC<AssignToMeProps> = ({
   setAssignToMeOpen,
   assignToMeOpen,
   request,
+  updateAssignedStatus,
 }) => {
   const [loading, setLoading] = useState(false);
   const [assigned, setAssigned] = useState(request.assigned_status);
 
-  const handleAssignToMe = (id: number) => {
+  const changeAssignToMe = async (id: number) => {
     setLoading(true);
-    axios
-      .put(`http://127.0.0.1:8000/partnerconnect/${id}`, {
-        assigned_status: true,
-        assigned_to: 1,
-      })
-      .then((response) => {
-        console.log(response.data);
-        setAssigned(true);
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const response = await axios.put(
+        `http://127.0.0.1:8000/partnerconnect/${id}`,
+        {
+          assigned_status: true,
+          assigned_to: 1,
+        }
+      );
+      setAssigned(true);
+      updateAssignedStatus(id, true, 1);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -126,7 +133,7 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
                 <button
                   className="bg-blue-400 rounded-lg text-lg text-white background-transparent font-semibold px-6 py-1.5 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="button"
-                  onClick={() => handleAssignToMe(request.id)}
+                  onClick={() => changeAssignToMe(request.id)}
                   disabled={loading}
                 >
                   {loading ? (
