@@ -40,7 +40,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  console.log("companyData",companyData)
+  console.log("companyData", companyData);
   const openPane = () => {
     setOpenState(false);
   };
@@ -48,7 +48,8 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   const handleConnect = async () => {
     if (connectionStatus === "Connect") {
       await sendEmail();
-      connectStatusChange();
+      await connectStatusChange();
+      createPartnerConnect();
     }
   };
 
@@ -90,6 +91,25 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
       setConnectionStatus("Requested");
     } else {
       console.error("JWT token not found in localStorage");
+    }
+  };
+
+  const createPartnerConnect = async () => {
+    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
+    if (jwtAccessToken) {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/partnerconnect/",
+        {
+          to_growthtechfirm: companyData?.startup_id,
+          query_status: "requested",
+          user_query: "55",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtAccessToken}`,
+          },
+        }
+      );
     }
   };
 

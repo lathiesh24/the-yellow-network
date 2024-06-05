@@ -14,7 +14,7 @@ const TotalRequests: React.FC = () => {
   const [newlyAddedOpen, setNewlyAddedOpen] = useState<boolean>(true);
   const [inProgressOpen, setInProgressOpen] = useState<boolean>(true);
   const [completedOpen, setCompletedOpen] = useState<boolean>(true);
-
+  const [rejectedOpen, setRejectedOpen] = useState<boolean>(true);
   const [view, setView] = useState<string>("allRequests");
 
   useEffect(() => {
@@ -46,6 +46,10 @@ const TotalRequests: React.FC = () => {
 
   const toggleCompleted = () => {
     setCompletedOpen(!completedOpen);
+  };
+
+  const toggleRejected = () => {
+    setRejectedOpen(!rejectedOpen);
   };
 
   return (
@@ -85,13 +89,14 @@ const TotalRequests: React.FC = () => {
             />
           ) : (
             <MyRequests
-              requests={requests}
               newlyAddedOpen={newlyAddedOpen}
               toggleNewlyAdded={toggleNewlyAdded}
               toggleInProgress={toggleInProgress}
               completedOpen={completedOpen}
               inProgressOpen={inProgressOpen}
               toggleCompleted={toggleCompleted}
+              rejectedOpen={rejectedOpen}
+              toggleRejected={toggleRejected}
             />
           )}
         </div>

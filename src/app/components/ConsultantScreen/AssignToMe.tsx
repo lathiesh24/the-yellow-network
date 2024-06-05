@@ -2,45 +2,7 @@ import React, { useState } from "react";
 import { TiTickOutline } from "react-icons/ti";
 import { FaSpinner } from "react-icons/fa";
 import axios from "axios";
-
-interface Request {
-  id: number;
-  assigned_to: any; // You may want to specify a more specific type here
-  query_status: string;
-  created_at: string;
-  assigned_status: boolean;
-  to_growthtechfirm: {
-    startup_id: number;
-    startup_name: string;
-    startup_url: string;
-    startup_analyst_rating: string;
-    startup_gsi: any; // You may want to specify a more specific type here
-    startup_partners: any; // You may want to specify a more specific type here
-    startup_customers: any; // You may want to specify a more specific type here
-    startup_usecases: string;
-    startup_solutions: string;
-    startup_industry: string;
-    startup_technology: string;
-    startup_overview: string;
-    startup_description: string;
-    startup_company_stage: string;
-    startup_country: string;
-    startup_founders_info: string;
-    startup_emails: string;
-  };
-  from_user: {
-    id: number;
-    first_name: string;
-    organization_name: string;
-  };
-  user_query: {
-    id: number;
-    query: string;
-    timestamp: string;
-    user: number;
-  };
-}
-
+import { Request } from "../../interfaces";
 interface AssignToMeProps {
   assignToMeOpen: boolean;
   setAssignToMeOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -78,9 +40,7 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
     <>
       <div className="flex justify-center items-center fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="my-6 max-w-3xl">
-          {/*content*/}
           <div className="p-4 border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-            {/*header*/}
             <div className="flex items-start justify-between px-2 rounded-t">
               <h3 className="text-3xl font-semibold py-2 pb-4">
                 Request Detail
@@ -187,7 +147,6 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
           </div>
         </div>
       </div>
-      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </>
   );
 };

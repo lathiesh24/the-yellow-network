@@ -4,17 +4,33 @@ import { IoIosArrowBack } from "react-icons/io";
 import { VscTriangleRight, VscTriangleDown } from "react-icons/vsc";
 import { CiEdit } from "react-icons/ci";
 import { useRouter } from "next/navigation";
+import EditModal from "./EditModal";
+import axios from "axios";
 
-const MyRequests = ({
+interface MyRequestsProps {
+  toggleNewlyAdded: () => void;
+  newlyAddedOpen: boolean;
+  toggleInProgress: () => void;
+  inProgressOpen: boolean;
+  toggleCompleted: () => void;
+  completedOpen: boolean;
+  toggleRejected: () => void;
+  rejectedOpen: boolean;
+}
+
+const MyRequests: React.FC<MyRequestsProps> = ({
   toggleNewlyAdded,
   newlyAddedOpen,
-  requests,
   toggleInProgress,
   inProgressOpen,
   toggleCompleted,
   completedOpen,
+  rejectedOpen,
+  toggleRejected,
 }) => {
   const router = useRouter();
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [requests, setRequests] = useState([]);
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const day = date.getDate();
@@ -26,6 +42,28 @@ const MyRequests = ({
   const handleBackButton = () => {
     router.push("/");
   };
+
+  const userInfo = localStorage.getItem("userInfo");
+
+  const userEmail = userInfo["email"];
+
+  useEffect(() => {
+    axios
+      .get(" http://127.0.0.1:8000/partnerconnect/", {
+        params: {
+          assigned_to: {
+            email: userEmail,
+          },
+        },
+      })
+      .then((response) => {
+        setRequests(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
   return (
     <div className="p-4 flex flex-col w-full">
       <div className="flex flex-row items-center text-2xl text-blue-400 gap-4 mb-4">
@@ -37,7 +75,6 @@ const MyRequests = ({
         <div>User Request Management - My Request</div>
       </div>
 
-      {/* header of table */}
       <div className="grid grid-cols-12 py-2.5 px-2 text-center uppercase text-sm text-gray-400 font-bold my-2">
         <div className="col-span-1">Request ID</div>
         <div className="col-span-1">From</div>
@@ -49,21 +86,20 @@ const MyRequests = ({
       </div>
 
       <div className="flex-grow overflow-auto">
-        {/* Newly Added Requests */}
         <div>
           <div className="flex flex-row items-center text-sm mb-2">
             <div onClick={toggleNewlyAdded} className="cursor-pointer">
-              {newlyAddedOpen ? <VscTriangleDown /> : <VscTriangleRight />}
+              {inProgressOpen ? <VscTriangleDown /> : <VscTriangleRight />}
             </div>
-            <div className="ml-2 font-semibold">Newly Added</div>
+            <div className="ml-2 font-semibold">In Progress</div>
           </div>
-          {newlyAddedOpen &&
+          {inProgressOpen &&
             requests
               .filter((request) => request.query_status === "requested")
               .map((request, index) => (
                 <div
                   key={index}
-                  className="w-[95vw] grid grid-cols-12 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
+                  className="grid grid-cols-12 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
                 >
                   <div className="col-span-1">{request?.id}</div>
                   <div className="col-span-1">
@@ -79,31 +115,44 @@ const MyRequests = ({
                   <div className="col-span-1 bg-zinc-300 text-gray-800 py-1 rounded capitalize">
                     {request?.query_status}
                   </div>
-                  <div className="col-span-1 text-blue-500 flex items-center justify-center cursor-pointer">
+                  <div
+                    className="col-span-1 text-blue-500 flex items-center justify-center cursor-pointer"
+                    onClick={() => setEditModalOpen(true)}
+                  >
                     <CiEdit size={28} />
                   </div>
+                  {editModalOpen ? (
+                    <div className="flex">
+                      <EditModal
+                        editModalOpen={editModalOpen}
+                        setEditModalOpen={setEditModalOpen}
+                        request={request}
+                        formatDate={formatDate}
+                      />
+                    </div>
+                  ) : null}
                 </div>
               ))}
         </div>
 
-        {/* In Progress Requests */}
+        {/* Rejected Requests */}
         <div>
-          {requests.filter((request) => request.query_status === "in_progress")
+          {requests.filter((request) => request.query_status === "rejected")
             .length > 0 && (
             <div className="flex flex-row items-center text-sm mb-2">
               <div onClick={toggleInProgress} className="cursor-pointer">
-                {inProgressOpen ? <VscTriangleDown /> : <VscTriangleRight />}
+                {rejectedOpen ? <VscTriangleDown /> : <VscTriangleRight />}
               </div>
-              <div className="ml-2 font-semibold">In Progress</div>
+              <div className="ml-2 font-semibold">Rejected</div>
             </div>
           )}
-          {inProgressOpen &&
+          {rejectedOpen &&
             requests
               .filter((request) => request.query_status === "in_progress")
               .map((request, index) => (
                 <div
                   key={index}
-                  className="w-[95vw] grid grid-cols-12 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
+                  className="grid grid-cols-12 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
                 >
                   <div className="col-span-1">{request?.id}</div>
                   <div className="col-span-1">
@@ -119,9 +168,22 @@ const MyRequests = ({
                   <div className="col-span-1 bg-zinc-300 text-gray-800 py-1 rounded capitalize">
                     {request?.query_status}
                   </div>
-                  <div className="col-span-1 text-blue-500 flex items-center justify-center cursor-pointer">
+                  <div
+                    className="col-span-1 text-blue-500 flex items-center justify-center cursor-pointer"
+                    onClick={() => setEditModalOpen(true)}
+                  >
                     <CiEdit size={28} />
                   </div>
+                  {editModalOpen ? (
+                    <div className="flex">
+                      <EditModal
+                        editModalOpen={editModalOpen}
+                        setEditModalOpen={setEditModalOpen}
+                        request={request}
+                        formatDate={formatDate}
+                      />
+                    </div>
+                  ) : null}
                 </div>
               ))}
         </div>
@@ -143,7 +205,7 @@ const MyRequests = ({
               .map((request, index) => (
                 <div
                   key={index}
-                  className="w-[95vw] grid grid-cols-12 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
+                  className="grid grid-cols-12 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
                 >
                   <div className="col-span-1">{request?.id}</div>
                   <div className="col-span-1">
@@ -159,9 +221,22 @@ const MyRequests = ({
                   <div className="col-span-1 bg-zinc-300 text-gray-800 py-1 rounded capitalize">
                     {request?.query_status}
                   </div>
-                  <div className="col-span-1 text-blue-500 flex items-center justify-center cursor-pointer">
+                  <div
+                    className="col-span-1 text-blue-500 flex items-center justify-center cursor-pointer"
+                    onClick={() => setEditModalOpen(true)}
+                  >
                     <CiEdit size={28} />
                   </div>
+                  {editModalOpen ? (
+                    <div className="flex">
+                      <EditModal
+                        editModalOpen={editModalOpen}
+                        setEditModalOpen={setEditModalOpen}
+                        request={request}
+                        formatDate={formatDate}
+                      />
+                    </div>
+                  ) : null}
                 </div>
               ))}
         </div>
