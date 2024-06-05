@@ -18,7 +18,7 @@ const AllRequests = ({
   const [requests, setRequests] = useState([]);
   const router = useRouter();
 
-  useEffect(() => {
+  const userName = useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/partnerconnect/")
       .then((response) => {
@@ -42,7 +42,6 @@ const AllRequests = ({
     id: number,
     status: boolean,
     assignedTo: {
-      id: number;
       first_name: string;
       email: string;
       organization_name: string;
@@ -81,7 +80,7 @@ const AllRequests = ({
           onClick={handleBackButton}
           className="cursor-pointer"
         />
-        <div>User Request Management - My Request</div>
+        <div>User Request Management - All Request</div>
       </div>
 
       <div className="w-full">
@@ -173,6 +172,7 @@ const AllRequests = ({
                   <div className="">
                     {request?.to_growthtechfirm?.startup_name}
                   </div>
+                  <div className="">{formatDate(request?.created_at)}</div>
                   <div className="col-span-4">
                     {truncateText(request?.user_query?.query, 60)}
                   </div>
@@ -202,7 +202,11 @@ const AllRequests = ({
 
           {completedOpen &&
             requests
-              .filter((request) => request.query_status === "completed")
+              .filter(
+                (request) =>
+                  request.query_status === "completed" ||
+                  request.query_status === "Rejected"
+              )
               .map((request, index) => (
                 <div
                   key={index}
@@ -213,6 +217,7 @@ const AllRequests = ({
                   <div className="">
                     {request?.to_growthtechfirm?.startup_name}
                   </div>
+                  <div className="">{formatDate(request?.created_at)}</div>
                   <div className="col-span-4">
                     {truncateText(request?.user_query?.query, 60)}
                   </div>

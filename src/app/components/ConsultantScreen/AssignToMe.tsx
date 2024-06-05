@@ -12,7 +12,6 @@ interface AssignToMeProps {
     id: number,
     status: boolean,
     assignedTo: {
-      id: number;
       first_name: string;
       email: string;
       organization_name: string;
@@ -29,36 +28,50 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
   const [loading, setLoading] = useState(false);
   const [assigned, setAssigned] = useState(request.assigned_status);
 
-  const userInfo = localStorage.getItem("userInfo");
-  const userEmail = userInfo["email"];
-  const userCompany = userInfo["organization_name"];
-  const userName = userInfo["first_name"];
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userEmail = userInfo?.email;
+  const userCompany = userInfo?.organization_name;
+  const userName = userInfo?.first_name;
 
   const changeAssignToMe = async (id: number) => {
     setLoading(true);
-    try {
-      const response = await axios.put(
-        `http://127.0.0.1:8000/partnerconnect/${id}`,
-        {
-          assigned_status: true,
-          assigned_to: {
-            first_name: userName,
-            email: userCompany,
-            organization_name: userEmail,
+    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
+
+    if (jwtAccessToken) {
+      try {
+        const response = await axios.put(
+          `http://127.0.0.1:8000/partnerconnect/${id}`,
+          {
+            assigned_status: true,
+            assigned_to: {
+              first_name: userName,
+              email: userEmail,
+              organization_name: userCompany,
+            },
           },
-        }
-      );
-      setAssigned(true);
-      updateAssignedStatus(id, true, {
-        id: 1,
-        first_name: "John",
-        email: "lathiesh@theyellow.network",
-        organization_name: "The Yellow Network",
-      });
-      setAssignToMeOpen(false); // Close the modal after assigning
-    } catch (error) {
-      console.error(error);
-    } finally {
+          {
+            headers: {
+              Authorization: `Bearer ${jwtAccessToken}`,
+            },
+          }
+        );
+        setAssigned(true);
+        updateAssignedStatus(id, true, {
+          first_name: userName,
+          email: userEmail,
+          organization_name: userCompany,
+        });
+        setAssignToMeOpen(false);
+      } catch (error) {
+        console.error(
+          "Error in PUT request:",
+          error.response ? error.response.data : error.message
+        );
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      console.error("JWT token not found in localStorage");
       setLoading(false);
     }
   };
@@ -79,7 +92,6 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
                 <span className="text-3xl text-black">x</span>
               </button>
             </div>
-
             <div className="grid grid-cols-2">
               <div className="flex flex-col justify-between">
                 <div className="p-2 flex flex-col items-start gap-2">
