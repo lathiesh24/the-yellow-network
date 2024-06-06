@@ -111,9 +111,9 @@ const EditModal: React.FC<EditModalProps> = ({
                       value={currentStatus}
                       onChange={handleStatusChange}
                     >
-                      <option value="Pending">Pending</option>
-                      <option value="Rejected">Rejected</option>
-                      <option value="Completed">Completed</option>
+                      <option value="pending">Pending</option>
+                      <option value="rejected">Rejected</option>
+                      <option value="completed">Completed</option>
                     </select>
                   </div>
                 </div>
