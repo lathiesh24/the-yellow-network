@@ -19,8 +19,6 @@ interface MyRequestsProps {
 }
 
 const MyRequests: React.FC<MyRequestsProps> = ({
-  toggleNewlyAdded,
-  newlyAddedOpen,
   toggleInProgress,
   inProgressOpen,
   toggleCompleted,
@@ -30,7 +28,9 @@ const MyRequests: React.FC<MyRequestsProps> = ({
 }) => {
   const router = useRouter();
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [currentRequest, setCurrentRequest] = useState(null);
   const [requests, setRequests] = useState([]);
+  
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const day = date.getDate();
@@ -43,17 +43,14 @@ const MyRequests: React.FC<MyRequestsProps> = ({
     router.push("/");
   };
 
-  const userInfo = localStorage.getItem("userInfo");
-
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
   const userEmail = userInfo["email"];
 
   useEffect(() => {
     axios
-      .get(" http://127.0.0.1:8000/partnerconnect/", {
+      .get("http://127.0.0.1:8000/partnerconnect/", {
         params: {
-          assigned_to: {
-            email: userEmail,
-          },
+          'assigned_to.email': userEmail,
         },
       })
       .then((response) => {
@@ -62,7 +59,12 @@ const MyRequests: React.FC<MyRequestsProps> = ({
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, []);
+  }, [userEmail]);
+
+  const handleEditClick = (request) => {
+    setCurrentRequest(request);
+    setEditModalOpen(true);
+  };
 
   return (
     <div className="p-4 flex flex-col w-full">
@@ -88,7 +90,7 @@ const MyRequests: React.FC<MyRequestsProps> = ({
       <div className="flex-grow overflow-auto">
         <div>
           <div className="flex flex-row items-center text-sm mb-2">
-            <div onClick={toggleNewlyAdded} className="cursor-pointer">
+            <div onClick={toggleInProgress} className="cursor-pointer">
               {inProgressOpen ? <VscTriangleDown /> : <VscTriangleRight />}
             </div>
             <div className="ml-2 font-semibold">In Progress</div>
@@ -117,20 +119,10 @@ const MyRequests: React.FC<MyRequestsProps> = ({
                   </div>
                   <div
                     className="col-span-1 text-blue-500 flex items-center justify-center cursor-pointer"
-                    onClick={() => setEditModalOpen(true)}
+                    onClick={() => handleEditClick(request)}
                   >
                     <CiEdit size={28} />
                   </div>
-                  {editModalOpen ? (
-                    <div className="flex">
-                      <EditModal
-                        editModalOpen={editModalOpen}
-                        setEditModalOpen={setEditModalOpen}
-                        request={request}
-                        formatDate={formatDate}
-                      />
-                    </div>
-                  ) : null}
                 </div>
               ))}
         </div>
@@ -140,7 +132,7 @@ const MyRequests: React.FC<MyRequestsProps> = ({
           {requests.filter((request) => request.query_status === "rejected")
             .length > 0 && (
             <div className="flex flex-row items-center text-sm mb-2">
-              <div onClick={toggleInProgress} className="cursor-pointer">
+              <div onClick={toggleRejected} className="cursor-pointer">
                 {rejectedOpen ? <VscTriangleDown /> : <VscTriangleRight />}
               </div>
               <div className="ml-2 font-semibold">Rejected</div>
@@ -148,7 +140,7 @@ const MyRequests: React.FC<MyRequestsProps> = ({
           )}
           {rejectedOpen &&
             requests
-              .filter((request) => request.query_status === "in_progress")
+              .filter((request) => request.query_status === "rejected")
               .map((request, index) => (
                 <div
                   key={index}
@@ -170,20 +162,10 @@ const MyRequests: React.FC<MyRequestsProps> = ({
                   </div>
                   <div
                     className="col-span-1 text-blue-500 flex items-center justify-center cursor-pointer"
-                    onClick={() => setEditModalOpen(true)}
+                    onClick={() => handleEditClick(request)}
                   >
                     <CiEdit size={28} />
                   </div>
-                  {editModalOpen ? (
-                    <div className="flex">
-                      <EditModal
-                        editModalOpen={editModalOpen}
-                        setEditModalOpen={setEditModalOpen}
-                        request={request}
-                        formatDate={formatDate}
-                      />
-                    </div>
-                  ) : null}
                 </div>
               ))}
         </div>
@@ -223,24 +205,23 @@ const MyRequests: React.FC<MyRequestsProps> = ({
                   </div>
                   <div
                     className="col-span-1 text-blue-500 flex items-center justify-center cursor-pointer"
-                    onClick={() => setEditModalOpen(true)}
+                    onClick={() => handleEditClick(request)}
                   >
                     <CiEdit size={28} />
                   </div>
-                  {editModalOpen ? (
-                    <div className="flex">
-                      <EditModal
-                        editModalOpen={editModalOpen}
-                        setEditModalOpen={setEditModalOpen}
-                        request={request}
-                        formatDate={formatDate}
-                      />
-                    </div>
-                  ) : null}
                 </div>
               ))}
         </div>
       </div>
+      
+      {editModalOpen && currentRequest && (
+        <EditModal
+          editModalOpen={editModalOpen}
+          setEditModalOpen={setEditModalOpen}
+          request={currentRequest}
+          formatDate={formatDate}
+        />
+      )}
     </div>
   );
 };

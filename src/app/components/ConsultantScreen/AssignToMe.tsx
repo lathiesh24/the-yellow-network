@@ -3,37 +3,77 @@ import { TiTickOutline } from "react-icons/ti";
 import { FaSpinner } from "react-icons/fa";
 import axios from "axios";
 import { Request } from "../../interfaces";
+
 interface AssignToMeProps {
   assignToMeOpen: boolean;
   setAssignToMeOpen: React.Dispatch<React.SetStateAction<boolean>>;
   request: Request;
+  updateAssignedStatus: (
+    id: number,
+    status: boolean,
+    assignedTo: {
+      first_name: string;
+      email: string;
+      organization_name: string;
+    }
+  ) => void;
 }
 
 const AssignToMe: React.FC<AssignToMeProps> = ({
   setAssignToMeOpen,
   assignToMeOpen,
   request,
+  updateAssignedStatus,
 }) => {
   const [loading, setLoading] = useState(false);
   const [assigned, setAssigned] = useState(request.assigned_status);
 
-  const handleAssignToMe = (id: number) => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userEmail = userInfo?.email;
+  const userCompany = userInfo?.organization_name;
+  const userName = userInfo?.first_name;
+
+  const changeAssignToMe = async (id: number) => {
     setLoading(true);
-    axios
-      .put(`http://127.0.0.1:8000/partnerconnect/${id}`, {
-        assigned_status: true,
-        assigned_to: 1,
-      })
-      .then((response) => {
-        console.log(response.data);
+    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
+
+    if (jwtAccessToken) {
+      try {
+        const response = await axios.put(
+          `http://127.0.0.1:8000/partnerconnect/${id}`,
+          {
+            assigned_status: true,
+            assigned_to: {
+              first_name: userName,
+              email: userEmail,
+              organization_name: userCompany,
+            },
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${jwtAccessToken}`,
+            },
+          }
+        );
         setAssigned(true);
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
+        updateAssignedStatus(id, true, {
+          first_name: userName,
+          email: userEmail,
+          organization_name: userCompany,
+        });
+        setAssignToMeOpen(false);
+      } catch (error) {
+        console.error(
+          "Error in PUT request:",
+          error.response ? error.response.data : error.message
+        );
+      } finally {
         setLoading(false);
-      });
+      }
+    } else {
+      console.error("JWT token not found in localStorage");
+      setLoading(false);
+    }
   };
 
   return (
@@ -52,7 +92,6 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
                 <span className="text-3xl text-black">x</span>
               </button>
             </div>
-
             <div className="grid grid-cols-2">
               <div className="flex flex-col justify-between">
                 <div className="p-2 flex flex-col items-start gap-2">
@@ -126,7 +165,7 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
                 <button
                   className="bg-blue-400 rounded-lg text-lg text-white background-transparent font-semibold px-6 py-1.5 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="button"
-                  onClick={() => handleAssignToMe(request.id)}
+                  onClick={() => changeAssignToMe(request.id)}
                   disabled={loading}
                 >
                   {loading ? (

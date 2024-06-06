@@ -1,22 +1,35 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { VscTriangleRight, VscTriangleDown } from "react-icons/vsc";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import AssignToMe from "./AssignToMe";
+import axios from "axios";
 
 const AllRequests = ({
   toggleNewlyAdded,
   newlyAddedOpen,
-  requests,
   toggleInProgress,
   inProgressOpen,
   toggleCompleted,
   completedOpen,
 }) => {
   const [assignToMeOpen, setAssignToMeOpen] = useState<boolean>(false);
+  const [currentRequest, setCurrentRequest] = useState(null);
+  const [requests, setRequests] = useState([]);
   const router = useRouter();
+
+  const userName = useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/partnerconnect/")
+      .then((response) => {
+        setRequests(response.data);
+        console.log("Fetched requests:", response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the data!", error);
+      });
+  }, []);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const day = date.getDate();
@@ -25,11 +38,23 @@ const AllRequests = ({
     return `${day}-${month}-${year}`;
   };
 
-  useEffect(() => {
-    let userInfo = localStorage.getItem("userInfo");
-    userInfo = JSON.parse(userInfo);
-    console.log("userInfo", userInfo);
-  }, []);
+  const updateAssignedStatus = (
+    id: number,
+    status: boolean,
+    assignedTo: {
+      first_name: string;
+      email: string;
+      organization_name: string;
+    }
+  ) => {
+    setRequests((prevRequests) =>
+      prevRequests.map((request) =>
+        request.id === id
+          ? { ...request, assigned_status: status, assigned_to: assignedTo }
+          : request
+      )
+    );
+  };
 
   const handleBackButton = () => {
     router.push("/");
@@ -42,6 +67,11 @@ const AllRequests = ({
     return text.substring(0, maxLength) + "...";
   };
 
+  const handleAssignToMe = (request) => {
+    setCurrentRequest(request);
+    setAssignToMeOpen(true);
+  };
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-row items-center text-2xl text-blue-400 gap-4 mb-4">
@@ -50,7 +80,7 @@ const AllRequests = ({
           onClick={handleBackButton}
           className="cursor-pointer"
         />
-        <div>User Request Management - My Request</div>
+        <div>User Request Management - All Request</div>
       </div>
 
       <div className="w-full">
@@ -63,6 +93,8 @@ const AllRequests = ({
           <div>Status</div>
           <div>Edit</div>
         </div>
+
+        {/* Newly Added Requests */}
         <div>
           <div className="flex flex-row items-center text-sm mb-2">
             <div onClick={toggleNewlyAdded} className="cursor-pointer">
@@ -85,16 +117,16 @@ const AllRequests = ({
                   </div>
                   <div className="">{formatDate(request?.created_at)}</div>
                   <div className="col-span-4">
-                    {truncateText(request?.user_query?.query, 20)}
+                    {truncateText(request?.user_query?.query, 60)}
                   </div>
                   <div className=" bg-zinc-300 text-gray-800 py-1 rounded capitalize">
                     {request?.query_status}
                   </div>
                   <div className="">
-                    {request?.assigned_status == null ? (
+                    {request?.assigned_status == false ? (
                       <button
                         className="bg-blue-500 text-white py-1 px-4 rounded"
-                        onClick={() => setAssignToMeOpen(true)}
+                        onClick={() => handleAssignToMe(request)}
                       >
                         Assign To me
                       </button>
@@ -103,11 +135,12 @@ const AllRequests = ({
                         {request?.assigned_to?.first_name}
                       </div>
                     )}
-                    {assignToMeOpen ? (
+                    {assignToMeOpen && currentRequest?.id === request.id ? (
                       <AssignToMe
                         assignToMeOpen={assignToMeOpen}
                         setAssignToMeOpen={setAssignToMeOpen}
-                        request={request}
+                        request={currentRequest}
+                        updateAssignedStatus={updateAssignedStatus}
                       />
                     ) : null}
                   </div>
@@ -132,7 +165,7 @@ const AllRequests = ({
               .map((request, index) => (
                 <div
                   key={index}
-                  className="grid grid-cols-7 gap-4 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
+                  className="grid grid-cols-10 gap-4 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
                 >
                   <div className="">{request?.id}</div>
                   <div className="">{request?.from_user?.first_name}</div>
@@ -140,19 +173,16 @@ const AllRequests = ({
                     {request?.to_growthtechfirm?.startup_name}
                   </div>
                   <div className="">{formatDate(request?.created_at)}</div>
-                  <div className="">{request?.user_query?.query}</div>
+                  <div className="col-span-4">
+                    {truncateText(request?.user_query?.query, 60)}
+                  </div>
                   <div className=" bg-zinc-300 text-gray-800 py-1 rounded capitalize">
                     {request?.query_status}
                   </div>
                   <div className="">
-                    <button
-                      className="bg-blue-500 text-white py-1 px-4 rounded"
-                      onClick={() => setAssignToMeOpen(true)}
-                    >
-                      {request?.assignedStatus == null
-                        ? "Assign To me"
-                        : request?.assignedStatus}
-                    </button>
+                    <div className="bg-blue-500 text-white py-1 px-4 rounded">
+                      {request?.assigned_to?.first_name}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -172,11 +202,15 @@ const AllRequests = ({
 
           {completedOpen &&
             requests
-              .filter((request) => request.query_status === "completed")
+              .filter(
+                (request) =>
+                  request.query_status === "completed" ||
+                  request.query_status === "Rejected"
+              )
               .map((request, index) => (
                 <div
                   key={index}
-                  className="grid grid-cols-7 gap-4 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
+                  className="grid grid-cols-10 gap-4 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
                 >
                   <div className="">{request?.id}</div>
                   <div className="">{request?.from_user?.first_name}</div>
@@ -184,19 +218,16 @@ const AllRequests = ({
                     {request?.to_growthtechfirm?.startup_name}
                   </div>
                   <div className="">{formatDate(request?.created_at)}</div>
-                  <div className="">{request?.user_query?.query}</div>
+                  <div className="col-span-4">
+                    {truncateText(request?.user_query?.query, 60)}
+                  </div>
                   <div className=" bg-zinc-300 text-gray-800 py-1 rounded capitalize">
                     {request?.query_status}
                   </div>
                   <div className="">
-                    <button
-                      className="bg-blue-500 text-white py-1 px-4 rounded"
-                      onClick={() => setAssignToMeOpen(true)}
-                    >
-                      {request?.assignedStatus == null
-                        ? "Assign To me"
-                        : request?.assignedStatus}
-                    </button>
+                    <div className="bg-blue-500 text-white py-1 px-4 rounded">
+                      {request?.assigned_to?.first_name}
+                    </div>
                   </div>
                 </div>
               ))}

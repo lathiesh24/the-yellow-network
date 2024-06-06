@@ -10,23 +10,11 @@ import AllRequests from "../components/ConsultantScreen/AllRequests";
 const progress = ["Newly Added", "In Progress", "Completed"];
 
 const TotalRequests: React.FC = () => {
-  const [requests, setRequests] = useState([]);
   const [newlyAddedOpen, setNewlyAddedOpen] = useState<boolean>(true);
   const [inProgressOpen, setInProgressOpen] = useState<boolean>(true);
   const [completedOpen, setCompletedOpen] = useState<boolean>(true);
   const [rejectedOpen, setRejectedOpen] = useState<boolean>(true);
   const [view, setView] = useState<string>("allRequests");
-
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/partnerconnect/")
-      .then((response) => {
-        setRequests(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the data!", error);
-      });
-  }, []);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -79,7 +67,6 @@ const TotalRequests: React.FC = () => {
         <div>
           {view === "allRequests" ? (
             <AllRequests
-              requests={requests}
               newlyAddedOpen={newlyAddedOpen}
               toggleNewlyAdded={toggleNewlyAdded}
               toggleInProgress={toggleInProgress}

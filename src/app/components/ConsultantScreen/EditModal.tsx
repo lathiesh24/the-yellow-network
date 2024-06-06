@@ -23,6 +23,7 @@ const EditModal: React.FC<EditModalProps> = ({
       await axios.put(` http://127.0.0.1:8000/partnerconnect/${request.id}`, {
         query_status: currentStatus,
       });
+      console.log("cliekeedd");
     } catch (error) {
       console.error("Failed to update status", error);
     }
