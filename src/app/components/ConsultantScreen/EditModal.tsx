@@ -17,15 +17,29 @@ const EditModal: React.FC<EditModalProps> = ({
   formatDate,
 }) => {
   const [currentStatus, setCurrentStatus] = useState(request.query_status);
-
+  console.log(request.id);
   const updateStatus = async () => {
-    try {
-      await axios.put(` http://127.0.0.1:8000/partnerconnect/${request.id}`, {
-        query_status: currentStatus,
-      });
-      console.log("cliekeedd");
-    } catch (error) {
-      console.error("Failed to update status", error);
+    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
+    if (jwtAccessToken) {
+      try {
+        await axios.put(
+          `http://127.0.0.1:8000/partnerconnect/4/update-query-status/`,
+          {
+            query_status: currentStatus,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${jwtAccessToken}`,
+            },
+          }
+        );
+        setCurrentStatus(request.query_status);
+        setEditModalOpen(false);
+      } catch (error) {
+        console.error("Failed to update status", error);
+      }
+    } else {
+      console.error("JWT token not found in localStorage");
     }
   };
 
@@ -112,9 +126,9 @@ const EditModal: React.FC<EditModalProps> = ({
                       value={currentStatus}
                       onChange={handleStatusChange}
                     >
-                      <option value="Pending">Pending</option>
-                      <option value="Rejected">Rejected</option>
-                      <option value="Completed">Completed</option>
+                      <option value="in_progress">Pending</option>
+                      <option value="rejected">Rejected</option>
+                      <option value="completed">Completed</option>
                     </select>
                   </div>
                 </div>

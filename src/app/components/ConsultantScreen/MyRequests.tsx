@@ -30,7 +30,7 @@ const MyRequests: React.FC<MyRequestsProps> = ({
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [currentRequest, setCurrentRequest] = useState(null);
   const [requests, setRequests] = useState([]);
-  
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const day = date.getDate();
@@ -50,7 +50,7 @@ const MyRequests: React.FC<MyRequestsProps> = ({
     axios
       .get("http://127.0.0.1:8000/partnerconnect/", {
         params: {
-          'assigned_to.email': userEmail,
+          "assigned_to.email": userEmail,
         },
       })
       .then((response) => {
@@ -123,6 +123,14 @@ const MyRequests: React.FC<MyRequestsProps> = ({
                   >
                     <CiEdit size={28} />
                   </div>
+                   {editModalOpen && currentRequest && (
+        <EditModal
+          editModalOpen={editModalOpen}
+          setEditModalOpen={setEditModalOpen}
+          request={currentRequest}
+          formatDate={formatDate}
+        />
+      )}
                 </div>
               ))}
         </div>
@@ -166,6 +174,7 @@ const MyRequests: React.FC<MyRequestsProps> = ({
                   >
                     <CiEdit size={28} />
                   </div>
+                  
                 </div>
               ))}
         </div>
@@ -213,15 +222,6 @@ const MyRequests: React.FC<MyRequestsProps> = ({
               ))}
         </div>
       </div>
-      
-      {editModalOpen && currentRequest && (
-        <EditModal
-          editModalOpen={editModalOpen}
-          setEditModalOpen={setEditModalOpen}
-          request={currentRequest}
-          formatDate={formatDate}
-        />
-      )}
     </div>
   );
 };

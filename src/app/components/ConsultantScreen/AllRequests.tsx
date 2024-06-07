@@ -190,7 +190,7 @@ const AllRequests = ({
 
         {/* Completed Requests */}
         <div>
-          {requests.filter((request) => request.query_status === "completed")
+          {requests.filter((request) => request.query_status === "completed" || request.query_status ==="rejected")
             .length > 0 && (
             <div className="flex flex-row items-center text-sm mb-2">
               <div onClick={toggleCompleted} className="cursor-pointer">
@@ -205,7 +205,7 @@ const AllRequests = ({
               .filter(
                 (request) =>
                   request.query_status === "completed" ||
-                  request.query_status === "Rejected"
+                  request.query_status === "rejected"
               )
               .map((request, index) => (
                 <div
