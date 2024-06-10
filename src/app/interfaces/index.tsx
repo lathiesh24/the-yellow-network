@@ -59,3 +59,11 @@ export interface Request {
     user: number;
   };
 }
+
+export interface QueryResponse {
+  id: number;
+  query: string;
+  category: string;
+  timestamp: string;
+  user: number;
+}

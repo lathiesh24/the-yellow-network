@@ -5,7 +5,7 @@ import NavBar from "./Navbar";
 import Prompt from "./Prompt";
 import axios from "axios";
 import CompanyProfilePane from "./CompanyProfilePane";
-import { StartupType } from "../interfaces";
+import { QueryResponse, StartupType } from "../interfaces";
 import LeftFrame from "./LeftFrame/LeftFrame";
 import api from "./Axios";
 
@@ -22,6 +22,7 @@ export default function HomePage() {
   const [isInputEmpty, setIsInputEmpty] = useState<boolean>(true);
   const [mailMessage, setMailMessage] = useState<any>(null);
   const [connectionStatus, setConnectionStatus] = useState<string>("Connect");
+  const [queryData, setQueryData] = useState<QueryResponse | null>(null);
 
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("userInfo");
@@ -73,10 +74,28 @@ export default function HomePage() {
     }
   };
 
-  let jwtAccessToken = localStorage.getItem("jwtAccessToken");
+  const saveQueryData = async (query: string) => {
+    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
+    if (jwtAccessToken) {
+      const response = await axios.post(
+        "http://127.0.0.1:8000//queryhistory/save/",
+        {
+          userquery: query,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtAccessToken}`,
+          },
+        }
+      );
+      setQueryData(response.data);
+    } else {
+      console.error("JWT token not found in localStorage");
+    }
+  };
 
-  console.log("jwtAccessToken",jwtAccessToken)
-  const fetchConnectStatus = async (startupId) => {
+  let jwtAccessToken = localStorage.getItem("jwtAccessToken");
+  const fetchConnectStatus = async (startupId: number) => {
     console.log("Fetching status for startupId:", startupId);
     if (jwtAccessToken && startupId) {
       const url = `http://127.0.0.1:8000/connects/${startupId}/`;
@@ -100,7 +119,7 @@ export default function HomePage() {
     // console.log("itemofhandlem", message.response.results);
     setMailMessage(message);
     // console.log("itemofhandle",item.name)
-    console.log("adanguda",item)
+    console.log("adanguda", item);
     const choosenFilterStartup = message.response.results.find(
       (startup: any) => startup.startup_name === item.name
     );
@@ -109,7 +128,7 @@ export default function HomePage() {
       (startup) => startup.startup_name === item.name
     )?.startup_id;
 
-    console.log("startupId",startupId)
+    console.log("startupId", startupId);
     // console.log("choosenFilterStartup",choosenFilterStartup)
     setSelectedStartup(choosenFilterStartup);
     // console.log("selectedStartup", selectedStartup);
@@ -136,11 +155,11 @@ export default function HomePage() {
               <span>
                 {typeof message?.response === "string"
                   ? JSON.parse(message?.response).map((startup, index) => (
-                    <div key={index}>{startup}</div>
-                  ))
+                      <div key={index}>{startup}</div>
+                    ))
                   : message?.response?.results.length === 0 &&
-                  message?.response?.chainresult &&
-                  message?.response?.chainresult}
+                    message?.response?.chainresult &&
+                    message?.response?.chainresult}
               </span>
 
               {message?.response?.trend && (
@@ -163,7 +182,7 @@ export default function HomePage() {
                       <div
                         key={indexofresult}
                         className="grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
-                        onClick={() => handleSendStartupData(startup, message, )}
+                        onClick={() => handleSendStartupData(startup, message)}
                       >
                         <div className="text-sm">{startup?.name}</div>
                         <div className="text-sm col-span-2">
@@ -192,6 +211,7 @@ export default function HomePage() {
               isInputEmpty={isInputEmpty}
               setIsInputEmpty={setIsInputEmpty}
               userInfo={userInfo}
+              queryData={queryData}
             />
           </div>
         )}
@@ -208,6 +228,7 @@ export default function HomePage() {
             handleToggleRightFrame={handleToggleRightFrame}
             isInputEmpty={isInputEmpty}
             setIsInputEmpty={setIsInputEmpty}
+            saveQueryData={saveQueryData}
           />
           <div className="absolute left-2 top-2">
             <NavBar

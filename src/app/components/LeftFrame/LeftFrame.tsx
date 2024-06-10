@@ -12,6 +12,7 @@ import { FaHistory } from "react-icons/fa";
 import { GrLogout } from "react-icons/gr";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { QueryResponse } from "../../interfaces";
 interface UserInfo {
   email: string;
   first_name: string;
@@ -24,6 +25,7 @@ interface LeftFrameProps {
   userInfo: UserInfo;
   isInputEmpty: boolean;
   setIsInputEmpty: React.Dispatch<React.SetStateAction<boolean>>;
+  queryData: QueryResponse;
 }
 
 const LeftFrame: React.FC<LeftFrameProps> = ({
@@ -33,6 +35,7 @@ const LeftFrame: React.FC<LeftFrameProps> = ({
   userInfo,
   isInputEmpty,
   setIsInputEmpty,
+  queryData,
 }) => {
   const [historyData, setHistoryData] = useState([]);
   const [activeTab, setActiveTab] = useState<string>(() => {
@@ -47,7 +50,7 @@ const LeftFrame: React.FC<LeftFrameProps> = ({
 
   useEffect(() => {
     handleQueryHistory();
-  }, []);
+  }, [queryData]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -123,7 +126,10 @@ const LeftFrame: React.FC<LeftFrameProps> = ({
 
   // Check if the email is from theyellow.network
   const isYellowNetworkEmail = (email: string) => {
-    return email.endsWith("@theyellow.network") || email.endsWith("mahendran99@gmail.com");
+    return (
+      email.endsWith("@theyellow.network") ||
+      email.endsWith("mahendran99@gmail.com")
+    );
   };
 
   return (
