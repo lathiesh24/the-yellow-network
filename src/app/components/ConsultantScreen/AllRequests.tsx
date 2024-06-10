@@ -131,7 +131,7 @@ const AllRequests = ({
                         Assign To me
                       </button>
                     ) : (
-                      <div className="bg-blue-500 text-white py-1 px-4 rounded">
+                      <div className="bg-yellow-400 text-white py-1 px-4 rounded">
                         {request?.assigned_to?.first_name}
                       </div>
                     )}
@@ -180,7 +180,7 @@ const AllRequests = ({
                     {request?.query_status}
                   </div>
                   <div className="">
-                    <div className="bg-blue-500 text-white py-1 px-4 rounded">
+                    <div className="bg-yellow-400 text-white py-1 px-4 rounded">
                       {request?.assigned_to?.first_name}
                     </div>
                   </div>
@@ -190,8 +190,11 @@ const AllRequests = ({
 
         {/* Completed Requests */}
         <div>
-          {requests.filter((request) => request.query_status === "completed" || request.query_status ==="rejected")
-            .length > 0 && (
+          {requests.filter(
+            (request) =>
+              request.query_status === "completed" ||
+              request.query_status === "rejected"
+          ).length > 0 && (
             <div className="flex flex-row items-center text-sm mb-2">
               <div onClick={toggleCompleted} className="cursor-pointer">
                 {completedOpen ? <VscTriangleDown /> : <VscTriangleRight />}
@@ -225,7 +228,7 @@ const AllRequests = ({
                     {request?.query_status}
                   </div>
                   <div className="">
-                    <div className="bg-blue-500 text-white py-1 px-4 rounded">
+                    <div className="bg-yellow-400 text-white py-1 px-4 rounded">
                       {request?.assigned_to?.first_name}
                     </div>
                   </div>
