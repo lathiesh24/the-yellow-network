@@ -250,6 +250,7 @@ export default function HomePage() {
               setMailData={setMailMessage}
               connectionStatus={connectionStatus}
               setConnectionStatus={setConnectionStatus}
+              queryData={queryData}
             />
           </div>
         )}

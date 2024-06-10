@@ -3,7 +3,7 @@ import {
   MdOutlineKeyboardDoubleArrowLeft,
   MdOutlineKeyboardDoubleArrowRight,
 } from "react-icons/md";
-import { StartupType } from "../interfaces";
+import { QueryResponse, StartupType } from "../interfaces";
 import { GrFormClose } from "react-icons/gr";
 import { FaSpinner } from "react-icons/fa";
 import api from "./Axios";
@@ -24,6 +24,7 @@ interface CompanyProfilePaneProps {
   setMailData: React.Dispatch<React.SetStateAction<any>>;
   connectionStatus: string;
   setConnectionStatus: React.Dispatch<React.SetStateAction<string>>;
+  queryData: QueryResponse;
 }
 
 const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
@@ -36,6 +37,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   mailData,
   connectionStatus,
   setConnectionStatus,
+  queryData,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -102,7 +104,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
         {
           to_growthtechfirm: companyData?.startup_id,
           query_status: "requested",
-          user_query: "55",
+          user_query: queryData?.id,
         },
         {
           headers: {

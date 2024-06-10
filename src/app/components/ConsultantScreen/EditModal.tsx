@@ -49,7 +49,7 @@ const EditModal: React.FC<EditModalProps> = ({
 
   return (
     <div className="flex justify-center items-center fixed inset-0 z-50 outline-none focus:outline-none">
-      <div className="my-6 max-w-3xl">
+      <div className="max-w-5xl">
         <div className="p-4 border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
           <div className="flex flex-col gap-y-4">
             <div className="flex flex-row justify-between">
@@ -64,7 +64,7 @@ const EditModal: React.FC<EditModalProps> = ({
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-x-16">
+            <div className="grid grid-cols-2 gap-x-12">
               <div className="flex flex-col gap-y-8">
                 <div className="relative">
                   <div className="absolute text-xs transform left-4 -translate-y-1/2 bg-white">
@@ -94,7 +94,7 @@ const EditModal: React.FC<EditModalProps> = ({
                   <div className="absolute text-xs transform left-4 -translate-y-1/2 bg-white">
                     Use Cases
                   </div>
-                  <div className="p-2 shadow-lg rounded-lg border">
+                  <div className="p-2 shadow-lg rounded-lg border break-words whitespace-normal text-left">
                     {request.user_query.query}
                   </div>
                 </div>

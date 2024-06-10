@@ -4,6 +4,7 @@ import { VscTriangleRight, VscTriangleDown } from "react-icons/vsc";
 import { useRouter } from "next/navigation";
 import AssignToMe from "./AssignToMe";
 import axios from "axios";
+import { BiSortAlt2 } from "react-icons/bi";
 
 const AllRequests = ({
   toggleNewlyAdded,
@@ -16,9 +17,13 @@ const AllRequests = ({
   const [assignToMeOpen, setAssignToMeOpen] = useState<boolean>(false);
   const [currentRequest, setCurrentRequest] = useState(null);
   const [requests, setRequests] = useState([]);
+  const [sortOrderRequestId, setSortOrderRequestId] = useState("ascending");
+  const [sortOrderDate, setSortOrderDate] = useState("ascending");
+  const [activeSort, setActiveSort] = useState("id"); 
   const router = useRouter();
 
-  const userName = useEffect(() => {
+  // Fetching data
+  useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/partnerconnect/")
       .then((response) => {
@@ -30,6 +35,7 @@ const AllRequests = ({
       });
   }, []);
 
+  // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const day = date.getDate();
@@ -38,6 +44,7 @@ const AllRequests = ({
     return `${day}-${month}-${year}`;
   };
 
+  // Update assigned status
   const updateAssignedStatus = (
     id: number,
     status: boolean,
@@ -56,17 +63,69 @@ const AllRequests = ({
     );
   };
 
+  // Handle back button click
   const handleBackButton = () => {
     router.push("/");
   };
 
-  const truncateText = (text: string, maxLength) => {
+  // Toggle sort order for Request ID
+  const toggleSortOrderRequestId = () => {
+    setSortOrderRequestId((prevOrder) =>
+      prevOrder === "ascending" ? "descending" : "ascending"
+    );
+    setActiveSort("id");
+  };
+
+  const toggleSortOrderDate = () => {
+    setSortOrderDate((prevOrder) =>
+      prevOrder === "ascending" ? "descending" : "ascending"
+    );
+    setActiveSort("date");
+  };
+
+  // Sorting functions
+  const sortRequestsById = (requests) => {
+    return requests.slice().sort((a, b) => {
+      if (sortOrderRequestId === "ascending") {
+        return a.id - b.id;
+      } else {
+        return b.id - a.id;
+      }
+    });
+  };
+
+  const sortRequestsByDate = (requests) => {
+    return requests.slice().sort((a, b) => {
+      const dateA = new Date(a.created_at).getTime();
+      const dateB = new Date(b.created_at).getTime();
+      if (sortOrderDate === "ascending") {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
+    });
+  };
+
+  // Get sorted requests based on active sort
+  const getSortedRequests = () => {
+    if (activeSort === "date") {
+      return sortRequestsByDate(requests);
+    } else {
+      return sortRequestsById(requests);
+    }
+  };
+
+  const sortedRequests = getSortedRequests();
+
+  // Truncate text
+  const truncateText = (text: string, maxLength: number) => {
     if (text.length <= maxLength) {
       return text;
     }
     return text.substring(0, maxLength) + "...";
   };
 
+  // Handle assigning to self
   const handleAssignToMe = (request) => {
     setCurrentRequest(request);
     setAssignToMeOpen(true);
@@ -84,11 +143,32 @@ const AllRequests = ({
       </div>
 
       <div className="w-full">
+        {/* Header for Request ID Sorting */}
         <div className="grid grid-cols-10 gap-4 py-2.5 px-2 text-center uppercase text-sm text-gray-400 font-bold my-2 bg-gray-100">
-          <div>Request ID</div>
-          <div>From</div>
-          <div>To</div>
-          <div>When</div>
+          <div className="flex flex-row justify-center items-center">
+            <div>Request ID</div>
+            <div className="cursor-pointer" onClick={toggleSortOrderRequestId}>
+              <BiSortAlt2 size={20} />
+            </div>
+          </div>
+          <div className="flex flex-row justify-center items-center">
+            <div>From</div>
+            {/* <div>
+              <BiSortAlt2 size={20} />
+            </div> */}
+          </div>
+          <div className="flex flex-row justify-center items-center">
+            <div>To</div>
+            {/* <div>
+              <BiSortAlt2 size={20} />
+            </div> */}
+          </div>
+          <div className="flex flex-row justify-center items-center">
+            <div>When</div>
+            <div onClick={toggleSortOrderDate} className="cursor-pointer">
+              <BiSortAlt2 size={20} />
+            </div>
+          </div>
           <div className="col-span-4">Use Case</div>
           <div>Status</div>
           <div>Edit</div>
@@ -103,7 +183,7 @@ const AllRequests = ({
             <div className="ml-2 font-semibold">Newly Added</div>
           </div>
           {newlyAddedOpen &&
-            requests
+            sortedRequests
               .filter((request) => request.query_status === "requested")
               .map((request, index) => (
                 <div
@@ -128,7 +208,7 @@ const AllRequests = ({
                         className="bg-blue-500 text-white py-1 px-4 rounded"
                         onClick={() => handleAssignToMe(request)}
                       >
-                        Assign To me
+                        Assign Self
                       </button>
                     ) : (
                       <div className="bg-yellow-400 text-white py-1 px-4 rounded">
@@ -160,7 +240,7 @@ const AllRequests = ({
             </div>
           )}
           {inProgressOpen &&
-            requests
+            sortedRequests
               .filter((request) => request.query_status === "in_progress")
               .map((request, index) => (
                 <div
@@ -204,7 +284,7 @@ const AllRequests = ({
           )}
 
           {completedOpen &&
-            requests
+            sortedRequests
               .filter(
                 (request) =>
                   request.query_status === "completed" ||
