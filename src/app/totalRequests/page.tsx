@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../components/ConsultantScreen/Navbar";
 import { IoPerson } from "react-icons/io5";
-import { LuArrowLeftRight } from "react-icons/lu";
+import { FaUser, FaUsers, FaUserCog } from "react-icons/fa";
 import axios from "axios";
 import MyRequests from "../components/ConsultantScreen/MyRequests";
 import AllRequests from "../components/ConsultantScreen/AllRequests";
@@ -16,13 +16,16 @@ const TotalRequests: React.FC = () => {
   const [rejectedOpen, setRejectedOpen] = useState<boolean>(true);
   const [view, setView] = useState<string>("allRequests");
 
-  const formatDate = (dateString: string) => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
+  const isSuperUser = userInfo["is_superuser"];
+
+  function formatDate(dateString: string) {
     const date = new Date(dateString);
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
-  };
+  }
 
   const toggleNewlyAdded = () => {
     setNewlyAddedOpen(!newlyAddedOpen);
@@ -45,22 +48,32 @@ const TotalRequests: React.FC = () => {
       <NavBar />
 
       <div className="flex-grow flex flex-row">
-        <div className="flex flex-col gap-4  shadow-md px-6 z-10 items-center">
+        <div className="flex flex-col gap-8  shadow-md px-6 z-10 items-center">
+          {isSuperUser ? (
+            <div
+              className={`mt-5 cursor-pointer ${
+                view === "adminConfig" ? "text-yellow-500" : "text-gray-400"
+              }`}
+              onClick={() => setView("adminConfig")}
+            >
+              <FaUserCog size={23} />
+            </div>
+          ) : null}
           <div
             className={`mt-5 cursor-pointer ${
               view === "allRequests" ? "text-yellow-500" : "text-gray-400"
             }`}
             onClick={() => setView("allRequests")}
           >
-            <LuArrowLeftRight size={23} />
+            <FaUsers size={23} />
           </div>
           <div
             className={`mt-5 cursor-pointer ${
-              view === "allRequests" ? "text-gray-500" : "text-yellow-400"
+              view === "myRequests" ? "text-yellow-400" : "text-gray-400"
             }`}
             onClick={() => setView("myRequests")}
           >
-            <IoPerson size={23} />
+            <FaUser size={23} />
           </div>
         </div>
 
@@ -73,8 +86,9 @@ const TotalRequests: React.FC = () => {
               completedOpen={completedOpen}
               inProgressOpen={inProgressOpen}
               toggleCompleted={toggleCompleted}
+              isSuperUser={isSuperUser}
             />
-          ) : (
+          ) : view === "myRequests" ? (
             <MyRequests
               newlyAddedOpen={newlyAddedOpen}
               toggleNewlyAdded={toggleNewlyAdded}
@@ -85,6 +99,8 @@ const TotalRequests: React.FC = () => {
               rejectedOpen={rejectedOpen}
               toggleRejected={toggleRejected}
             />
+          ) : (
+            <div>Admin Configuration</div>
           )}
         </div>
       </div>

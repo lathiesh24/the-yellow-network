@@ -4,6 +4,7 @@ import { VscTriangleRight, VscTriangleDown } from "react-icons/vsc";
 import { useRouter } from "next/navigation";
 import AssignToMe from "./AssignToMe";
 import axios from "axios";
+import { MdAssignmentInd } from "react-icons/md";
 import { BiSortAlt2 } from "react-icons/bi";
 
 const AllRequests = ({
@@ -13,13 +14,14 @@ const AllRequests = ({
   inProgressOpen,
   toggleCompleted,
   completedOpen,
+  isSuperUser,
 }) => {
   const [assignToMeOpen, setAssignToMeOpen] = useState<boolean>(false);
   const [currentRequest, setCurrentRequest] = useState(null);
   const [requests, setRequests] = useState([]);
   const [sortOrderRequestId, setSortOrderRequestId] = useState("ascending");
   const [sortOrderDate, setSortOrderDate] = useState("ascending");
-  const [activeSort, setActiveSort] = useState("id"); 
+  const [activeSort, setActiveSort] = useState("id");
   const router = useRouter();
 
   // Fetching data
@@ -157,6 +159,7 @@ const AllRequests = ({
               <BiSortAlt2 size={20} />
             </div> */}
           </div>
+          <div>Organization</div>
           <div className="flex flex-row justify-center items-center">
             <div>To</div>
             {/* <div>
@@ -169,9 +172,9 @@ const AllRequests = ({
               <BiSortAlt2 size={20} />
             </div>
           </div>
-          <div className="col-span-4">Use Case</div>
+          <div className="col-span-3">Use Case</div>
           <div>Status</div>
-          <div>Edit</div>
+          <div>Assign</div>
         </div>
 
         {/* Newly Added Requests */}
@@ -192,35 +195,48 @@ const AllRequests = ({
                 >
                   <div className="">{request?.id}</div>
                   <div className="">{request?.from_user?.first_name}</div>
+                   <div className="">{request?.from_user?.organization_name}</div>
                   <div className="">
                     {request?.to_growthtechfirm?.startup_name}
                   </div>
                   <div className="">{formatDate(request?.created_at)}</div>
-                  <div className="col-span-4">
+                  <div className="col-span-3">
                     {truncateText(request?.user_query?.query, 60)}
                   </div>
                   <div className=" bg-zinc-300 text-gray-800 py-1 rounded capitalize">
                     {request?.query_status}
                   </div>
                   <div className="">
-                    {request?.assigned_status == false ? (
-                      <button
-                        className="bg-blue-500 text-white py-1 px-4 rounded"
-                        onClick={() => handleAssignToMe(request)}
-                      >
-                        Assign Self
-                      </button>
+                    {request?.assigned_status === false ? (
+                      isSuperUser ? (
+                        <button
+                          className="flex items-center justify-center bg-blue-500 text-white py-1 px-4 rounded w-full"
+                          onClick={() => handleAssignToMe(request)}
+                          
+                        >
+                          <MdAssignmentInd className="mr-1" size={16} /> Assigne
+                        </button>
+                      ) : (
+                        <button
+                          className="bg-blue-500 text-white py-1 px-4 rounded"
+                          onClick={() => handleAssignToMe(request)}
+                        >
+                          Assign Self
+                        </button>
+                      )
                     ) : (
                       <div className="bg-yellow-400 text-white py-1 px-4 rounded">
                         {request?.assigned_to?.first_name}
                       </div>
                     )}
+
                     {assignToMeOpen && currentRequest?.id === request.id ? (
                       <AssignToMe
                         assignToMeOpen={assignToMeOpen}
                         setAssignToMeOpen={setAssignToMeOpen}
                         request={currentRequest}
                         updateAssignedStatus={updateAssignedStatus}
+                        isSuperUser = {isSuperUser}
                       />
                     ) : null}
                   </div>

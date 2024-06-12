@@ -3,6 +3,7 @@ import { TiTickOutline } from "react-icons/ti";
 import { FaSpinner } from "react-icons/fa";
 import axios from "axios";
 import { Request } from "../../interfaces";
+import { MdAssignmentInd } from "react-icons/md";
 
 interface AssignToMeProps {
   assignToMeOpen: boolean;
@@ -17,6 +18,7 @@ interface AssignToMeProps {
       organization_name: string;
     }
   ) => void;
+  isSuperUser: boolean;
 }
 
 const AssignToMe: React.FC<AssignToMeProps> = ({
@@ -24,16 +26,34 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
   assignToMeOpen,
   request,
   updateAssignedStatus,
+  isSuperUser,
 }) => {
   const [loading, setLoading] = useState(false);
   const [assigned, setAssigned] = useState(request.assigned_status);
+  const [openAssigneColumn, setOpenAssigneColumn] = useState(false);
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo")!);
+  const userId = userInfo?.id;
   const userEmail = userInfo?.email;
   const userCompany = userInfo?.organization_name;
   const userName = userInfo?.first_name;
 
-  const changeAssignToMe = async (id: number) => {
+  const assigneData = [
+    { id: 1, name: "Lathiesh", email: "lathiesh@theyellow.network" },
+    { id: 2, name: "Rakesh", email: "rakesh@theyellow.network" },
+    { id: 3, name: "Anand", email: "anand@theyellow.network" },
+    { id: 4, name: "Pavithra", email: "pavithra@theyellow.network" },
+  ];
+
+  const assignRequest = async (
+    id: number,
+    assignee: {
+      id?: number;
+      first_name: string;
+      email: string;
+      organization_name: string;
+    }
+  ) => {
     setLoading(true);
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
 
@@ -43,11 +63,7 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
           `http://127.0.0.1:8000/partnerconnect/${id}`,
           {
             assigned_status: true,
-            assigned_to: {
-              first_name: userName,
-              email: userEmail,
-              organization_name: userCompany,
-            },
+            assigned_to: assignee,
           },
           {
             headers: {
@@ -56,11 +72,7 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
           }
         );
         setAssigned(true);
-        updateAssignedStatus(id, true, {
-          first_name: userName,
-          email: userEmail,
-          organization_name: userCompany,
-        });
+        updateAssignedStatus(id, true, assignee);
         setAssignToMeOpen(false);
       } catch (error) {
         console.error(
@@ -74,6 +86,32 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
       console.error("JWT token not found in localStorage");
       setLoading(false);
     }
+  };
+
+  const changeAssignToMe = () => {
+    assignRequest(request.id, {
+      first_name: userName,
+      email: userEmail,
+      organization_name: userCompany,
+    });
+  };
+
+  const assignToMembers = (
+    id: number,
+    assigneeId: number,
+    userName: string,
+    userEmail: string
+  ) => {
+    assignRequest(id, {
+      id: assigneeId,
+      first_name: userName,
+      email: userEmail,
+      organization_name: userCompany,
+    });
+  };
+
+  const toggleAssigneColumn = () => {
+    setOpenAssigneColumn(!openAssigneColumn);
   };
 
   return (
@@ -134,7 +172,7 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
                       User Mail ID
                     </div>
                     <div className="p-2 shadow-lg rounded-lg border">
-                      anand@abc.com
+                      {request.from_user.email}
                     </div>
                   </div>
                   <div className="relative">
@@ -182,11 +220,52 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
                 <div className="bg-blue-400 rounded-lg text-lg text-white font-semibold px-6 py-1.5 outline-none focus:outline-none ease-linear transition-all duration-150">
                   Assigned
                 </div>
+              ) : isSuperUser ? (
+                <button
+                  className="relative bg-gray-300 rounded-lg text-sm text-white font-semibold px-4 py-1.5 outline-none focus:outline-none ease-linear transition-all duration-150"
+                  type="button"
+                  onClick={toggleAssigneColumn}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <FaSpinner className="animate-spin" size={24} />
+                  ) : (
+                    <div className="flex flex-row justify-center items-center gap-2">
+                      <>
+                        <MdAssignmentInd size={20} />
+                        <div>Assign</div>
+                      </>
+                      {openAssigneColumn ? (
+                        <div className="absolute bg-white flex flex-col shadow-customShadow text-black rounded-sm">
+                          {assigneData.map((assignee) => (
+                            <div
+                              key={assignee.id}
+                              className="flex flex-row gap-6 items-center border-b-[1px] px-6 rounded-sm hover:bg-gray-200"
+                              onClick={() =>
+                                assignToMembers(
+                                  request.id,
+                                  assignee.id,
+                                  assignee.name,
+                                  assignee.email
+                                )
+                              }
+                            >
+                              <div className="py-4">{assignee.name}</div>
+                              <div className="text-gray-500 text-xs">
+                                {assignee.email}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
+                </button>
               ) : (
                 <button
                   className="bg-blue-400 rounded-lg text-sm text-white font-semibold px-4 py-1.5 outline-none focus:outline-none ease-linear transition-all duration-150"
                   type="button"
-                  onClick={() => changeAssignToMe(request.id)}
+                  onClick={changeAssignToMe}
                   disabled={loading}
                 >
                   {loading ? (

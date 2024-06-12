@@ -48,6 +48,7 @@ export interface Request {
     startup_emails: string;
   };
   from_user: {
+    email: string;
     id: number;
     first_name: string;
     organization_name: string;
