@@ -43,6 +43,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   console.log("companyData", companyData);
+  console.log("querydata",queryData)
   const openPane = () => {
     setOpenState(false);
   };
