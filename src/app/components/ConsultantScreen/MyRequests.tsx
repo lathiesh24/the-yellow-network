@@ -148,13 +148,13 @@ const MyRequests: React.FC<MyRequestsProps> = ({
         <div className="col-span-1">From</div>
         <div className="col-span-1">To</div>
         <div className="col-span-1">
-         <div className="flex flex-row justify-center items-center">
+          <div className="flex flex-row justify-center items-center">
             <div>When</div>
             <div onClick={toggleSortOrderDate} className="cursor-pointer">
               <BiSortAlt2 size={20} />
             </div>
           </div>
-          </div>
+        </div>
         <div className="col-span-6">Use Case</div>
         <div className="col-span-1">Status</div>
         <div className="col-span-1">Edit</div>
@@ -170,7 +170,14 @@ const MyRequests: React.FC<MyRequestsProps> = ({
           </div>
           {inProgressOpen &&
             sortedRequests
-              .filter((request) => request.query_status === "requested")
+              .filter(
+                (request) =>
+                  request.query_status === "requested" ||
+                  request.query_status === "in_progress" ||
+                  request.query_status === "convo_started" ||
+                  request.query_status === "pitch" ||
+                  request.query_status === "gtf_pending"
+              )
               .map((request, index) => (
                 <div
                   key={index}
@@ -242,7 +249,7 @@ const MyRequests: React.FC<MyRequestsProps> = ({
                   <div className="col-span-6">
                     {truncateText(request?.user_query.query, 60)}
                   </div>
-                  <div className="col-span-1 bg-zinc-300 text-gray-800 py-1 rounded capitalize">
+                  <div className="col-span-1 bg-red-400 text-gray-800 py-1 rounded capitalize">
                     {request?.query_status}
                   </div>
                   <div
@@ -285,7 +292,7 @@ const MyRequests: React.FC<MyRequestsProps> = ({
                     {formatDate(request?.created_at)}
                   </div>
                   <div className="col-span-6">{request?.user_query.query}</div>
-                  <div className="col-span-1 bg-zinc-300 text-gray-800 py-1 rounded capitalize">
+                  <div className="col-span-1  text-gray-800 py-1 rounded capitalize bg-green-400">
                     {request?.query_status}
                   </div>
                   <div

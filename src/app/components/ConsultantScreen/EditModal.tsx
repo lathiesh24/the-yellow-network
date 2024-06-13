@@ -18,12 +18,12 @@ const EditModal: React.FC<EditModalProps> = ({
 }) => {
   const [currentStatus, setCurrentStatus] = useState(request.query_status);
   console.log(request.id);
-  const updateStatus = async () => {
+  const updateStatus = async (id) => {
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
     if (jwtAccessToken) {
       try {
         await axios.put(
-          `http://127.0.0.1:8000/partnerconnect/4/update-query-status/`,
+          `http://127.0.0.1:8000/partnerconnect/${id}/update-query-status/`,
           {
             query_status: currentStatus,
           },
@@ -66,30 +66,30 @@ const EditModal: React.FC<EditModalProps> = ({
 
             <div className="grid grid-cols-2 gap-x-12">
               <div className="flex flex-col gap-y-8">
-                <div className="relative">
+                {/* <div className="relative">
                   <div className="absolute text-xs transform left-4 -translate-y-1/2 bg-white">
                     Request Id
                   </div>
                   <div className="p-2 shadow-lg rounded-lg border">
                     {request.id}
                   </div>
-                </div>
-                <div className="relative">
+                </div> */}
+                {/* <div className="relative">
                   <div className="absolute text-xs transform left-4 -translate-y-1/2 bg-white">
                     Connected Firm
                   </div>
                   <div className="p-2 shadow-lg rounded-lg border">
                     {request.to_growthtechfirm.startup_name}
                   </div>
-                </div>
-                <div className="relative">
+                </div> */}
+                {/* <div className="relative">
                   <div className="absolute text-xs transform left-4 -translate-y-1/2 bg-white">
                     Created At
                   </div>
                   <div className="p-2 shadow-lg rounded-lg border">
                     {formatDate(request.created_at)}
                   </div>
-                </div>
+                </div> */}
                 <div className="relative">
                   <div className="absolute text-xs transform left-4 -translate-y-1/2 bg-white">
                     Use Cases
@@ -100,22 +100,22 @@ const EditModal: React.FC<EditModalProps> = ({
                 </div>
               </div>
               <div className="flex flex-col gap-y-8">
-                <div className="relative">
+                {/* <div className="relative">
                   <div className="absolute text-xs transform left-4 -translate-y-1/2 bg-white">
                     User Name
                   </div>
                   <div className="p-2 shadow-lg rounded-lg border">
                     {request.from_user.first_name}
                   </div>
-                </div>
-                <div className="relative">
+                </div> */}
+                {/* <div className="relative">
                   <div className="absolute text-xs transform left-4 -translate-y-1/2 bg-white">
                     Org Name
                   </div>
                   <div className="p-2 shadow-lg rounded-lg border">
                     {request.from_user.organization_name}
                   </div>
-                </div>
+                </div> */}
                 <div className="relative">
                   <div className="absolute text-xs transform left-4 -translate-y-1/2 bg-white">
                     Current Status
@@ -126,7 +126,10 @@ const EditModal: React.FC<EditModalProps> = ({
                       value={currentStatus}
                       onChange={handleStatusChange}
                     >
-                      <option value="in_progress">Pending</option>
+                      <option value="in_progress">Requested</option>
+                      <option value="gtf_pending">GTF Pending</option>
+                      <option value="convo_started">Convo Started</option>
+                      <option value="pitch">Pitch</option>
                       <option value="rejected">Rejected</option>
                       <option value="completed">Completed</option>
                     </select>
@@ -138,7 +141,7 @@ const EditModal: React.FC<EditModalProps> = ({
             <div className="flex justify-end pt-4">
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded shadow"
-                onClick={updateStatus}
+                onClick={() => updateStatus(request.id)}
               >
                 Save
               </button>

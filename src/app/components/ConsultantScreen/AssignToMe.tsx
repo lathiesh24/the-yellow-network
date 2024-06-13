@@ -30,15 +30,16 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [assigned, setAssigned] = useState(request.assigned_status);
-  const [openAssigneColumn, setOpenAssigneColumn] = useState(false);
+  const [openAssigneeColumn, setOpenAssigneeColumn] = useState(false);
 
-  const userInfo = JSON.parse(localStorage.getItem("userInfo")!);
+  // Safely parse userInfo from localStorage
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
   const userId = userInfo?.id;
-  const userEmail = userInfo?.email;
-  const userCompany = userInfo?.organization_name;
-  const userName = userInfo?.first_name;
+  const userEmail = userInfo?.email || "";
+  const userCompany = userInfo?.organization_name || "";
+  const userName = userInfo?.first_name || "";
 
-  const assigneData = [
+  const assigneeData = [
     { id: 1, name: "Lathiesh", email: "lathiesh@theyellow.network" },
     { id: 2, name: "Rakesh", email: "rakesh@theyellow.network" },
     { id: 3, name: "Anand", email: "anand@theyellow.network" },
@@ -110,8 +111,8 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
     });
   };
 
-  const toggleAssigneColumn = () => {
-    setOpenAssigneColumn(!openAssigneColumn);
+  const toggleAssigneeColumn = () => {
+    setOpenAssigneeColumn(!openAssigneeColumn);
   };
 
   return (
@@ -138,20 +139,22 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
                     Usecase
                   </div>
                   <div className="p-2 shadow-lg rounded-lg border break-words whitespace-normal text-left">
-                    {request.user_query.query}
+                    {request.user_query?.query || "No Query Available"}
                   </div>
                 </div>
-                <div className="relative">
+                {/* <div className="relative">
                   <div className="absolute text-xs transform left-4 -translate-y-1/2 bg-white">
                     Growth Tech Firm
                   </div>
                   <div className="p-2 shadow-lg rounded-lg border flex items-center gap-x-1">
-                    <div>{request.to_growthtechfirm.startup_name}</div>
+                    <div>
+                      {request.to_growthtechfirm?.startup_name || "N/A"}
+                    </div>
                     <div className="text-sm bg-yellow-400 rounded-xl text-white">
                       <TiTickOutline size={14} />
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
 
               <div className="grid grid-cols-2 gap-8">
@@ -159,30 +162,30 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
                   <div className="text-lg font-semibold text-blue-400">
                     Nifo User
                   </div>
-                  <div className="relative">
+                  {/* <div className="relative">
                     <div className="absolute text-xs transform left-4 -translate-y-1/2 bg-white">
                       User Name
                     </div>
                     <div className="p-2 shadow-lg rounded-lg border">
-                      {request.from_user.first_name}
+                      {request.from_user?.first_name || "N/A"}
                     </div>
-                  </div>
+                  </div> */}
                   <div className="relative">
                     <div className="absolute text-xs transform left-4 -translate-y-1/2 bg-white">
                       User Mail ID
                     </div>
                     <div className="p-2 shadow-lg rounded-lg border">
-                      {request.from_user.email}
+                      {request.from_user?.email || "N/A"}
                     </div>
                   </div>
-                  <div className="relative">
+                  {/* <div className="relative">
                     <div className="absolute text-xs transform left-4 -translate-y-1/2 bg-white">
                       User Organization
                     </div>
                     <div className="p-2 shadow-lg rounded-lg border">
-                      {request.from_user.organization_name}
+                      {request.from_user?.organization_name || "N/A"}
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="flex flex-col gap-y-4">
@@ -200,7 +203,7 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
                       Email
                     </div>
                     <div className="p-2 shadow-lg rounded-lg border">
-                      {request.to_growthtechfirm.startup_emails}
+                      {request.to_growthtechfirm?.startup_emails || "N/A"}
                     </div>
                   </div>
                   <div className="relative">
@@ -208,7 +211,7 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
                       Firm's Website
                     </div>
                     <div className="p-2 shadow-lg rounded-lg border break-words whitespace-normal text-left">
-                      {request.to_growthtechfirm.startup_url}
+                      {request.to_growthtechfirm?.startup_url || "N/A"}
                     </div>
                   </div>
                 </div>
@@ -216,7 +219,7 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
             </div>
 
             <div className="flex justify-center pt-4 gap-4">
-              {assigned ? (
+              {assigned && !isSuperUser ? (
                 <div className="bg-blue-400 rounded-lg text-lg text-white font-semibold px-6 py-1.5 outline-none focus:outline-none ease-linear transition-all duration-150">
                   Assigned
                 </div>
@@ -224,40 +227,38 @@ const AssignToMe: React.FC<AssignToMeProps> = ({
                 <button
                   className="relative bg-gray-300 rounded-lg text-sm text-white font-semibold px-4 py-1.5 outline-none focus:outline-none ease-linear transition-all duration-150"
                   type="button"
-                  onClick={toggleAssigneColumn}
+                  onClick={toggleAssigneeColumn}
                   disabled={loading}
                 >
                   {loading ? (
                     <FaSpinner className="animate-spin" size={24} />
                   ) : (
                     <div className="flex flex-row justify-center items-center gap-2">
-                      <>
-                        <MdAssignmentInd size={20} />
-                        <div>Assign</div>
-                      </>
-                      {openAssigneColumn ? (
-                        <div className="absolute bg-white flex flex-col shadow-customShadow text-black rounded-sm">
-                          {assigneData.map((assignee) => (
-                            <div
-                              key={assignee.id}
-                              className="flex flex-row gap-6 items-center border-b-[1px] px-6 rounded-sm hover:bg-gray-200"
-                              onClick={() =>
-                                assignToMembers(
-                                  request.id,
-                                  assignee.id,
-                                  assignee.name,
-                                  assignee.email
-                                )
-                              }
-                            >
-                              <div className="py-4">{assignee.name}</div>
-                              <div className="text-gray-500 text-xs">
-                                {assignee.email}
-                              </div>
-                            </div>
-                          ))}
+                      <MdAssignmentInd size={20} />
+                      <div>Assign</div>
+                    </div>
+                  )}
+                  {openAssigneeColumn && (
+                    <div className="absolute bg-white flex flex-col shadow-customShadow text-black rounded-sm top-full left-0 mt-2">
+                      {assigneeData.map((assignee) => (
+                        <div
+                          key={assignee.id}
+                          className="flex flex-row gap-6 items-center border-b-[1px] px-6 py-2 rounded-sm hover:bg-gray-200 cursor-pointer"
+                          onClick={() =>
+                            assignToMembers(
+                              request.id,
+                              assignee.id,
+                              assignee.name,
+                              assignee.email
+                            )
+                          }
+                        >
+                          <div>{assignee.name}</div>
+                          <div className="text-gray-500 text-xs">
+                            {assignee.email}
+                          </div>
                         </div>
-                      ) : null}
+                      ))}
                     </div>
                   )}
                 </button>

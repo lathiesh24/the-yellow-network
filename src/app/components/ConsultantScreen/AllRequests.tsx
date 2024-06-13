@@ -6,6 +6,7 @@ import AssignToMe from "./AssignToMe";
 import axios from "axios";
 import { MdAssignmentInd } from "react-icons/md";
 import { BiSortAlt2 } from "react-icons/bi";
+import { CiEdit } from "react-icons/ci";
 
 const AllRequests = ({
   toggleNewlyAdded,
@@ -16,7 +17,7 @@ const AllRequests = ({
   completedOpen,
   isSuperUser,
 }) => {
-  const [assignToMeOpen, setAssignToMeOpen] = useState<boolean>(false);
+  const [assignToMeOpen, setAssignToMeOpen] = useState(false);
   const [currentRequest, setCurrentRequest] = useState(null);
   const [requests, setRequests] = useState([]);
   const [sortOrderRequestId, setSortOrderRequestId] = useState("ascending");
@@ -24,7 +25,6 @@ const AllRequests = ({
   const [activeSort, setActiveSort] = useState("id");
   const router = useRouter();
 
-  // Fetching data
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/partnerconnect/")
@@ -37,8 +37,7 @@ const AllRequests = ({
       });
   }, []);
 
-  // Format date
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate();
     const month = date.getMonth() + 1;
@@ -46,16 +45,7 @@ const AllRequests = ({
     return `${day}-${month}-${year}`;
   };
 
-  // Update assigned status
-  const updateAssignedStatus = (
-    id: number,
-    status: boolean,
-    assignedTo: {
-      first_name: string;
-      email: string;
-      organization_name: string;
-    }
-  ) => {
+  const updateAssignedStatus = (id, status, assignedTo) => {
     setRequests((prevRequests) =>
       prevRequests.map((request) =>
         request.id === id
@@ -65,12 +55,10 @@ const AllRequests = ({
     );
   };
 
-  // Handle back button click
   const handleBackButton = () => {
     router.push("/");
   };
 
-  // Toggle sort order for Request ID
   const toggleSortOrderRequestId = () => {
     setSortOrderRequestId((prevOrder) =>
       prevOrder === "ascending" ? "descending" : "ascending"
@@ -85,7 +73,6 @@ const AllRequests = ({
     setActiveSort("date");
   };
 
-  // Sorting functions
   const sortRequestsById = (requests) => {
     return requests.slice().sort((a, b) => {
       if (sortOrderRequestId === "ascending") {
@@ -108,7 +95,6 @@ const AllRequests = ({
     });
   };
 
-  // Get sorted requests based on active sort
   const getSortedRequests = () => {
     if (activeSort === "date") {
       return sortRequestsByDate(requests);
@@ -119,15 +105,13 @@ const AllRequests = ({
 
   const sortedRequests = getSortedRequests();
 
-  // Truncate text
-  const truncateText = (text: string, maxLength: number) => {
+  const truncateText = (text, maxLength) => {
     if (text.length <= maxLength) {
       return text;
     }
     return text.substring(0, maxLength) + "...";
   };
 
-  // Handle assigning to self
   const handleAssignToMe = (request) => {
     setCurrentRequest(request);
     setAssignToMeOpen(true);
@@ -145,7 +129,6 @@ const AllRequests = ({
       </div>
 
       <div className="w-full">
-        {/* Header for Request ID Sorting */}
         <div className="grid grid-cols-10 gap-4 py-2.5 px-2 text-center uppercase text-sm text-gray-400 font-bold my-2 bg-gray-100">
           <div className="flex flex-row justify-center items-center">
             <div>Request ID</div>
@@ -155,16 +138,10 @@ const AllRequests = ({
           </div>
           <div className="flex flex-row justify-center items-center">
             <div>From</div>
-            {/* <div>
-              <BiSortAlt2 size={20} />
-            </div> */}
           </div>
           <div>Organization</div>
           <div className="flex flex-row justify-center items-center">
             <div>To</div>
-            {/* <div>
-              <BiSortAlt2 size={20} />
-            </div> */}
           </div>
           <div className="flex flex-row justify-center items-center">
             <div>When</div>
@@ -177,7 +154,6 @@ const AllRequests = ({
           <div>Assign</div>
         </div>
 
-        {/* Newly Added Requests */}
         <div>
           <div className="flex flex-row items-center text-sm mb-2">
             <div onClick={toggleNewlyAdded} className="cursor-pointer">
@@ -193,28 +169,25 @@ const AllRequests = ({
                   key={index}
                   className="grid grid-cols-10 gap-4 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
                 >
-                  <div className="">{request?.id}</div>
-                  <div className="">{request?.from_user?.first_name}</div>
-                   <div className="">{request?.from_user?.organization_name}</div>
-                  <div className="">
-                    {request?.to_growthtechfirm?.startup_name}
-                  </div>
-                  <div className="">{formatDate(request?.created_at)}</div>
+                  <div>{request?.id}</div>
+                  <div>{request?.from_user?.first_name}</div>
+                  <div>{request?.from_user?.organization_name}</div>
+                  <div>{request?.to_growthtechfirm?.startup_name}</div>
+                  <div>{formatDate(request?.created_at)}</div>
                   <div className="col-span-3">
                     {truncateText(request?.user_query?.query, 60)}
                   </div>
-                  <div className=" bg-zinc-300 text-gray-800 py-1 rounded capitalize">
+                  <div className="bg-zinc-300 text-gray-800 py-1 rounded capitalize">
                     {request?.query_status}
                   </div>
-                  <div className="">
+                  <div>
                     {request?.assigned_status === false ? (
                       isSuperUser ? (
                         <button
                           className="flex items-center justify-center bg-blue-500 text-white py-1 px-4 rounded w-full"
                           onClick={() => handleAssignToMe(request)}
-                          
                         >
-                          <MdAssignmentInd className="mr-1" size={16} /> Assigne
+                          <MdAssignmentInd className="mr-1" size={16} /> Assign
                         </button>
                       ) : (
                         <button
@@ -224,6 +197,16 @@ const AllRequests = ({
                           Assign Self
                         </button>
                       )
+                    ) : isSuperUser ? (
+                      <div className="bg-yellow-400 text-white py-1 px-4 rounded flex flex-row justify-between items-center">
+                        <div>{request?.assigned_to?.first_name}</div>
+                        <div
+                          className="cursor-pointer"
+                          onClick={() => handleAssignToMe(request)}
+                        >
+                          <CiEdit size={23} />
+                        </div>
+                      </div>
                     ) : (
                       <div className="bg-yellow-400 text-white py-1 px-4 rounded">
                         {request?.assigned_to?.first_name}
@@ -236,7 +219,7 @@ const AllRequests = ({
                         setAssignToMeOpen={setAssignToMeOpen}
                         request={currentRequest}
                         updateAssignedStatus={updateAssignedStatus}
-                        isSuperUser = {isSuperUser}
+                        isSuperUser={isSuperUser}
                       />
                     ) : null}
                   </div>
@@ -244,7 +227,6 @@ const AllRequests = ({
               ))}
         </div>
 
-        {/* In Progress Requests */}
         <div>
           {requests.filter((request) => request.query_status === "in_progress")
             .length > 0 && (
@@ -263,28 +245,23 @@ const AllRequests = ({
                   key={index}
                   className="grid grid-cols-10 gap-4 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
                 >
-                  <div className="">{request?.id}</div>
-                  <div className="">{request?.from_user?.first_name}</div>
-                  <div className="">
-                    {request?.to_growthtechfirm?.startup_name}
-                  </div>
-                  <div className="">{formatDate(request?.created_at)}</div>
+                  <div>{request?.id}</div>
+                  <div>{request?.from_user?.first_name}</div>
+                  <div>{request?.to_growthtechfirm?.startup_name}</div>
+                  <div>{formatDate(request?.created_at)}</div>
                   <div className="col-span-4">
                     {truncateText(request?.user_query?.query, 60)}
                   </div>
-                  <div className=" bg-zinc-300 text-gray-800 py-1 rounded capitalize">
+                  <div className="bg-zinc-300 text-gray-800 py-1 rounded capitalize">
                     {request?.query_status}
                   </div>
-                  <div className="">
-                    <div className="bg-yellow-400 text-white py-1 px-4 rounded">
-                      {request?.assigned_to?.first_name}
-                    </div>
+                  <div className="bg-yellow-400 text-white py-1 px-4 rounded">
+                    {request?.assigned_to?.first_name}
                   </div>
                 </div>
               ))}
         </div>
 
-        {/* Completed Requests */}
         <div>
           {requests.filter(
             (request) =>
@@ -311,22 +288,18 @@ const AllRequests = ({
                   key={index}
                   className="grid grid-cols-10 gap-4 py-2.5 px-2 text-center text-xs whitespace-nowrap bg-white rounded-lg shadow-md border-gray-100 border-[1px] my-2"
                 >
-                  <div className="">{request?.id}</div>
-                  <div className="">{request?.from_user?.first_name}</div>
-                  <div className="">
-                    {request?.to_growthtechfirm?.startup_name}
-                  </div>
-                  <div className="">{formatDate(request?.created_at)}</div>
+                  <div>{request?.id}</div>
+                  <div>{request?.from_user?.first_name}</div>
+                  <div>{request?.to_growthtechfirm?.startup_name}</div>
+                  <div>{formatDate(request?.created_at)}</div>
                   <div className="col-span-4">
                     {truncateText(request?.user_query?.query, 60)}
                   </div>
-                  <div className=" bg-zinc-300 text-gray-800 py-1 rounded capitalize">
+                  <div className="bg-zinc-300 text-gray-800 py-1 rounded capitalize">
                     {request?.query_status}
                   </div>
-                  <div className="">
-                    <div className="bg-yellow-400 text-white py-1 px-4 rounded">
-                      {request?.assigned_to?.first_name}
-                    </div>
+                  <div className="bg-yellow-400 text-white py-1 px-4 rounded">
+                    {request?.assigned_to?.first_name}
                   </div>
                 </div>
               ))}
