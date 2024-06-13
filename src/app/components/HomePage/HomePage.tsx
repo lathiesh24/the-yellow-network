@@ -1,13 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { RxAvatar } from "react-icons/rx";
-import NavBar from "./Navbar";
-import Prompt from "./Prompt";
+import NavBar from "../Navbar";
+import Prompt from "../Prompt";
 import axios from "axios";
-import CompanyProfilePane from "./CompanyProfilePane";
-import { QueryResponse, StartupType } from "../interfaces";
-import LeftFrame from "./LeftFrame/LeftFrame";
-import api from "./Axios";
+import CompanyProfilePane from "../CompanyProfilePane";
+import { QueryResponse, StartupType } from "../../interfaces";
+import LeftFrame from "../LeftFrame/LeftFrame";
+import api from "../Axios";
+import RenderStartup from "./RenderStartup";
 
 export default function HomePage() {
   const [messages, setMessages] = useState([]);
@@ -23,6 +24,8 @@ export default function HomePage() {
   const [mailMessage, setMailMessage] = useState<any>(null);
   const [connectionStatus, setConnectionStatus] = useState<string>("Connect");
   const [queryData, setQueryData] = useState<QueryResponse | null>(null);
+
+  console.log("queryDatainHome", queryData, inputPrompt);
 
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("userInfo");
@@ -40,6 +43,7 @@ export default function HomePage() {
     setOpen(!open);
   };
 
+  console.log("messages", messages);
   const handleToggleLeftFrame = () => {
     if (open) {
       setOpen(!open);
@@ -74,6 +78,7 @@ export default function HomePage() {
     }
   };
 
+  //save the data queried
   const saveQueryData = async (query: string) => {
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
     if (jwtAccessToken) {
@@ -116,27 +121,13 @@ export default function HomePage() {
   };
 
   const handleSendStartupData = (item: any, message: any) => {
-    // console.log("itemofhandlem", message.response.results);
+    console.log("itemofhandlem", item);
     setMailMessage(message);
-    // console.log("itemofhandle",item.name)
-    console.log("adanguda", item);
-    const choosenFilterStartup = message.response.results.find(
-      (startup: any) => startup.startup_name === item.name
-    );
-
-    const startupId = message.response.results.find(
-      (startup) => startup.startup_name === item.name
-    )?.startup_id;
-
-    console.log("startupId", startupId);
-    // console.log("choosenFilterStartup",choosenFilterStartup)
-    setSelectedStartup(choosenFilterStartup);
-    // console.log("selectedStartup", selectedStartup);
+    setSelectedStartup(item?.database_info);
     setOpenRightFrame(true);
-    fetchConnectStatus(startupId);
+    fetchConnectStatus(item?.database_info?.startup_id);
   };
 
-  console.log("messages for trends", messages);
   const renderMessages = () => {
     return messages.map((message: any, index: number) => (
       <div key={index} className="justify-between mb-4 text-[16px] px-6">
@@ -147,51 +138,22 @@ export default function HomePage() {
           <span className="text-[17px]">{message?.question}</span>
         </div>
         <div className="p-6 text-left border-l-4 border-blue-100">
-          <span className="font-semibold text-black block mb-3">GamePlan:</span>
+          <span className="font-semibold text-black block mb-3">NIFO:</span>
           {message?.response === "Loading" ? (
             <div>Loading..</div>
           ) : (
             <div>
-              <span>
-                {typeof message?.response === "string"
-                  ? JSON.parse(message?.response).map((startup, index) => (
-                      <div key={index}>{startup}</div>
-                    ))
-                  : message?.response?.results.length === 0 &&
-                    message?.response?.chainresult &&
-                    message?.response?.chainresult}
-              </span>
-
-              {message?.response?.trend && (
-                <div className="mb-4 leading-7">
-                  <div>{message?.response?.trend}</div>
+              {message.response.response ==
+              "No specific details available." ? null : (
+                <div className="mb-2 leading-7">
+                  {message.response.response}
                 </div>
               )}
 
-              {message?.response?.results?.length > 0 && (
-                <div className="grid grid-cols-3 font-semibold text-base">
-                  <div>Startup Name</div>
-                  <div>Reason</div>
-                </div>
-              )}
-
-              {message?.response?.startups?.length > 0 &&
-                message.response.startups.map(
-                  (startup: any, indexofresult: number) => {
-                    return (
-                      <div
-                        key={indexofresult}
-                        className="grid grid-cols-3 mt-4 rounded shadow-md p-2 bg-blue-100 cursor-pointer"
-                        onClick={() => handleSendStartupData(startup, message)}
-                      >
-                        <div className="text-sm">{startup?.name}</div>
-                        <div className="text-sm col-span-2">
-                          {startup?.description}
-                        </div>
-                      </div>
-                    );
-                  }
-                )}
+              <RenderStartup
+                message={message}
+                handleSendStartupData={handleSendStartupData}
+              ></RenderStartup>
             </div>
           )}
         </div>
