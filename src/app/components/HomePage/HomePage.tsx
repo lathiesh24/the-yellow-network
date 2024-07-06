@@ -9,6 +9,10 @@ import { QueryResponse, StartupType } from "../../interfaces";
 import LeftFrame from "../LeftFrame/LeftFrame";
 import api from "../Axios";
 import RenderStartup from "./RenderStartup";
+import BottomBar from "../../mobileComponents/BottomBar";
+import MobileHeader from "../../mobileComponents/MobileHeader";
+import Spotlight from "../LeftFrame/Spotlight";
+import SpotlightMobile from "../../mobileComponents/Spotlight";
 
 export default function HomePage() {
   const [messages, setMessages] = useState([]);
@@ -163,7 +167,8 @@ export default function HomePage() {
 
   return (
     <main className="">
-      <div className="flex flex-row  w-full">
+      {/* Laptop Responsiveness */}
+      {/* <div className="flex flex-row  w-full">
         {open && (
           <div className="w-1/5">
             <LeftFrame
@@ -216,6 +221,14 @@ export default function HomePage() {
             />
           </div>
         )}
+      </div> */}
+
+
+      {/* Mobile Responsiveness */}
+      <div className="">
+        <MobileHeader/>
+        <SpotlightMobile/>
+        <BottomBar/>
       </div>
     </main>
   );
