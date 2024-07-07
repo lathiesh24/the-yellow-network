@@ -12,7 +12,10 @@ import RenderStartup from "./RenderStartup";
 import BottomBar from "../../mobileComponents/BottomBar";
 import MobileHeader from "../../mobileComponents/MobileHeader";
 import Spotlight from "../LeftFrame/Spotlight";
-import SpotlightMobile from "../../mobileComponents/Spotlight";
+import SpotlightMobile from "../../mobileComponents/FooterComponents/SpotlightMobile";
+import SearchMobile from "../../mobileComponents/FooterComponents/SearchMobile";
+import TrendsMobile from "../../mobileComponents/FooterComponents/TrendsMobile";
+import MoreMobile from "../../mobileComponents/FooterComponents/MoreMobile";
 
 export default function HomePage() {
   const [messages, setMessages] = useState([]);
@@ -28,6 +31,7 @@ export default function HomePage() {
   const [mailMessage, setMailMessage] = useState<any>(null);
   const [connectionStatus, setConnectionStatus] = useState<string>("Connect");
   const [queryData, setQueryData] = useState<QueryResponse | null>(null);
+
 
   console.log("queryDatainHome", queryData, inputPrompt);
 
@@ -165,9 +169,30 @@ export default function HomePage() {
     ));
   };
 
+
+  // mobileResponsiveness
+  const [activeTab, setActiveTab] = useState<string>("Spotlight");
+
+  const renderTabContent = () => {
+    switch(activeTab) {
+      case "Spotlight":
+        return <SpotlightMobile/>;
+      case "Search":
+        return <SearchMobile/>
+      case "Trends":
+        return <TrendsMobile/>
+      case "More":
+        return <MoreMobile/>;
+      default:
+        return null;
+    } 
+  }
+
+
   return (
     <main className="">
       {/* Laptop Responsiveness */}
+
       {/* <div className="flex flex-row  w-full">
         {open && (
           <div className="w-1/5">
@@ -227,8 +252,8 @@ export default function HomePage() {
       {/* Mobile Responsiveness */}
       <div className="">
         <MobileHeader/>
-        <SpotlightMobile/>
-        <BottomBar/>
+        {renderTabContent()}
+        <BottomBar setActiveTab={setActiveTab}/>
       </div>
     </main>
   );
