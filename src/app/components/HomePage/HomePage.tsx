@@ -32,7 +32,6 @@ export default function HomePage() {
   const [connectionStatus, setConnectionStatus] = useState<string>("Connect");
   const [queryData, setQueryData] = useState<QueryResponse | null>(null);
 
-
   console.log("queryDatainHome", queryData, inputPrompt);
 
   useEffect(() => {
@@ -169,31 +168,40 @@ export default function HomePage() {
     ));
   };
 
-
   // mobileResponsiveness
   const [activeTab, setActiveTab] = useState<string>("Spotlight");
+  const [activeSpotlight, setActiveSpotlight] = useState<boolean>(false)
 
   const renderTabContent = () => {
-    switch(activeTab) {
+    switch (activeTab) {
       case "Spotlight":
-        return <SpotlightMobile/>;
+        return <SpotlightMobile activeSpotlight={activeSpotlight} setActiveSpotlight={setActiveSpotlight} />;
       case "Search":
-        return <SearchMobile/>
+        return (
+          <SearchMobile
+            isInputEmpty={isInputEmpty}
+            inputPrompt={inputPrompt}
+            setInputPrompt={setInputPrompt}
+            setIsInputEmpty={setIsInputEmpty}
+            handleToggleRightFrame={handleToggleRightFrame}
+            handleToggleLeftFrame={handleToggleLeftFrame}
+            onSaveInput={handleSaveInput}
+            saveQueryData={saveQueryData}
+          />
+        );
       case "Trends":
-        return <TrendsMobile/>
+        return <TrendsMobile />;
       case "More":
-        return <MoreMobile/>;
+        return <MoreMobile />;
       default:
         return null;
-    } 
-  }
-
+    }
+  };
 
   return (
-    <main className="">
-      {/* Laptop Responsiveness */}
-
-      {/* <div className="flex flex-row  w-full">
+    <main className="flex flex-col w-full">
+      {/* Desktop Responsiveness */}
+      <div className="hidden md:flex w-full flex-row">
         {open && (
           <div className="w-1/5">
             <LeftFrame
@@ -246,14 +254,13 @@ export default function HomePage() {
             />
           </div>
         )}
-      </div> */}
-
+      </div>
 
       {/* Mobile Responsiveness */}
-      <div className="">
-        <MobileHeader/>
+      <div className="flex flex-col md:hidden">
+        <MobileHeader activeSpotlight={activeSpotlight} setActiveSpotlight={setActiveSpotlight} />
         {renderTabContent()}
-        <BottomBar setActiveTab={setActiveTab}/>
+        <BottomBar setActiveTab={setActiveTab} activeTab={activeTab} />
       </div>
     </main>
   );
