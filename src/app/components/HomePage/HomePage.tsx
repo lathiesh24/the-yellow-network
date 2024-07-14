@@ -187,6 +187,9 @@ export default function HomePage() {
             handleToggleLeftFrame={handleToggleLeftFrame}
             onSaveInput={handleSaveInput}
             saveQueryData={saveQueryData}
+            messages={messages}
+            connectionStatus={connectionStatus} 
+            setConnectionStatus={setConnectionStatus}
           />
         );
       case "Trends":
