@@ -7,7 +7,6 @@ import axios from "axios";
 import CompanyProfilePane from "../CompanyProfilePane";
 import { QueryResponse, StartupType } from "../../interfaces";
 import LeftFrame from "../LeftFrame/LeftFrame";
-import api from "../Axios";
 import RenderStartup from "./RenderStartup";
 import BottomBar from "../../mobileComponents/BottomBar";
 import MobileHeader from "../../mobileComponents/MobileHeader";
@@ -32,6 +31,7 @@ export default function HomePage() {
   const [connectionStatus, setConnectionStatus] = useState<string>("Connect");
   const [queryData, setQueryData] = useState<QueryResponse | null>(null);
 
+  const [isLogoutOpen, setIsLogoutOpen] = useState<boolean>(false);
   console.log("queryDatainHome", queryData, inputPrompt);
 
   useEffect(() => {
@@ -170,12 +170,17 @@ export default function HomePage() {
 
   // mobileResponsiveness
   const [activeTab, setActiveTab] = useState<string>("Spotlight");
-  const [activeSpotlight, setActiveSpotlight] = useState<boolean>(false)
+  const [activeSpotlight, setActiveSpotlight] = useState<boolean>(false);
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "Spotlight":
-        return <SpotlightMobile activeSpotlight={activeSpotlight} setActiveSpotlight={setActiveSpotlight} />;
+        return (
+          <SpotlightMobile
+            activeSpotlight={activeSpotlight}
+            setActiveSpotlight={setActiveSpotlight}
+          />
+        );
       case "Search":
         return (
           <SearchMobile
@@ -188,7 +193,7 @@ export default function HomePage() {
             onSaveInput={handleSaveInput}
             saveQueryData={saveQueryData}
             messages={messages}
-            connectionStatus={connectionStatus} 
+            connectionStatus={connectionStatus}
             setConnectionStatus={setConnectionStatus}
           />
         );
@@ -211,10 +216,12 @@ export default function HomePage() {
               open={open}
               inputPrompt={inputPrompt}
               setInputPrompt={setInputPrompt}
+              userInfo={userInfo}
               isInputEmpty={isInputEmpty}
               setIsInputEmpty={setIsInputEmpty}
-              userInfo={userInfo}
               queryData={queryData}
+              setIsLogoutOpen={setIsLogoutOpen}
+              isLogoutOpen={isLogoutOpen}
             />
           </div>
         )}
@@ -261,7 +268,10 @@ export default function HomePage() {
 
       {/* Mobile Responsiveness */}
       <div className="flex flex-col md:hidden">
-        <MobileHeader activeSpotlight={activeSpotlight} setActiveSpotlight={setActiveSpotlight} />
+        <MobileHeader
+          activeSpotlight={activeSpotlight}
+          setActiveSpotlight={setActiveSpotlight}
+        />
         {renderTabContent()}
         <BottomBar setActiveTab={setActiveTab} activeTab={activeTab} />
       </div>
