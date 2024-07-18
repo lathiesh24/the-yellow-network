@@ -210,7 +210,6 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
               </div>
             )}
           </div>
-          <div></div>
         </div>
       )}
     </>
