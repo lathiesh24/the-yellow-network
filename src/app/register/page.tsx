@@ -31,7 +31,7 @@ const RegisterPage: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log("dataforregister", data);
-    let urlforregister = `https://theyellow.group/api/user/register/`;
+    let urlforregister = `http://0.0.0.0:8000/user/register/`;
     setLoading(true);
     try {
       const response = await axios.post(urlforregister, data);

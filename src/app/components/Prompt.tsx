@@ -17,7 +17,7 @@ interface PromptProps {
   handleToggleRightFrame: () => void;
   isInputEmpty: boolean;
   setIsInputEmpty: React.Dispatch<React.SetStateAction<boolean>>;
-  saveQueryData;
+  // saveQueryData;
 }
 
 const Prompt: React.FC<PromptProps> = ({
@@ -31,7 +31,7 @@ const Prompt: React.FC<PromptProps> = ({
   handleToggleRightFrame,
   isInputEmpty,
   setIsInputEmpty,
-  saveQueryData,
+  // saveQueryData,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isFeedbackFormOpen, setIsFeedbackFormOpen] = useState(false);
@@ -57,7 +57,7 @@ const Prompt: React.FC<PromptProps> = ({
       onSaveInput(inputPrompt);
       setInputPrompt("");
       setIsInputEmpty(true);
-      await saveQueryData(inputPrompt); // Pass the input prompt value to saveQueryData
+      // await saveQueryData(inputPrompt); // Pass the input prompt value to saveQueryData
     }
   };
 
@@ -132,10 +132,10 @@ const Prompt: React.FC<PromptProps> = ({
         >
           <BsChatQuote size={32} />
         </div>
-        <FeedbackForm
+        {/* <FeedbackForm
           isOpen={isFeedbackFormOpen}
           onRequestClose={closeFeedbackForm}
-        />
+        /> */}
       </div>
     </div>
   );
