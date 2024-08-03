@@ -12,7 +12,10 @@ import { FaHistory } from "react-icons/fa";
 import { GrLogout } from "react-icons/gr";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { QueryResponse } from "../../interfaces";
+import { ChatHistoryResponse } from "../../interfaces";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { fetchChatHistory } from "../../redux/features/chatHistorySlice";
+import useUserInfo from "../../redux/customHooks/userHook";
 
 interface UserInfo {
   email: string;
@@ -20,35 +23,31 @@ interface UserInfo {
 }
 
 interface LeftFrameProps {
-  open: boolean;
-  inputPrompt: string;
-  setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
-  userInfo: UserInfo;
-  isInputEmpty: boolean;
-  setIsInputEmpty: React.Dispatch<React.SetStateAction<boolean>>;
-  queryData: QueryResponse;
-  setIsLogoutOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isLogoutOpen: boolean;
   onNewChat: () => void;
   setSessionId: React.Dispatch<React.SetStateAction<string>>;
-  sessionId: string;
 }
 
 const LeftFrame: React.FC<LeftFrameProps> = ({
-  open,
-  inputPrompt,
-  setInputPrompt,
-  userInfo,
-  isInputEmpty,
-  setIsInputEmpty,
-  queryData,
-  setIsLogoutOpen,
-  isLogoutOpen,
   onNewChat,
   setSessionId,
-  sessionId,
 }) => {
-  const [historyData, setHistoryData] = useState<any>([]);
+
+  const userInfo = useUserInfo()
+
+  const [isLogoutOpen, setIsLogoutOpen] = useState<boolean>(false);
+
+  const dispatch = useAppDispatch();
+
+  const {history} = useAppSelector((state)=> state.chatHistory);
+
+  useEffect(()=> {
+   dispatch(fetchChatHistory());
+  }, [dispatch])
+
+  console.log("slicehistory",history)
+
+
+
   const [activeTab, setActiveTab] = useState<string>(() => {
     const savedActiveTab = localStorage.getItem("activeTab");
     return savedActiveTab ? savedActiveTab : "spotlight";
@@ -58,9 +57,6 @@ const LeftFrame: React.FC<LeftFrameProps> = ({
   const logoutRef = useRef<HTMLDivElement>(null);
   const navigate = useRouter();
 
-  useEffect(() => {
-    handleQueryHistory();
-  }, [queryData]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -83,29 +79,6 @@ const LeftFrame: React.FC<LeftFrameProps> = ({
     localStorage.setItem("activeTab", activeTab);
   }, [activeTab]);
 
-  const handleQueryHistory = async () => {
-    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
-
-    if (jwtAccessToken) {
-      try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/prompt/session/",
-          {
-            headers: {
-              Authorization: `Bearer ${jwtAccessToken}`,
-            },
-          }
-        );
-        const queries = response.data;
-        console.log(queries, "queries");
-        setHistoryData(queries);
-      } catch (error) {
-        console.error("Error fetching query history:", error);
-      }
-    } else {
-      console.error("JWT token not found in localStorage");
-    }
-  };
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
@@ -203,7 +176,6 @@ const LeftFrame: React.FC<LeftFrameProps> = ({
             </div>
             <HistoryBar
               onSelectHistory={handleHistorySelect}
-              historyData={historyData}
             />
           </>
         )}

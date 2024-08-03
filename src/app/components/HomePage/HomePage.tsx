@@ -13,9 +13,9 @@ import SpotlightMobile from "../../mobileComponents/FooterComponents/SpotlightMo
 import SearchMobile from "../../mobileComponents/FooterComponents/SearchMobile";
 import TrendsMobile from "../../mobileComponents/FooterComponents/TrendsMobile";
 import MoreMobile from "../../mobileComponents/FooterComponents/MoreMobile";
-import { QueryResponse, StartupType } from "../../interfaces";
+import { ChatHistoryResponse, StartupType } from "../../interfaces";
 import { TbShare2 } from "react-icons/tb";
-import CryptoJS from "crypto-js";
+import { encryptURL } from "../../utils/shareUtils";
 
 export default function HomePage() {
   const [messages, setMessages] = useState([]);
@@ -30,8 +30,7 @@ export default function HomePage() {
   const [isInputEmpty, setIsInputEmpty] = useState<boolean>(true);
   const [mailMessage, setMailMessage] = useState<any>(null);
   const [connectionStatus, setConnectionStatus] = useState<string>("Connect");
-  const [queryData, setQueryData] = useState<QueryResponse | null>(null);
-  const [isLogoutOpen, setIsLogoutOpen] = useState<boolean>(false);
+  const [queryData, setQueryData] = useState<ChatHistoryResponse | null>(null);
   const [activeTab, setActiveTab] = useState<string>("Spotlight");
   const [activeSpotlight, setActiveSpotlight] = useState<boolean>(false);
   const [sessionId, setSessionId] = useState<string>(() => {
@@ -40,7 +39,6 @@ export default function HomePage() {
   });
 
   console.log("queryDatainHome", queryData, inputPrompt);
-  console.log("messsagess---->",messages)
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("userInfo");
     if (userInfoFromStorage) {
@@ -57,7 +55,6 @@ export default function HomePage() {
     setOpen(!open);
   };
 
-  console.log("messages", messages);
   const handleToggleLeftFrame = () => {
     if (open) {
       setOpen(!open);
@@ -199,17 +196,10 @@ export default function HomePage() {
   };
 
   const handleShareClick = async () => {
-    const secretKey: string = "urlencrypt";
+    const encodedSessionID = encryptURL(sessionId)
 
-    const encryptedSessionId = CryptoJS.AES.encrypt(
-      sessionId,
-      secretKey
-    ).toString();
-
-    const encodedEncryptedSessionId = encodeURIComponent(encryptedSessionId);
-
-    const shareUrl: string = `${window.location.origin}/share/${encodedEncryptedSessionId}`;
-    console.log(shareUrl,"shareurll-->")
+    const shareUrl: string = `${window.location.origin}/share/${encodedSessionID}`;
+    console.log(shareUrl,"shareChatUrl-->")
     if (navigator.share) {
       try {
         await navigator.share({
@@ -302,18 +292,8 @@ export default function HomePage() {
         {open && (
           <div className="w-1/5">
             <LeftFrame
-              open={open}
-              inputPrompt={inputPrompt}
-              setInputPrompt={setInputPrompt}
-              userInfo={userInfo}
-              isInputEmpty={isInputEmpty}
-              setIsInputEmpty={setIsInputEmpty}
-              queryData={queryData}
-              setIsLogoutOpen={setIsLogoutOpen}
-              isLogoutOpen={isLogoutOpen}
               onNewChat={handleNewChat}
               setSessionId={setSessionId}
-              sessionId={sessionId}
             />
           </div>
         )}

@@ -3,6 +3,8 @@ import Image from "next/image";
 import { FiArrowDownCircle } from "react-icons/fi";
 import { IoShareSocialOutline } from "react-icons/io5";
 import { MdOutlineFileDownload } from "react-icons/md";
+import { useRouter } from "next/navigation";
+
 
 const SpotlightMobile = ({ activeSpotlight, setActiveSpotlight }) => {
   // Helper function to format the date
@@ -25,6 +27,7 @@ const SpotlightMobile = ({ activeSpotlight, setActiveSpotlight }) => {
     const interval = setInterval(() => {
       setCDate(getFormattedDate());
     }, 1000 * 60 * 60 * 12);
+
 
     return () => clearInterval(interval);
   }, []);
@@ -64,6 +67,25 @@ const SpotlightMobile = ({ activeSpotlight, setActiveSpotlight }) => {
   };
 
   const renderSpotlightSecondPage = () => {
+
+    const router = useRouter();
+    const handleSpotlightShare = async()=> {
+      const shareUrl: string = `${window.location.origin}/spotlights`;
+      console.log(shareUrl,"shareurll-->spotlight")
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "Share Spotlight",
+            url: shareUrl,
+          });
+          console.log("Successfully shared");
+        } catch (error) {
+          console.error("Error sharing:", error);
+        }
+      } else {
+        alert("Web Share API not supported");
+      }
+    }
     return (
       <div className="mb-40">
         {/* Image */}
@@ -90,7 +112,7 @@ const SpotlightMobile = ({ activeSpotlight, setActiveSpotlight }) => {
         <div className="flex justify-between  px-6 py-4">
           <div className="flex gap-8">
             {/* Share button */}
-            <div className="flex flex-col gap-1 text-xs items-center">
+            <div className="flex flex-col gap-1 text-xs items-center cursor-pointer" onClick={handleSpotlightShare}>
               <div>
                 <IoShareSocialOutline size={24} />
               </div>

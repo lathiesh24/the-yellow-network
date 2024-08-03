@@ -1,35 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { fetchChatHistory } from "../../redux/features/chatHistorySlice";
+import { Session } from "../../interfaces";
 
-interface Message {
-  id: number;
-  role: string;
-  content: string;
-  created_time: string;
-  session: number;
-}
 
-interface Session {
-  id: number;
-  session_id: string;
-  created_time: string;
-  messages: Message[];
-}
 
 interface HistoryBarProps {
   onSelectHistory: (sessionId: string) => void;
-  historyData: Session[];
 }
 
-const HistoryBar: React.FC<HistoryBarProps> = ({
-  onSelectHistory,
-  historyData,
-}) => {
-  const router  = useRouter()
+const HistoryBar: React.FC<HistoryBarProps> = ({ onSelectHistory }) => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const { history } = useAppSelector((state) => state.chatHistory);
+
+  useEffect(() => {
+    dispatch(fetchChatHistory());
+  }, [dispatch]);
+
+  console.log("History Data in history bar", history);
+
   const handleRenderMainSession = (session: string) => {
-    console.log(session,"seasonseason")
+    console.log(session, "seasonseason");
     // router.push(`/${session}`);
-  }
+  };
 
   const isToday = (date: Date) => {
     const today = new Date();
@@ -57,7 +53,7 @@ const HistoryBar: React.FC<HistoryBarProps> = ({
     const previous7DaysSessions: Session[] = [];
     const past30DaysSessions: Session[] = [];
 
-    historyData.forEach((session) => {
+    history.forEach((session) => {
       const sessionDate = new Date(session.created_time);
 
       if (isToday(sessionDate)) {
