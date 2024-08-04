@@ -93,3 +93,11 @@ export interface ChatHistoryResponse {
   messages: Message[];
 }
 
+export interface FormData {
+  first_name?: string;
+  email: string;
+  organization_name?: string;
+  password: string;
+}
+
+

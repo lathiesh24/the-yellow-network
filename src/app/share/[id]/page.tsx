@@ -5,15 +5,13 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { decryptURL } from "../../utils/shareUtils";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { fetchSessionMessages } from "../../redux/features/chat/sessionMessageSlice"
 
 const ShareSessionPage = () => {
-  const [messages, setMessages] = useState([]);
 
   const dispatch = useAppDispatch()
-  const messageInfo = useAppSelector((state)=> state.sessionMessage)
+  const messages = useAppSelector((state)=> state.sessionMessage.conversations)
 
-  
-  console.log("messageInfo",messageInfo, messages)
   const params = useParams();
   let encodedSessionID = params.id;
 
@@ -29,35 +27,8 @@ const ShareSessionPage = () => {
 
   const decryptedSessionId = decryptURL(encodedSessionID);
 
-  const fetchSessionMessages = async (id:string) => {
-    console.log("idofetch",id)
-    try {
-      const jwtAccessToken = localStorage.getItem("jwtAccessToken");
-      if (jwtAccessToken) {
-        const res = await axios.get(`http://127.0.0.1:8000/prompt/convo/${id}`, {
-          headers: {
-            Authorization: `Bearer ${jwtAccessToken}`,
-          },
-        });
-        setMessages(res.data.conversations);
-        console.log("Response:", res);
-      } else {
-        console.error("JWT token not found in localStorage.");
-      }
-    } catch (error) {
-      console.error("Error fetching session messages:", error);
-    }
-  };
-
   useEffect(() => {
     if (decryptedSessionId) {
-      fetchSessionMessages(decryptedSessionId);
-    }
-  }, [decryptedSessionId]);
-
-  useEffect(() => {
-    if (decryptedSessionId) {
-      // Directly dispatch the thunk with the decrypted session ID
       dispatch(fetchSessionMessages(decryptedSessionId));
     }
   }, [decryptedSessionId, dispatch]);
@@ -88,7 +59,7 @@ const ShareSessionPage = () => {
     );
   };
 
-  const renderOtherCategories = (message) => {
+  const renderOtherCategories = (message:any) => {
     const startups = message?.response?.startups;
 
     if (!startups || startups?.length === 0) return null;
@@ -114,7 +85,7 @@ const ShareSessionPage = () => {
   };
 
   const renderMessages = () => {
-    return messages.map((message, index) => (
+    return messages.map((message:any, index) => (
       <div key={index} className="justify-between mb-4 text-[16px] px-6">
         <div className="p-6 text-left border-l-4 border-orange-100">
           <span className="font-semibold text-[17px] text-black block mb-1">

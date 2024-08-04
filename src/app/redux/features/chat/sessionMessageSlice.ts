@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { StartupType } from "../../../interfaces";
 import { getRequestWithAccessToken } from "../../hooks";
 
-// Define the ChatResponseType and ConversationType interfaces
 interface ChatResponseType {
   success: boolean;
   category: string;
@@ -19,25 +18,23 @@ interface ConversationType {
   response: ChatResponseType;
 }
 
-// Define the SessionMessageState interface
 export interface SessionMessageState {
   loading: boolean;
   conversations: ConversationType[];
   error: string | null;
 }
 
-// Define the initial state
 const initialState: SessionMessageState = {
   loading: false,
   conversations: [],
   error: null,
 };
 
-// Create the async thunk for fetching session messages
+
 export const fetchSessionMessages = createAsyncThunk<
-  ConversationType[], // Return type
-  string, // Parameter type
-  { rejectValue: string } // Rejection type
+  ConversationType[], 
+  string, 
+  { rejectValue: string }
 >(
   "sessionMessages/fetchSessionMessages",
   async (id: string, { rejectWithValue }) => {
