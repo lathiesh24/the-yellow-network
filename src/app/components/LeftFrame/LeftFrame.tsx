@@ -12,49 +12,51 @@ import { FaHistory } from "react-icons/fa";
 import { GrLogout } from "react-icons/gr";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { QueryResponse } from "../../interfaces";
+import { ChatHistoryResponse } from "../../interfaces";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { fetchChatHistory } from "../../redux/features/chatHistorySlice";
+import useUserInfo from "../../redux/customHooks/userHook";
+
 interface UserInfo {
   email: string;
   first_name: string;
 }
 
 interface LeftFrameProps {
-  open: boolean;
-  inputPrompt: string;
-  setInputPrompt: React.Dispatch<React.SetStateAction<string>>;
-  userInfo: UserInfo;
-  isInputEmpty: boolean;
-  setIsInputEmpty: React.Dispatch<React.SetStateAction<boolean>>;
-  queryData: QueryResponse;
-  setIsLogoutOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isLogoutOpen: boolean;
+  onNewChat: () => void;
+  setSessionId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const LeftFrame: React.FC<LeftFrameProps> = ({
-  open,
-  inputPrompt,
-  setInputPrompt,
-  userInfo,
-  isInputEmpty,
-  setIsInputEmpty,
-  queryData,
-  setIsLogoutOpen,
-  isLogoutOpen
+  onNewChat,
+  setSessionId,
 }) => {
-  const [historyData, setHistoryData] = useState<any>([]);
+
+  const userInfo = useUserInfo()
+
+  const [isLogoutOpen, setIsLogoutOpen] = useState<boolean>(false);
+
+  const dispatch = useAppDispatch();
+
+  const {history} = useAppSelector((state)=> state.chatHistory);
+
+  useEffect(()=> {
+   dispatch(fetchChatHistory());
+  }, [dispatch])
+
+  console.log("slicehistory",history)
+
+
+
   const [activeTab, setActiveTab] = useState<string>(() => {
-    // Retrieve the active tab from localStorage if available
     const savedActiveTab = localStorage.getItem("activeTab");
     return savedActiveTab ? savedActiveTab : "spotlight";
   });
 
-  const [currentMenu, setCurrentMenu] = useState<string>(activeTab); // Initialize currentMenu with activeTab
+  const [currentMenu, setCurrentMenu] = useState<string>(activeTab);
   const logoutRef = useRef<HTMLDivElement>(null);
   const navigate = useRouter();
 
-  useEffect(() => {
-    handleQueryHistory();
-  }, [queryData]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -74,41 +76,18 @@ const LeftFrame: React.FC<LeftFrameProps> = ({
   }, []);
 
   useEffect(() => {
-    // Save the active tab to localStorage when it changes
     localStorage.setItem("activeTab", activeTab);
   }, [activeTab]);
 
-  const handleQueryHistory = async () => {
-    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
-
-    if (jwtAccessToken) {
-      try {
-        const response = await axios.get(
-          "https://theyellow.group/api/queryhistory/retrieve/",
-          {
-            headers: {
-              Authorization: `Bearer ${jwtAccessToken}`,
-            },
-          }
-        );
-        const queries = response.data;
-        setHistoryData(queries);
-      } catch (error) {
-        console.error("Error fetching query history:", error);
-      }
-    } else {
-      console.error("JWT token not found in localStorage");
-    }
-  };
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
     setCurrentMenu(tab);
   };
 
-  const handleHistorySelect = (value: string) => {
-    setInputPrompt(value);
-    setIsInputEmpty(false);
+  const handleHistorySelect = (sessionId: string) => {
+    console.log("Selected session ID:", sessionId);
+    setSessionId(sessionId);
   };
 
   const showDropdown = (event: React.MouseEvent) => {
@@ -128,7 +107,6 @@ const LeftFrame: React.FC<LeftFrameProps> = ({
     navigate.push("/totalRequests");
   };
 
-  // Check if the email is from theyellow.network
   const isYellowNetworkEmail = (email: string) => {
     return (
       email.endsWith("@theyellow.network") ||
@@ -190,10 +168,16 @@ const LeftFrame: React.FC<LeftFrameProps> = ({
           </div>
         </div>
         {activeTab === "history" && (
-          <HistoryBar
-            onSelectHistory={handleHistorySelect}
-            historyData={historyData}
-          />
+          <>
+            <div className="text-sm py-3 px-2 bg-white font-semibold cursor-pointer flex justify-center">
+              <button className="bg-yellow-400 p-2 rounded-lg text-white" onClick={onNewChat}>
+                New Chat
+              </button>
+            </div>
+            <HistoryBar
+              onSelectHistory={handleHistorySelect}
+            />
+          </>
         )}
         {activeTab === "recommended" && (
           <RecommendedQueries onSelectHistory={handleHistorySelect} />
