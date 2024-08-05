@@ -146,25 +146,7 @@ export default function HomePage() {
   useEffect(() => {
     handleGetConvo();
   }, [sessionId]);
-  // const saveQueryData = async (query: string) => {
-  //   const jwtAccessToken = localStorage.getItem("jwtAccessToken");
-  //   if (jwtAccessToken) {
-  //     const response = await axios.post(
-  //       "https://theyellow.group/api/queryhistory/save/",
-  //       {
-  //         userquery: query,
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${jwtAccessToken}`,
-  //         },
-  //       }
-  //     );
-  //     setQueryData(response.data);
-  //   } else {
-  //     console.error("JWT token not found in localStorage");
-  //   }
-  // };
+ 
 
   const fetchConnectStatus = async (startupId: number) => {
     console.log("Fetching status for startupId:", startupId);

@@ -2,8 +2,6 @@ import React, { useRef, useEffect, useState } from "react";
 import { IoMdSend } from "react-icons/io";
 import DefaultCard from "./DefaultCard";
 import { BsChatQuote } from "react-icons/bs";
-import axios from "axios";
-import FeedbackForm from "./FeedbackForm";
 
 interface PromptProps {
   open: boolean;
@@ -31,7 +29,6 @@ const Prompt: React.FC<PromptProps> = ({
   handleToggleRightFrame,
   isInputEmpty,
   setIsInputEmpty,
-  // saveQueryData,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isFeedbackFormOpen, setIsFeedbackFormOpen] = useState(false);
