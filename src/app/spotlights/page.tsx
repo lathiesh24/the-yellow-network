@@ -80,12 +80,12 @@ const page = () => {
             <div>Share</div>
           </div>
           {/* Download button */}
-          <div className="flex flex-col gap-1 text-xs items-center">
+          {/* <div className="flex flex-col gap-1 text-xs items-center">
             <div>
               <MdOutlineFileDownload size={24} />
             </div>
             <div>Download</div>
-          </div>
+          </div> */}
         </div>
 
         {/* Connect button */}

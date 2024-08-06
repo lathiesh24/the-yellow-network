@@ -100,4 +100,16 @@ export interface FormData {
   password: string;
 }
 
+export interface SpotlightContent {
+  heading: string;
+  body: string;
+}
+
+export interface Spotlight {
+  id:number
+  spotlight_title: string;
+  spotlight_content: SpotlightContent[];
+  spotlight_img: string;
+  created_at: string;
+}
 
