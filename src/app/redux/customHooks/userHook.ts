@@ -8,7 +8,7 @@ const useUserInfo = ()=> {
 
 
     useEffect(()=> {
-    const userInfoFromStorage  = localStorage.getItem('userInfo')
+    const userInfoFromStorage  = localStorage.getItem('user')
     if(userInfoFromStorage) {
         const parsedUserInfo = JSON.parse(userInfoFromStorage);
         dispatch(setUserInfo(parsedUserInfo))

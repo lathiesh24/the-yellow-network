@@ -9,7 +9,7 @@ import CompanyProfilePane from "../CompanyProfilePane";
 import RenderStartup from "./RenderStartup";
 import BottomBar from "../../mobileComponents/BottomBar";
 import MobileHeader from "../../mobileComponents/MobileHeader";
-import SpotlightMobile from "../../mobileComponents/FooterComponents/SpotlightMobile";
+import SpotlightMobile from "../Spotlights/SpotlightMobile";
 import SearchMobile from "../../mobileComponents/FooterComponents/SearchMobile";
 import TrendsMobile from "../../mobileComponents/FooterComponents/TrendsMobile";
 import MoreMobile from "../../mobileComponents/FooterComponents/MoreMobile";
@@ -22,7 +22,6 @@ export default function HomePage() {
   const [defaultPrompt, setDefaultPrompt] = useState<string>("");
   const [open, setOpen] = useState<boolean>(true);
   const [selectedStartup, setSelectedStartup] = useState<StartupType>();
-  const [openCompanyPane, setOpenCompanyPane] = useState<boolean>(true);
   const [inputPrompt, setInputPrompt] = useState(defaultPrompt);
   const [openRightFrame, setOpenRightFrame] = useState<boolean>(true);
   const [userInfo, setUserInfo] = useState<any>(null);
@@ -91,7 +90,7 @@ export default function HomePage() {
         }
       );
 
-      console.log(response,"response ===>")
+      console.log(response, "response ===>");
       setMessages((prevMessages) =>
         prevMessages.map((msg) =>
           msg.question === input
@@ -128,7 +127,7 @@ export default function HomePage() {
           }
         );
 
-        console.log("responseee==?", response.data.conversations)
+        console.log("responseee==?", response.data.conversations);
 
         if (response.status === 200) {
           setMessages(response.data.conversations); // Adjust this to match your response structure
@@ -136,7 +135,10 @@ export default function HomePage() {
           console.error("Failed to fetch conversation data.");
         }
       } catch (error) {
-        console.error("An error occurred while fetching conversation data:", error);
+        console.error(
+          "An error occurred while fetching conversation data:",
+          error
+        );
       }
     } else {
       console.error("JWT token not found in localStorage.");
@@ -146,7 +148,6 @@ export default function HomePage() {
   useEffect(() => {
     handleGetConvo();
   }, [sessionId]);
- 
 
   const fetchConnectStatus = async (startupId: number) => {
     console.log("Fetching status for startupId:", startupId);
@@ -178,10 +179,10 @@ export default function HomePage() {
   };
 
   const handleShareClick = async () => {
-    const encodedSessionID = encryptURL(sessionId)
+    const encodedSessionID = encryptURL(sessionId);
 
     const shareUrl: string = `${window.location.origin}/share/${encodedSessionID}`;
-    console.log(shareUrl,"shareChatUrl-->")
+    console.log(shareUrl, "shareChatUrl-->");
     if (navigator.share) {
       try {
         await navigator.share({
@@ -236,12 +237,7 @@ export default function HomePage() {
   const renderTabContent = () => {
     switch (activeTab) {
       case "Spotlight":
-        return (
-          <SpotlightMobile
-            activeSpotlight={activeSpotlight}
-            setActiveSpotlight={setActiveSpotlight}
-          />
-        );
+        return <SpotlightMobile />;
       case "Search":
         return (
           <SearchMobile
@@ -273,10 +269,7 @@ export default function HomePage() {
       <div className="hidden md:flex w-full flex-row">
         {open && (
           <div className="w-1/5">
-            <LeftFrame
-              onNewChat={handleNewChat}
-              setSessionId={setSessionId}
-            />
+            <LeftFrame onNewChat={handleNewChat} setSessionId={setSessionId} />
           </div>
         )}
         <div className="relative flex-grow pt-12">
