@@ -119,7 +119,7 @@ export default function HomePage() {
     if (jwtAccessToken) {
       try {
         const response = await axios.get(
-          `https://theyellow.group/api/prompt/convo/${sessionId}`,
+          `https://theyellow.group/api/prompt/convo/${sessionId}/`,
           {
             headers: {
               Authorization: `Bearer ${jwtAccessToken}`,
