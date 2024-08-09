@@ -39,7 +39,7 @@ export default function HomePage() {
 
   console.log("queryDatainHome", queryData, inputPrompt);
   useEffect(() => {
-    const userInfoFromStorage = localStorage.getItem("userInfo");
+    const userInfoFromStorage = localStorage.getItem("user");
     if (userInfoFromStorage) {
       const parsedUserInfo = JSON.parse(userInfoFromStorage);
       setUserInfo(parsedUserInfo);
@@ -130,7 +130,7 @@ export default function HomePage() {
         console.log("responseee==?", response.data.conversations);
 
         if (response.status === 200) {
-          setMessages(response.data.conversations); // Adjust this to match your response structure
+          setMessages(response.data.conversations);
         } else {
           console.error("Failed to fetch conversation data.");
         }
@@ -252,6 +252,7 @@ export default function HomePage() {
             messages={messages}
             connectionStatus={connectionStatus}
             setConnectionStatus={setConnectionStatus}
+            setSessionId={setSessionId}
           />
         );
       case "Trends":
@@ -274,17 +275,20 @@ export default function HomePage() {
         )}
         <div className="relative flex-grow pt-12">
           <Prompt
-            onSaveInput={handleSaveInput}
-            defaultPrompt={defaultPrompt}
-            renderMessages={renderMessages}
+            isInputEmpty={isInputEmpty}
             inputPrompt={inputPrompt}
             setInputPrompt={setInputPrompt}
-            open={open}
-            handleToggleLeftFrame={handleToggleLeftFrame}
-            openRightFrame={openRightFrame}
-            handleToggleRightFrame={handleToggleRightFrame}
-            isInputEmpty={isInputEmpty}
             setIsInputEmpty={setIsInputEmpty}
+            handleToggleLeftFrame={handleToggleLeftFrame}
+            handleToggleRightFrame={handleToggleRightFrame}
+            onSaveInput={handleSaveInput}
+
+            defaultPrompt={defaultPrompt}
+            renderMessages={renderMessages}
+            open={open}
+            openRightFrame={openRightFrame}
+            
+           
             // saveQueryData={saveQueryData}
           />
           <div className="absolute left-2 top-2 flex items-center">
