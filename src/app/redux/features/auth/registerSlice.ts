@@ -27,7 +27,7 @@ export const registerUser = createAsyncThunk(
   'register/registerUser',
   async (data: FormData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://0.0.0.0:8000/user/register/', data);
+      const response = await axios.post('http://127.0.0.1:8000/user/register/', data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -68,7 +68,7 @@ const registerSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       });
-  },
+  },  
 });
 
 export const { clearRegisterState } = registerSlice.actions;
