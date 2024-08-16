@@ -104,11 +104,15 @@ const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, e
               placeholder="Enter your organization"
               className="text-base placeholder-text-base px-5 py-3 h-10 outline-none rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] placeholder-text-gray-300 border border-solid w-80"
             />
+            <div>
+              Hi
+            </div>
             {errors.organization_name && (
               <p className="text-red-500 capitalize">
                 {errors.organization_name.message}
               </p>
             )}
+            
           </div>
 
           {/* Success/Error Message */}

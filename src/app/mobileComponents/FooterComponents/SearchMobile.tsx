@@ -17,6 +17,7 @@ interface SearchMobileProps {
   connectionStatus: any;
   setConnectionStatus: (status: any) => void;
   setSessionId: (id: any) => void;
+  handleNewChat: any
 }
 
 const SearchMobile: React.FC<SearchMobileProps> = ({
@@ -31,10 +32,16 @@ const SearchMobile: React.FC<SearchMobileProps> = ({
   connectionStatus,
   setConnectionStatus,
   setSessionId,
+  handleNewChat
 }) => {
+  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
   const [answerTab, setAnswerTab] = useState(false);
   const [selectedStartup, setSelectedStartup] = useState<any>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
+  const handleAccordian = () => {
+    setIsAccordionOpen(!isAccordionOpen);
+  };
 
   const handleStartups = (startup: any) => {
     setSelectedStartup(startup);
@@ -50,23 +57,27 @@ const SearchMobile: React.FC<SearchMobileProps> = ({
 
   const handleSelectSession = (sessionId: string) => {
     setSessionId(sessionId);
-    setIsHistoryOpen(false); // Close the history overlay
+    setIsHistoryOpen(false);
   };
 
   const renderMainContent = () => (
-    <div className="flex items-center flex-col my-40 gap-20">
-      <div className="flex gap-10">
+    <div className="relative flex flex-col items-center justify-center min-h-screen">
+      <div
+        className="absolute top-0 left-0 m-4 text-blue-400 cursor-pointer"
+        onClick={toggleHistory}
+      >
+        <FaBars size={24} />
+      </div>
+
+      <div className="flex gap-10 items-center justify-center">
         <Image
           src="/ecllipseright.png"
           width={50}
           height={50}
           alt="Ecllipse Right"
         />
-        <div className="font-semibold text-lg flex flex-col gap-2 items-center justify-center mx-auto">
-          What problem are you{" "}
-          <span className="flex justify-center items-center">
-            trying to solve?
-          </span>
+        <div className="font-semibold text-lg text-center">
+          What problem are you trying to solve?
         </div>
         <Image
           src="/ecllipseleft.png"
@@ -92,6 +103,22 @@ const SearchMobile: React.FC<SearchMobileProps> = ({
 
   const renderAnswerTab = () => (
     <div className="pb-64">
+      <div className="flex justify-between items-center">
+        <div
+          className="mt-4 ml-4 text-blue-400 cursor-pointer"
+          onClick={toggleHistory}
+        >
+          <FaBars size={24} />
+        </div>
+
+        <div 
+        className="p-2 rounded-md bg-blue-400 text-white mt-4 mr-4 text-sm font-semibold"
+        onClick={()=>handleNewChat()}
+        >
+          New Chat
+        </div>
+      </div>
+
       <div className="mx-6 flex flex-col gap-6 mt-6">
         {messages.map((message, index) => (
           <div key={index} className="flex flex-col gap-2 mb-4">
@@ -157,12 +184,6 @@ const SearchMobile: React.FC<SearchMobileProps> = ({
 
   return (
     <div>
-      <div
-        className="mt-4 ml-4 text-blue-400 cursor-pointer"
-        onClick={toggleHistory}
-      >
-        <FaBars size={24} />
-      </div>
       {selectedStartup ? (
         <StartupProfile
           selectedStartup={selectedStartup}

@@ -6,7 +6,7 @@ import {
 import { GrFormClose } from "react-icons/gr";
 import { FaSpinner } from "react-icons/fa";
 import axios from "axios";
-import Image from 'next/image'; // Assuming you are using Next.js for the Image component
+import Image from "next/image"; // Assuming you are using Next.js for the Image component
 import ConnectModal from "./CompanyProfile/ConnectModal";
 import { ChatHistoryResponse, StartupType } from "../interfaces";
 
@@ -44,7 +44,11 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  console.log('conectionStatusLaptop',connectionStatus, companyData.startup_name)
+  console.log(
+    "conectionStatusLaptop",
+    connectionStatus,
+    companyData.startup_name
+  );
   const openPane = () => setOpenState(false);
 
   const handleConnect = async () => {
@@ -65,7 +69,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   };
 
   const sendEmail = async () => {
-    await axios.post("https://theyellow.group/api/email/send-email/", {
+    await axios.post("http://127.0.0.1:8000/email/send-email/", {
       subject: "Demo",
       template_name: "email_template.html",
       context: { userInfo, mailData, companyData },
@@ -79,7 +83,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
       throw new Error("JWT token not found in localStorage");
     }
     await axios.post(
-      "https://theyellow.group/api/connects/",
+      "http://127.0.0.1:8000/connects/",
       { startup_id: companyData?.startup_id },
       { headers: { Authorization: `Bearer ${jwtAccessToken}` } }
     );
@@ -91,7 +95,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
       throw new Error("JWT token not found in localStorage");
     }
     await axios.post(
-      "https://theyellow.group/api/partnerconnect/",
+      "http://127.0.0.1:8000/partnerconnect/",
       {
         to_growthtechfirm: companyData?.startup_id,
         query_status: "requested",
