@@ -17,6 +17,7 @@ const SpotlightMobile: React.FC = () => {
   const handleSpotlight = (id: number) => {
     const encodedId = encryptURL(id.toString());
     router.push(`/spotlights/${encodedId}`);
+    
   };
 
   return (
