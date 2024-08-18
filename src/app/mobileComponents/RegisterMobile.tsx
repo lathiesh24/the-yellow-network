@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { FormData } from '../interfaces';
+import { FormData, StartupType } from '../interfaces';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { fetchCompanies } from '../redux/features/companyprofile/companyProfile';
 
 interface RegisterMobileProps {
   onSubmit: SubmitHandler<FormData>;
@@ -17,13 +19,52 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
   message,
   error,
 }) => {
+  const dispatch = useAppDispatch();
   const {
     handleSubmit,
     register,
-    formState: { errors, isValid, isSubmitting, isSubmitted },
+    setValue,
+    formState: { errors, isValid, isSubmitting },
   } = useForm<FormData>({
     mode: 'onChange',
   });
+
+  const [filteredCompanies, setFilteredCompanies] = useState<StartupType[]>([]);
+  const [query, setQuery] = useState('');
+  const [selectedCompanyId, setSelectedCompanyId] = useState<number | null>(null);
+
+  const { companies } = useAppSelector((state) => state.companyProfile);
+
+  useEffect(() => {
+    dispatch(fetchCompanies());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (query) {
+      const filtered = companies
+        .filter((company) =>
+          company.startup_name.toLowerCase().includes(query.toLowerCase())
+        )
+        .slice(0, 4);
+      setFilteredCompanies(filtered);
+    } else {
+      setFilteredCompanies([]);
+    }
+  }, [query, companies]);
+
+  const handleCompanySelect = (company: StartupType) => {
+    setQuery(company.startup_name);
+    setSelectedCompanyId(company.startup_id);
+    setFilteredCompanies([]);
+    setValue('organization_name', company.startup_name);
+  };
+
+  const handleFormSubmit: SubmitHandler<FormData> = (data) => {
+    if (selectedCompanyId) {
+      data.organization_id = selectedCompanyId;
+    }
+    onSubmit(data);
+  };
 
   return (
     <div className="h-screen w-full flex flex-col justify-start pt-10 items-start bg-gradient-to-b from-yellow-300 to-yellow-100">
@@ -40,7 +81,7 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
       </div>
       <div className="w-full h-4/5 flex flex-col mt-8 bg-white py-8 rounded-t-3xl shadow-lg">
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(handleFormSubmit)}
           className="flex flex-col gap-6 px-10 mt-4"
         >
           <div className="flex flex-col items-start justify-start gap-2 w-full">
@@ -96,7 +137,22 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
               id="organization_name"
               placeholder="Organization Name"
               className="text-base px-5 py-3 outline-none rounded-lg shadow w-full"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
             />
+            {filteredCompanies.length > 0 && (
+              <ul className="border border-gray-300 mt-2 w-full max-h-48 overflow-y-auto">
+                {filteredCompanies.map((company) => (
+                  <li
+                    key={company.startup_id}
+                    onClick={() => handleCompanySelect(company)}
+                    className="cursor-pointer p-2 hover:bg-gray-100"
+                  >
+                    {company.startup_name}
+                  </li>
+                ))}
+              </ul>
+            )}
             {errors.organization_name && (
               <p className="text-red-500">{errors.organization_name.message}</p>
             )}

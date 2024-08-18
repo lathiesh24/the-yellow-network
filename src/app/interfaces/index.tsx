@@ -98,6 +98,7 @@ export interface FormData {
   email: string;
   organization_name?: string;
   password: string;
+  organization_id?: number;
 }
 
 export interface SpotlightContent {
