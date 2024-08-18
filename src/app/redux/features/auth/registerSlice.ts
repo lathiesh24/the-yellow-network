@@ -78,7 +78,7 @@ const registerSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       });
-  },
+  },  
 });
 
 export const { clearRegisterState } = registerSlice.actions;
