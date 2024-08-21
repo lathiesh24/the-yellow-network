@@ -56,7 +56,7 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
     setQuery(company.startup_name);
     setSelectedCompanyId(company.startup_id);
     setFilteredCompanies([]);
-    setValue('organization_name', company.startup_name);
+    setValue('organization_id', company.startup_id);
   };
 
   const handleFormSubmit: SubmitHandler<FormData> = (data) => {

@@ -8,8 +8,7 @@ const CompanyProfilePage: React.FC = () => {
   const { company, loading, error } = useAppSelector((state) => state.companyProfile);
 
   useEffect(() => {
-    // Convert the number to a string before passing it to the fetchCompanyById function
-    const companyId = "1"; // Replace '1' with the desired ID as a string
+    const companyId = "1"; 
     dispatch(fetchCompanyById(companyId));
   }, [dispatch]);
 

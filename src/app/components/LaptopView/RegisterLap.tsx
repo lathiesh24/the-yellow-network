@@ -40,12 +40,12 @@ const RegisterLap: React.FC<RegisterLapProps> = ({
   }, [dispatch]);
 
   useEffect(() => {
-    if (query) {
+    if (query && companies.length > 0) {
       const filtered = companies
         .filter((company) =>
           company.startup_name.toLowerCase().includes(query.toLowerCase())
         )
-        .slice(0, 4); // Limit results to top 4
+        .slice(0, 4);
       setFilteredCompanies(filtered);
     } else {
       setFilteredCompanies([]);
@@ -56,15 +56,18 @@ const RegisterLap: React.FC<RegisterLapProps> = ({
     setQuery(company.startup_name);
     setSelectedCompanyId(company.startup_id);
     setFilteredCompanies([]);
-    setValue("organization_name", company.startup_name); // Set the value in the form
+    setValue("organization_id", company.startup_id);
   };
 
   const handleFormSubmit: SubmitHandler<FormData> = (data) => {
     if (selectedCompanyId) {
-      data.organization_id = selectedCompanyId;
+      data.organization_id = selectedCompanyId; 
     }
+    delete data.organization_name;
+    console.log("Data to submit:", data);
     onSubmit(data);
   };
+  
 
   return (
     <div className="flex justify-evenly items-center bg-gradient-to-b from-yellow-100 to-yellow-400">
@@ -105,8 +108,9 @@ const RegisterLap: React.FC<RegisterLapProps> = ({
               </p>
             )}
           </div>
+
           <div className="flex flex-col items-start justify-start gap-2">
-            <label htmlFor="email">Organisation Email</label>
+            <label htmlFor="email">Organization Email</label>
             <input
               type="email"
               id="email"
@@ -146,7 +150,9 @@ const RegisterLap: React.FC<RegisterLapProps> = ({
             <label htmlFor="organization">Organization Name</label>
             <input
               type="text"
-              {...register("organization_name", { required: "Organization name is required" })}
+              {...register("organization_name", {
+                required: "Organization name is required",
+              })}
               autoComplete="off"
               id="organization"
               placeholder="Enter your organization"
@@ -155,7 +161,7 @@ const RegisterLap: React.FC<RegisterLapProps> = ({
               onChange={(e) => setQuery(e.target.value)}
             />
             {filteredCompanies.length > 0 && (
-              <ul className="border border-gray-300 mt-2 w-full max-h-48 overflow-y-auto">
+              <ul className="border border-gray-300 mt-2 w-full max-h-48 overflow-y-auto bg-white z-10">
                 {filteredCompanies.map((company) => (
                   <li
                     key={company.startup_id}
@@ -194,6 +200,7 @@ const RegisterLap: React.FC<RegisterLapProps> = ({
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
+
         <div className="flex justify-center items-center gap-2 mt-8 md:mt-10">
           <div>Already have an account?</div>
           <Link href="/login" className="underline">

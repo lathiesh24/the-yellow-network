@@ -28,7 +28,8 @@ export interface UserInfo {
   email:string;
   first_name:string;
   is_superuser:boolean;
-  organization:string | null;
+  organization:number;
+  is_primary_user : boolean
 }
 
 
