@@ -1,40 +1,46 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { StartupType } from "../../../interfaces";
 import { getRequestWithAccessToken } from "../../hooks";
+import axios from 'axios';
 
 // Define the state shape for company profiles
-export interface CompanyProfileState {
-  loading: boolean;
+interface CompanyProfileState {
   companies: StartupType[];
-  company: StartupType | null;
+  loading: boolean;
   error: string | null;
+  hasMore: boolean;
 }
+
 
 // Initial state
 const initialState: CompanyProfileState = {
-  loading: false,
   companies: [],
-  company: null,
+  loading: false,
   error: null,
+  hasMore: true,
 };
 
-// Thunk to fetch all companies
-export const fetchCompanies = createAsyncThunk<
-  StartupType[],
-  void,
-  { rejectValue: string }
->("companyProfile/fetchCompanies", async (_, { rejectWithValue }) => {
-  try {
-    const response = await getRequestWithAccessToken(
-      `http://127.0.0.1:8000/directorysearch/companyview/`
-    );
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue(
-      error.response?.data || "Error in fetching companies"
-    );
+export const fetchCompanies = createAsyncThunk(
+  'companyProfile/fetchCompanies',
+  async ({ page, page_size }: { page: number, page_size: number }, { rejectWithValue }) => {
+    try {
+      const response = await getRequestWithAccessToken(
+        `http://127.0.0.1:8000/directorysearch/companyview/?page=${page}&page_size=${page_size}`, 
+      );
+
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+      return response.data.results;
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+        return rejectWithValue('No more data');
+      }
+      return rejectWithValue('An error occurred while fetching data');
+    }
   }
-});
+);
+
+
 
 // Thunk to fetch a single company by ID
 export const fetchCompanyById = createAsyncThunk<
@@ -46,7 +52,7 @@ export const fetchCompanyById = createAsyncThunk<
     const response = await getRequestWithAccessToken(
       `http://127.0.0.1:8000/directorysearch/companyview/${id}/`
     );
-    return response.data;
+    return response.data.results;
   } catch (error: any) {
     return rejectWithValue(
       error.response?.data || `Error in fetching company with ID: ${id}`
@@ -54,54 +60,33 @@ export const fetchCompanyById = createAsyncThunk<
   }
 });
 
-// Create the slice
+
 const companyProfileSlice = createSlice({
-  name: "companyProfile",
+  name: 'companyProfile',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // Fetch all companies
-    builder
-      .addCase(fetchCompanies.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(
-        fetchCompanies.fulfilled,
-        (state, action: PayloadAction<StartupType[]>) => {
-          state.companies = action.payload;
-          state.loading = false;
-        }
-      )
-      .addCase(
-        fetchCompanies.rejected,
-        (state, action: PayloadAction<string | undefined>) => {
-          state.error = action.payload || "Failed to fetch companies";
-          state.loading = false;
-        }
-      );
-
-    // Fetch a company by ID
-    builder
-      .addCase(fetchCompanyById.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(
-        fetchCompanyById.fulfilled,
-        (state, action: PayloadAction<StartupType>) => {
-          state.company = action.payload;
-          state.loading = false;
-        }
-      )
-      .addCase(
-        fetchCompanyById.rejected,
-        (state, action: PayloadAction<string | undefined>) => {
-          state.error = action.payload || "Failed to fetch company by ID";
-          state.loading = false;
-        }
-      );
+    builder.addCase(fetchCompanies.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchCompanies.fulfilled, (state, action) => {
+      if (action.payload.length === 0) {
+        state.hasMore = false;  
+      } else {
+        state.companies = [...state.companies, ...action.payload];
+      }
+      state.loading = false;
+    });
+    builder.addCase(fetchCompanies.rejected, (state, action) => {
+      state.loading = false;
+      if (action.payload === 'No more data') {
+        state.hasMore = false;
+      } else {
+        state.error = action.error.message || 'Something went wrong';
+      }
+    });
   },
 });
+
 
 export default companyProfileSlice.reducer;
