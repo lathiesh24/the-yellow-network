@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchCompanies } from "../../redux/features/companyprofile/companyProfile";
+import RegistrationModel from "../RegisterModel/RegisterModel";
+import axios from "axios"; // Added for API requests
 
 interface RegisterLapProps {
   onSubmit: SubmitHandler<FormData>;
@@ -61,13 +63,33 @@ const RegisterLap: React.FC<RegisterLapProps> = ({
 
   const handleFormSubmit: SubmitHandler<FormData> = (data) => {
     if (selectedCompanyId) {
-      data.organization_id = selectedCompanyId; 
+      data.organization_id = selectedCompanyId;
     }
     delete data.organization_name;
     console.log("Data to submit:", data);
     onSubmit(data);
   };
+
+  const [showModal, setShowModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   
+  const handleModelSubmit = async (data: { organization_name: string; website: string; description: string }) => {
+    try {
+      handleCloseModal();
+      await axios.post('http://127.0.0.1:8000/prompt/registerOrganization/', data); 
+      dispatch(fetchCompanies());
+    } catch (error) {
+      console.error("Error submitting organization:", error);
+    }
+  };
 
   return (
     <div className="flex justify-evenly items-center bg-gradient-to-b from-yellow-100 to-yellow-400">
@@ -176,7 +198,7 @@ const RegisterLap: React.FC<RegisterLapProps> = ({
             {query && filteredCompanies.length === 0 && (
               <button
                 className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
-                onClick={() => console.log("Company not found. Show additional options here.")}
+                onClick={handleOpenModal}
               >
                 Company not found? Add it here!
               </button>
@@ -208,13 +230,18 @@ const RegisterLap: React.FC<RegisterLapProps> = ({
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
-        <div className="flex justify-center items-center gap-2 mt-8 md:mt-10">
-          <div>Already have an account?</div>
-          <Link href="/login" className="underline">
-            Sign-in
-          </Link>
+        <div className="p-8">
+          <span className="text-sm xl:text-base text-gray-400 font-light">
+            Already have an account?{" "}
+            <Link href="/signin" className="font-medium text-blue-500">
+              Sign in
+            </Link>
+          </span>
         </div>
       </div>
+      {showModal && (
+        <RegistrationModel onClose={handleCloseModal} onSubmit={handleModelSubmit} />
+      )}
     </div>
   );
 };
