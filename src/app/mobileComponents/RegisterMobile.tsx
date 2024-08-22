@@ -19,24 +19,16 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
   message,
   error,
 }) => {
-<<<<<<< HEAD
   const dispatch = useAppDispatch();
   const {
     handleSubmit,
     register,
     setValue,
     formState: { errors, isValid, isSubmitting },
-=======
-  const {
-    handleSubmit,
-    register,
-    formState: { errors, isValid, isSubmitting, isSubmitted },
->>>>>>> 9a2f22d (Local host URl updated using config.js and environment variables)
   } = useForm<FormData>({
     mode: 'onChange',
   });
 
-<<<<<<< HEAD
   const [filteredCompanies, setFilteredCompanies] = useState<StartupType[]>([]);
   const [query, setQuery] = useState('');
   const [selectedCompanyId, setSelectedCompanyId] = useState<number | null>(null);
@@ -74,8 +66,6 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
     onSubmit(data);
   };
 
-=======
->>>>>>> 9a2f22d (Local host URl updated using config.js and environment variables)
   return (
     <div className="h-screen w-full flex flex-col justify-start pt-10 items-start bg-gradient-to-b from-yellow-300 to-yellow-100">
       <div className="w-full flex justify-center">
@@ -91,11 +81,7 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
       </div>
       <div className="w-full h-4/5 flex flex-col mt-8 bg-white py-8 rounded-t-3xl shadow-lg">
         <form
-<<<<<<< HEAD
           onSubmit={handleSubmit(handleFormSubmit)}
-=======
-          onSubmit={handleSubmit(onSubmit)}
->>>>>>> 9a2f22d (Local host URl updated using config.js and environment variables)
           className="flex flex-col gap-6 px-10 mt-4"
         >
           <div className="flex flex-col items-start justify-start gap-2 w-full">
@@ -151,7 +137,6 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
               id="organization_name"
               placeholder="Organization Name"
               className="text-base px-5 py-3 outline-none rounded-lg shadow w-full"
-<<<<<<< HEAD
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -168,9 +153,6 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
                 ))}
               </ul>
             )}
-=======
-            />
->>>>>>> 9a2f22d (Local host URl updated using config.js and environment variables)
             {errors.organization_name && (
               <p className="text-red-500">{errors.organization_name.message}</p>
             )}
