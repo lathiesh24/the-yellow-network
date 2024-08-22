@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { StartupType } from "../../../interfaces";
-import { getRequestWithAccessToken } from "../../hooks";
+import { getRequest, getRequestWithAccessToken } from "../../hooks";
 import axios from 'axios';
 
 // Define the state shape for company profiles
@@ -49,7 +49,7 @@ export const fetchCompanyById = createAsyncThunk<
   { rejectValue: string }
 >("companyProfile/fetchCompanyById", async (id, { rejectWithValue }) => {
   try {
-    const response = await getRequestWithAccessToken(
+    const response = await getRequest(
       `http://127.0.0.1:8000/directorysearch/companyview/${id}/`
     );
     return response.data.results;

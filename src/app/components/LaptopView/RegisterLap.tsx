@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { FormData } from "../../interfaces";
+import { FormData, StartupType } from "../../interfaces";
 import Image from "next/image";
 import Link from "next/link";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { fetchCompanies } from "../../redux/features/companyprofile/companyProfile";
 
 interface RegisterLapProps {
   onSubmit: SubmitHandler<FormData>;
@@ -11,10 +13,61 @@ interface RegisterLapProps {
   error?: string;
 }
 
-const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, error }) => {
-  const { handleSubmit, register, formState: { errors, isValid, isSubmitting } } = useForm<FormData>({
-    mode: "onChange", // Validate on change
+const RegisterLap: React.FC<RegisterLapProps> = ({
+  onSubmit,
+  loading,
+  message,
+  error,
+}) => {
+  const dispatch = useAppDispatch();
+  const {
+    handleSubmit,
+    register,
+    setValue,
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<FormData>({
+    mode: "onChange",
   });
+
+  const [filteredCompanies, setFilteredCompanies] = useState<StartupType[]>([]);
+  const [query, setQuery] = useState("");
+  const [selectedCompanyId, setSelectedCompanyId] = useState<number | null>(null);
+
+  const { companies } = useAppSelector((state) => state.companyProfile);
+
+  useEffect(() => {
+    dispatch(fetchCompanies());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (query && companies.length > 0) {
+      const filtered = companies
+        .filter((company) =>
+          company.startup_name.toLowerCase().includes(query.toLowerCase())
+        )
+        .slice(0, 4);
+      setFilteredCompanies(filtered);
+    } else {
+      setFilteredCompanies([]);
+    }
+  }, [query, companies]);
+
+  const handleCompanySelect = (company: StartupType) => {
+    setQuery(company.startup_name);
+    setSelectedCompanyId(company.startup_id);
+    setFilteredCompanies([]);
+    setValue("organization_id", company.startup_id);
+  };
+
+  const handleFormSubmit: SubmitHandler<FormData> = (data) => {
+    if (selectedCompanyId) {
+      data.organization_id = selectedCompanyId; 
+    }
+    delete data.organization_name;
+    console.log("Data to submit:", data);
+    onSubmit(data);
+  };
+  
 
   return (
     <div className="flex justify-evenly items-center bg-gradient-to-b from-yellow-100 to-yellow-400">
@@ -37,7 +90,7 @@ const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, e
         </div>
 
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(handleFormSubmit)}
           className="flex flex-col gap-4 xl:gap-8 px-10 justify-center items-center xl:pt-8"
         >
           <div className="flex flex-col items-start justify-start gap-2">
@@ -55,8 +108,9 @@ const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, e
               </p>
             )}
           </div>
+
           <div className="flex flex-col items-start justify-start gap-2">
-            <label htmlFor="email">Organisation Email</label>
+            <label htmlFor="email">Organization Email</label>
             <input
               type="email"
               id="email"
@@ -71,9 +125,7 @@ const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, e
               className="text-base placeholder-text-base px-5 py-3 h-10 outline-none rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] placeholder-text-gray-300 border border-solid w-80"
             />
             {errors.email && (
-              <p className="text-red-500 capitalize">
-                {errors.email.message}
-              </p>
+              <p className="text-red-500 capitalize">{errors.email.message}</p>
             )}
           </div>
 
@@ -98,26 +150,42 @@ const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, e
             <label htmlFor="organization">Organization Name</label>
             <input
               type="text"
-              {...register("organization_name", { required: "Organization name is required" })}
+              {...register("organization_name", {
+                required: "Organization name is required",
+              })}
               autoComplete="off"
               id="organization"
               placeholder="Enter your organization"
               className="text-base placeholder-text-base px-5 py-3 h-10 outline-none rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] placeholder-text-gray-300 border border-solid w-80"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
             />
-            <div>
-              Hi
-            </div>
+            {filteredCompanies.length > 0 && (
+              <ul className="border border-gray-300 mt-2 w-full max-h-48 overflow-y-auto bg-white z-10">
+                {filteredCompanies.map((company) => (
+                  <li
+                    key={company.startup_id}
+                    onClick={() => handleCompanySelect(company)}
+                    className="cursor-pointer p-2 hover:bg-gray-100"
+                  >
+                    {company.startup_name}
+                  </li>
+                ))}
+              </ul>
+            )}
             {errors.organization_name && (
               <p className="text-red-500 capitalize">
                 {errors.organization_name.message}
               </p>
             )}
-            
           </div>
 
-          {/* Success/Error Message */}
           {!loading && (message || error) && (
-            <p className={`text-base capitalize ${error ? 'text-red-500' : 'text-blue-500'}`}>
+            <p
+              className={`text-base capitalize ${
+                error ? "text-red-500" : "text-blue-500"
+              }`}
+            >
               {message || error}
             </p>
           )}
@@ -125,11 +193,14 @@ const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, e
           <button
             type="submit"
             disabled={!isValid || isSubmitting}
-            className={`rounded-md bg-blue-500 text-sm px-4 py-2 text-white flex items-center justify-center uppercase font-semibold ${isSubmitting || !isValid ? "cursor-not-allowed bg-gray-300" : ""}`}
+            className={`rounded-md bg-blue-500 text-sm px-4 py-2 text-white flex items-center justify-center uppercase font-semibold ${
+              isSubmitting || !isValid ? "cursor-not-allowed bg-gray-300" : ""
+            }`}
           >
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
+
         <div className="flex justify-center items-center gap-2 mt-8 md:mt-10">
           <div>Already have an account?</div>
           <Link href="/login" className="underline">
