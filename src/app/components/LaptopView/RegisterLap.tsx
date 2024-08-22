@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FormData, StartupType } from "../../interfaces";
@@ -6,13 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchCompanies } from "../../redux/features/companyprofile/companyProfile";
-=======
-import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { FormData } from "../../interfaces";
-import Image from "next/image";
-import Link from "next/link";
->>>>>>> 9a2f22d (Local host URl updated using config.js and environment variables)
 
 interface RegisterLapProps {
   onSubmit: SubmitHandler<FormData>;
@@ -21,7 +13,6 @@ interface RegisterLapProps {
   error?: string;
 }
 
-<<<<<<< HEAD
 const RegisterLap: React.FC<RegisterLapProps> = ({
   onSubmit,
   loading,
@@ -78,13 +69,6 @@ const RegisterLap: React.FC<RegisterLapProps> = ({
   };
   
 
-=======
-const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, error }) => {
-  const { handleSubmit, register, formState: { errors, isValid, isSubmitting } } = useForm<FormData>({
-    mode: "onChange", // Validate on change
-  });
-
->>>>>>> 9a2f22d (Local host URl updated using config.js and environment variables)
   return (
     <div className="flex justify-evenly items-center bg-gradient-to-b from-yellow-100 to-yellow-400">
       <div className="w-7/12 h-screen flex items-center justify-center">
@@ -106,11 +90,7 @@ const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, e
         </div>
 
         <form
-<<<<<<< HEAD
           onSubmit={handleSubmit(handleFormSubmit)}
-=======
-          onSubmit={handleSubmit(onSubmit)}
->>>>>>> 9a2f22d (Local host URl updated using config.js and environment variables)
           className="flex flex-col gap-4 xl:gap-8 px-10 justify-center items-center xl:pt-8"
         >
           <div className="flex flex-col items-start justify-start gap-2">
@@ -128,14 +108,9 @@ const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, e
               </p>
             )}
           </div>
-<<<<<<< HEAD
 
           <div className="flex flex-col items-start justify-start gap-2">
             <label htmlFor="email">Organization Email</label>
-=======
-          <div className="flex flex-col items-start justify-start gap-2">
-            <label htmlFor="email">Organisation Email</label>
->>>>>>> 9a2f22d (Local host URl updated using config.js and environment variables)
             <input
               type="email"
               id="email"
@@ -150,13 +125,7 @@ const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, e
               className="text-base placeholder-text-base px-5 py-3 h-10 outline-none rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] placeholder-text-gray-300 border border-solid w-80"
             />
             {errors.email && (
-<<<<<<< HEAD
               <p className="text-red-500 capitalize">{errors.email.message}</p>
-=======
-              <p className="text-red-500 capitalize">
-                {errors.email.message}
-              </p>
->>>>>>> 9a2f22d (Local host URl updated using config.js and environment variables)
             )}
           </div>
 
@@ -181,18 +150,13 @@ const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, e
             <label htmlFor="organization">Organization Name</label>
             <input
               type="text"
-<<<<<<< HEAD
               {...register("organization_name", {
                 required: "Organization name is required",
               })}
-=======
-              {...register("organization_name", { required: "Organization name is required" })}
->>>>>>> 9a2f22d (Local host URl updated using config.js and environment variables)
               autoComplete="off"
               id="organization"
               placeholder="Enter your organization"
               className="text-base placeholder-text-base px-5 py-3 h-10 outline-none rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] placeholder-text-gray-300 border border-solid w-80"
-<<<<<<< HEAD
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -209,9 +173,14 @@ const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, e
                 ))}
               </ul>
             )}
-=======
-            />
->>>>>>> 9a2f22d (Local host URl updated using config.js and environment variables)
+            {query && filteredCompanies.length === 0 && (
+              <button
+                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
+                onClick={() => console.log("Company not found. Show additional options here.")}
+              >
+                Company not found? Add it here!
+              </button>
+            )}
             {errors.organization_name && (
               <p className="text-red-500 capitalize">
                 {errors.organization_name.message}
@@ -219,18 +188,12 @@ const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, e
             )}
           </div>
 
-<<<<<<< HEAD
           {!loading && (message || error) && (
             <p
               className={`text-base capitalize ${
                 error ? "text-red-500" : "text-blue-500"
               }`}
             >
-=======
-          {/* Success/Error Message */}
-          {!loading && (message || error) && (
-            <p className={`text-base capitalize ${error ? 'text-red-500' : 'text-blue-500'}`}>
->>>>>>> 9a2f22d (Local host URl updated using config.js and environment variables)
               {message || error}
             </p>
           )}
@@ -238,21 +201,13 @@ const RegisterLap: React.FC<RegisterLapProps> = ({ onSubmit, loading, message, e
           <button
             type="submit"
             disabled={!isValid || isSubmitting}
-<<<<<<< HEAD
             className={`rounded-md bg-blue-500 text-sm px-4 py-2 text-white flex items-center justify-center uppercase font-semibold ${
               isSubmitting || !isValid ? "cursor-not-allowed bg-gray-300" : ""
             }`}
-=======
-            className={`rounded-md bg-blue-500 text-sm px-4 py-2 text-white flex items-center justify-center uppercase font-semibold ${isSubmitting || !isValid ? "cursor-not-allowed bg-gray-300" : ""}`}
->>>>>>> 9a2f22d (Local host URl updated using config.js and environment variables)
           >
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
-<<<<<<< HEAD
-
-=======
->>>>>>> 9a2f22d (Local host URl updated using config.js and environment variables)
         <div className="flex justify-center items-center gap-2 mt-8 md:mt-10">
           <div>Already have an account?</div>
           <Link href="/login" className="underline">
