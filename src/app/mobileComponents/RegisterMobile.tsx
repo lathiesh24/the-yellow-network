@@ -77,14 +77,12 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
       await axios.post('http://127.0.0.1:8000/prompt/registerOrganization/', data);
       handleCloseModal();
       dispatch(fetchCompanies());
-      // Reset the query to hide the button if the company is now in the list
       setQuery('');
     } catch (error) {
       console.error('Error submitting organization:', error);
     }
   };
 
-  // Determine if the "Add your organization" button should be shown
   const showAddOrganizationButton = query && !filteredCompanies.some(company => company.startup_name.toLowerCase() === query.toLowerCase());
 
   return (
