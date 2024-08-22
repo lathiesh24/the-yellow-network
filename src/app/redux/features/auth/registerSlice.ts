@@ -29,7 +29,6 @@ export const registerUser = createAsyncThunk(
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/user/register/",
-        //https://theyellow.group/api
         data
       );
       return response.data;

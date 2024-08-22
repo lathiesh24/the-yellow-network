@@ -35,7 +35,6 @@ const CompanyProfilePage: React.FC = () => {
       return;
     }
     if (hasMore) {
-      console.log("api call");
       dispatch(fetchCompanies({ page, page_size: 9 }));
     }
   }, [dispatch, page, hasMore, initialLoad]);
