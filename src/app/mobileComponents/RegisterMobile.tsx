@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { FormData, StartupType } from '../interfaces';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { fetchCompanies } from '../redux/features/companyprofile/companyProfile';
+import RegistrationModel from '../components/RegisterModel/RegisterModel';
+import axios from 'axios';
 
 interface RegisterMobileProps {
   onSubmit: SubmitHandler<FormData>;
@@ -32,6 +34,7 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
   const [filteredCompanies, setFilteredCompanies] = useState<StartupType[]>([]);
   const [query, setQuery] = useState('');
   const [selectedCompanyId, setSelectedCompanyId] = useState<number | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   const { companies } = useAppSelector((state) => state.companyProfile);
 
@@ -59,44 +62,49 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
     setValue('organization_id', company.startup_id);
   };
 
-  const handleFormSubmit: SubmitHandler<FormData> = (data) => {
+  const handleFormSubmit: SubmitHandler<FormData> = async (data) => {
     if (selectedCompanyId) {
       data.organization_id = selectedCompanyId;
     }
     onSubmit(data);
   };
 
+  const handleOpenModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
+
+  const handleModelSubmit = async (data: { organization_name: string; website: string; description: string }) => {
+    try {
+      await axios.post('http://127.0.0.1:8000/prompt/registerOrganization/', data);
+      handleCloseModal();
+      dispatch(fetchCompanies());
+      // Reset the query to hide the button if the company is now in the list
+      setQuery('');
+    } catch (error) {
+      console.error('Error submitting organization:', error);
+    }
+  };
+
+  // Determine if the "Add your organization" button should be shown
+  const showAddOrganizationButton = query && !filteredCompanies.some(company => company.startup_name.toLowerCase() === query.toLowerCase());
+
   return (
     <div className="h-screen w-full flex flex-col justify-start pt-10 items-start bg-gradient-to-b from-yellow-300 to-yellow-100">
       <div className="w-full flex justify-center">
-        <Image
-          src="/tyn-login.png"
-          alt="Login Image"
-          width={150}
-          height={150}
-        />
+        <Image src="/tyn-login.png" alt="Login Image" width={150} height={150} />
       </div>
-      <div className="text-4xl text-white font-semibold px-14 py-4">
-        Sign Up
-      </div>
+      <div className="text-4xl text-white font-semibold px-14 py-4">Sign Up</div>
       <div className="w-full h-4/5 flex flex-col mt-8 bg-white py-8 rounded-t-3xl shadow-lg">
-        <form
-          onSubmit={handleSubmit(handleFormSubmit)}
-          className="flex flex-col gap-6 px-10 mt-4"
-        >
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-6 px-10 mt-4">
+          {/* Form fields */}
           <div className="flex flex-col items-start justify-start gap-2 w-full">
             <input
               type="text"
-              {...register('first_name', {
-                required: 'Full name is required',
-              })}
+              {...register('first_name', { required: 'Full name is required' })}
               id="first_name"
               placeholder="Full Name"
               className="text-base px-5 py-3 outline-none rounded-lg shadow w-full"
             />
-            {errors.first_name && (
-              <p className="text-red-500">{errors.first_name.message}</p>
-            )}
+            {errors.first_name && <p className="text-red-500">{errors.first_name.message}</p>}
           </div>
           <div className="flex flex-col items-start justify-start gap-2 w-full">
             <input
@@ -112,9 +120,7 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
               placeholder="Email Address"
               className="text-base px-5 py-3 outline-none rounded-lg shadow w-full"
             />
-            {errors.email && (
-              <p className="text-red-500">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="text-red-500">{errors.email.message}</p>}
           </div>
           <div className="flex flex-col items-start justify-start gap-2 w-full">
             <input
@@ -124,16 +130,12 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
               placeholder="Password"
               className="text-base px-5 py-3 outline-none rounded-lg shadow w-full"
             />
-            {errors.password && (
-              <p className="text-red-500">{errors.password.message}</p>
-            )}
+            {errors.password && <p className="text-red-500">{errors.password.message}</p>}
           </div>
           <div className="flex flex-col items-start justify-start gap-2 w-full">
             <input
               type="text"
-              {...register('organization_name', {
-                required: 'Organization name is required',
-              })}
+              {...register('organization_name', { required: 'Organization name is required' })}
               id="organization_name"
               placeholder="Organization Name"
               className="text-base px-5 py-3 outline-none rounded-lg shadow w-full"
@@ -153,9 +155,15 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
                 ))}
               </ul>
             )}
-            {errors.organization_name && (
-              <p className="text-red-500">{errors.organization_name.message}</p>
+            {showAddOrganizationButton && (
+              <button
+                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
+                onClick={handleOpenModal}
+              >
+                Company not found? Add it here!
+              </button>
             )}
+            {errors.organization_name && <p className="text-red-500">{errors.organization_name.message}</p>}
           </div>
           {!loading && (message || error) && (
             <p className={`text-base capitalize text-center ${error ? 'text-red-500' : 'text-blue-500'}`}>
@@ -165,9 +173,7 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
           <button
             type="submit"
             disabled={!isValid || isSubmitting}
-            className={`rounded-md ${
-              isValid ? 'bg-blue-500' : 'bg-gray-300 cursor-not-allowed'
-            } text-sm px-4 py-2 text-white flex items-center justify-center uppercase font-semibold w-full rounded-lg`}
+            className={`rounded-md ${isValid ? 'bg-blue-500' : 'bg-gray-300 cursor-not-allowed'} text-sm px-4 py-2 text-white flex items-center justify-center uppercase font-semibold w-full rounded-lg`}
           >
             {loading ? 'Registering...' : 'Register'}
           </button>
@@ -179,6 +185,9 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
           </div>
         </form>
       </div>
+      {showModal && (
+        <RegistrationModel onClose={handleCloseModal} onSubmit={handleModelSubmit} />
+      )}
     </div>
   );
 };
