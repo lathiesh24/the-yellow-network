@@ -83,8 +83,8 @@ const RegisterLap: React.FC<RegisterLapProps> = ({
   
   const handleModelSubmit = async (data: { organization_name: string; website: string; description: string }) => {
     try {
-      handleCloseModal();
       await axios.post('http://127.0.0.1:8000/prompt/registerOrganization/', data); 
+      handleCloseModal();
       dispatch(fetchCompanies());
     } catch (error) {
       console.error("Error submitting organization:", error);
