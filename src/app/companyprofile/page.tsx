@@ -8,7 +8,7 @@ const CompanyProfilePage: React.FC = () => {
   const { company, loading, error } = useAppSelector((state) => state.companyProfile);
 
   useEffect(() => {
-    const companyId = "1"; 
+    const companyId = "2"; 
     dispatch(fetchCompanyById(companyId));
   }, [dispatch]);
 
