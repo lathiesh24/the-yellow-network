@@ -92,7 +92,7 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
               })}
               id="first_name"
               placeholder="Full Name"
-              className="text-base px-5 py-3 outline-none rounded-lg shadow w-full"
+              className="text-base px-5 py-3 outline-none rounded-lg shadow border-none w-full"
             />
             {errors.first_name && (
               <p className="text-red-500">{errors.first_name.message}</p>
@@ -110,7 +110,7 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
               })}
               id="email"
               placeholder="Email Address"
-              className="text-base px-5 py-3 outline-none rounded-lg shadow w-full"
+              className="text-base px-5 py-3 outline-none rounded-lg shadow border-none w-full"
             />
             {errors.email && (
               <p className="text-red-500">{errors.email.message}</p>
@@ -122,7 +122,7 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
               {...register('password', { required: 'Password is required' })}
               id="password"
               placeholder="Password"
-              className="text-base px-5 py-3 outline-none rounded-lg shadow w-full"
+              className="text-base px-5 py-3 outline-none rounded-lg shadow border-none w-full"
             />
             {errors.password && (
               <p className="text-red-500">{errors.password.message}</p>
@@ -136,7 +136,7 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
               })}
               id="organization_name"
               placeholder="Organization Name"
-              className="text-base px-5 py-3 outline-none rounded-lg shadow w-full"
+              className="text-base px-5 py-3 outline-none rounded-lg shadow border-none w-full"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
