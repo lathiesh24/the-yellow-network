@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Card, Button, Spinner } from "flowbite-react"; // Import Spinner component
+import { Card, Button, Spinner } from "flowbite-react"; 
 import Link from 'next/link';
 import { FaLink, FaLocationDot } from "react-icons/fa6";
 
@@ -23,7 +23,7 @@ const truncateText = (text: string, maxLength: number) => {
   return text.substring(0, maxLength) + "...";
 };
 
-const CompanyList: React.FC<CompanyListProps> = ({ viewType, companies = [], lastCompanyElementRef ,isLoading}) => {
+const CompanyList: React.FC<CompanyListProps> = ({ viewType, companies = [] , lastCompanyElementRef ,isLoading}) => {
   return (
     <div>
       { viewType === "card" ? (
