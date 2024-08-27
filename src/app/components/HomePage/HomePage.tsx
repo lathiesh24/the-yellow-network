@@ -90,7 +90,7 @@ export default function HomePage() {
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
     if (jwtAccessToken) {
       const response = await axios.post(
-        "https://theyellow.group/api/queryhistory/save/",
+        "http://127.0.0.1:8000/queryhistory/save/",
         {
           userquery: query,
         },
@@ -110,7 +110,7 @@ export default function HomePage() {
   const fetchConnectStatus = async (startupId: number) => {
     console.log("Fetching status for startupId:", startupId);
     if (jwtAccessToken && startupId) {
-      const url = `https://theyellow.group/api/connects/${startupId}/`;
+      const url = `http://127.0.0.1:8000/connects/${startupId}/`;
       try {
         const response = await axios.get(url, {
           headers: {
@@ -200,9 +200,7 @@ export default function HomePage() {
       case "Trends":
         return <TrendsMobile />;
       case "More":
-        return <MoreMobile
-        userInfo={userInfo}
-        />;
+        return <MoreMobile userInfo={userInfo} />;
       default:
         return null;
     }
@@ -242,7 +240,7 @@ export default function HomePage() {
             setIsInputEmpty={setIsInputEmpty}
             saveQueryData={saveQueryData}
           />
-          <div className="absolute left-2 top-2">
+          <div className="absolute left-0 top-2">
             <NavBar
               open={open}
               handleToggleLeftFrame={handleToggleLeftFrameNavbar}

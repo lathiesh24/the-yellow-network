@@ -23,7 +23,7 @@ const HistoryMobile = () => {
 
     try {
       const response = await axios.get(
-        "https://theyellow.group/api/queryhistory/retrieve/",
+        "http://127.0.0.1:8000/queryhistory/retrieve/",
         {
           headers: { Authorization: `Bearer ${jwtAccessToken}` },
         }
@@ -70,12 +70,10 @@ const HistoryMobile = () => {
                     onClick={() => console.log("Query clicked:", query)} // replace with actual function
                   >
                     <div className="text-gray-300">
-                    <IoChatbubbleOutline size={22}/>
+                      <IoChatbubbleOutline size={22} />
                     </div>
 
-                    <div>
-                    {query}
-                    </div>
+                    <div>{query}</div>
                   </div>
                 ))}
               </div>

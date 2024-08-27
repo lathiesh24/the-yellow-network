@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState } from "react";
 import { IoMdSend } from "react-icons/io";
 import DefaultCard from "./DefaultCard";
 import { BsChatQuote } from "react-icons/bs";
-import axios from "axios";
 import FeedbackForm from "./FeedbackForm";
 
 interface PromptProps {
@@ -17,7 +16,7 @@ interface PromptProps {
   handleToggleRightFrame: () => void;
   isInputEmpty: boolean;
   setIsInputEmpty: React.Dispatch<React.SetStateAction<boolean>>;
-  saveQueryData;
+  saveQueryData: (input: string) => Promise<void>;
 }
 
 const Prompt: React.FC<PromptProps> = ({
@@ -34,15 +33,9 @@ const Prompt: React.FC<PromptProps> = ({
   saveQueryData,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isFeedbackFormOpen, setIsFeedbackFormOpen] = useState(false);
 
-  const handleFeedbackIconClick = () => {
-    setIsFeedbackFormOpen(true);
-  };
-
-  const closeFeedbackForm = () => {
-    setIsFeedbackFormOpen(false);
-  };
   useEffect(() => {
     scrollToBottom();
   }, [renderMessages]);
@@ -50,6 +43,20 @@ const Prompt: React.FC<PromptProps> = ({
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputPrompt(event.target.value);
     setIsInputEmpty(event.target.value.trim() === "");
+    autoResizeTextarea();
+  };
+
+  const autoResizeTextarea = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      console.log(
+        "Auto-resize triggered:",
+        textarea.scrollHeight,
+        textarea.clientHeight
+      );
+      textarea.style.height = "auto"; // Reset the height
+      textarea.style.height = `${textarea.scrollHeight}px`; // Set it to the scroll height
+    }
   };
 
   const handleSendClick = async () => {
@@ -57,7 +64,7 @@ const Prompt: React.FC<PromptProps> = ({
       onSaveInput(inputPrompt);
       setInputPrompt("");
       setIsInputEmpty(true);
-      await saveQueryData(inputPrompt); // Pass the input prompt value to saveQueryData
+      await saveQueryData(inputPrompt);
     }
   };
 
@@ -69,6 +76,7 @@ const Prompt: React.FC<PromptProps> = ({
 
   const handleCardSelect = (value: string) => {
     setInputPrompt(value);
+    autoResizeTextarea();
   };
 
   const handleTextareaClick = () => {
@@ -76,8 +84,17 @@ const Prompt: React.FC<PromptProps> = ({
     handleToggleRightFrame();
   };
 
+  // Correctly define the feedback form handlers
+  const handleFeedbackIconClick = () => {
+    setIsFeedbackFormOpen(true);
+  };
+
+  const closeFeedbackForm = () => {
+    setIsFeedbackFormOpen(false);
+  };
+
   return (
-    <div className=" flex flex-col w-full items-center justify-center relative">
+    <div className="flex flex-col w-full items-center justify-center relative">
       <div className="prompt-container overflow-y-auto">
         {renderMessages().length === 0 ? (
           <>
@@ -99,9 +116,10 @@ const Prompt: React.FC<PromptProps> = ({
           </div>
         )}
       </div>
-      <div className="bg-white w-4/6 rounded-lg shadow-customShadow ">
-        <div className="flex items-center ">
+      <div className="bg-white w-4/6 rounded-lg shadow-customShadow">
+        <div className="flex items-center">
           <textarea
+            ref={textareaRef}
             className="flex-1 focus:outline-none py-4 px-4 rounded-md resize-none overflow-hidden text-[14px]"
             placeholder="Provide your problem statement to be solved..."
             rows={1}

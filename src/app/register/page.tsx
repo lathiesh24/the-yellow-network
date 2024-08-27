@@ -31,7 +31,7 @@ const RegisterPage: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log("dataforregister", data);
-    let urlforregister = `https://theyellow.group/api/user/register/`;
+    let urlforregister = `http://127.0.0.1:8000/user/register/`;
     setLoading(true);
     try {
       const response = await axios.post(urlforregister, data);
@@ -39,11 +39,17 @@ const RegisterPage: React.FC = () => {
       if (response.status === 200 || response.status === 201) {
         setRegisterResponse(response.data.message);
         setRegisterState(response.data.user);
-        localStorage.setItem("jwtAccessToken", response.data.tokens.access_token);
-        localStorage.setItem("jwtRefreshToken", response.data.tokens.refresh_token);
+        localStorage.setItem(
+          "jwtAccessToken",
+          response.data.tokens.access_token
+        );
+        localStorage.setItem(
+          "jwtRefreshToken",
+          response.data.tokens.refresh_token
+        );
         localStorage.setItem("user", JSON.stringify(response.data.user));
-        console.log('Navigation attempt following registration...');
-        router.push("/");  // Navigation to home or another page
+        console.log("Navigation attempt following registration...");
+        router.push("/"); // Navigation to home or another page
       } else {
         // If the status is neither 200 nor 201, throw an error.
         throw new Error(`Registration failed with status: ${response.status}`);
@@ -51,13 +57,14 @@ const RegisterPage: React.FC = () => {
     } catch (error) {
       console.error("error in registration", error);
       // It's good practice to handle unexpected statuses or network errors gracefully.
-      setRegisterResponse(error.response?.data?.message?.email[0] || "Unexpected error during registration. Please try again.");
+      setRegisterResponse(
+        error.response?.data?.message?.email[0] ||
+          "Unexpected error during registration. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
-  
-  
 
   useEffect(() => {
     if (regsiterState) {
@@ -274,7 +281,9 @@ const RegisterPage: React.FC = () => {
               )}
             </div>
             {isSubmitted && registerResponse && (
-              <p className="text-blue-500 capitalize items-center flex justify-center">{registerResponse}</p>
+              <p className="text-blue-500 capitalize items-center flex justify-center">
+                {registerResponse}
+              </p>
             )}
             <button
               type="submit"
@@ -283,7 +292,7 @@ const RegisterPage: React.FC = () => {
                 isValid ? "bg-blue-500" : "bg-gray-300 cursor-not-allowed"
               } text-sm px-4 py-2 text-white flex items-center justify-center uppercase font-semibold w-full rounded-lg`}
             >
-             {loading ? "Registering" : "Register"}
+              {loading ? "Registering" : "Register"}
             </button>
             <div className="mt-4 text-center font-medium tracking-wide">
               Already have an account?{" "}

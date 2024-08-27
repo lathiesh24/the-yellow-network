@@ -39,7 +39,7 @@ const LeftFrame: React.FC<LeftFrameProps> = ({
   setIsInputEmpty,
   queryData,
   setIsLogoutOpen,
-  isLogoutOpen
+  isLogoutOpen,
 }) => {
   const [historyData, setHistoryData] = useState<any>([]);
   const [activeTab, setActiveTab] = useState<string>(() => {
@@ -84,7 +84,7 @@ const LeftFrame: React.FC<LeftFrameProps> = ({
     if (jwtAccessToken) {
       try {
         const response = await axios.get(
-          "https://theyellow.group/api/queryhistory/retrieve/",
+          "http://127.0.0.1:8000/queryhistory/retrieve/",
           {
             headers: {
               Authorization: `Bearer ${jwtAccessToken}`,
