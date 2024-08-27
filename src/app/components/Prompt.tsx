@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState } from "react";
 import { IoMdSend } from "react-icons/io";
 import DefaultCard from "./DefaultCard";
 import { BsChatQuote } from "react-icons/bs";
-import FeedbackForm from "./FeedbackForm";
 
 interface PromptProps {
   open: boolean;
@@ -16,7 +15,7 @@ interface PromptProps {
   handleToggleRightFrame: () => void;
   isInputEmpty: boolean;
   setIsInputEmpty: React.Dispatch<React.SetStateAction<boolean>>;
-  saveQueryData: (input: string) => Promise<void>;
+  // saveQueryData;
 }
 
 const Prompt: React.FC<PromptProps> = ({
@@ -30,7 +29,6 @@ const Prompt: React.FC<PromptProps> = ({
   handleToggleRightFrame,
   isInputEmpty,
   setIsInputEmpty,
-  saveQueryData,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -64,7 +62,7 @@ const Prompt: React.FC<PromptProps> = ({
       onSaveInput(inputPrompt);
       setInputPrompt("");
       setIsInputEmpty(true);
-      await saveQueryData(inputPrompt);
+      // await saveQueryData(inputPrompt); // Pass the input prompt value to saveQueryData
     }
   };
 
@@ -150,10 +148,10 @@ const Prompt: React.FC<PromptProps> = ({
         >
           <BsChatQuote size={32} />
         </div>
-        <FeedbackForm
+        {/* <FeedbackForm
           isOpen={isFeedbackFormOpen}
           onRequestClose={closeFeedbackForm}
-        />
+        /> */}
       </div>
     </div>
   );

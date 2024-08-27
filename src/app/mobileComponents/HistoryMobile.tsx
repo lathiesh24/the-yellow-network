@@ -1,42 +1,42 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { MdChevronLeft } from "react-icons/md";
+import React from "react";
 import { IoChatbubbleOutline } from "react-icons/io5";
+import { useAppSelector } from "../redux/hooks";
+import { segregateSessions } from "../utils/historyUtils";
+import { Session } from "../interfaces";
 
-const HistoryMobile = () => {
-  const [historyData, setHistoryData] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+interface HistoryMobileProps {
+  onSelectSession: (sessionId: string) => void;
+}
 
-  useEffect(() => {
-    fetchHistory();
-  }, []);
+const HistoryMobile: React.FC<HistoryMobileProps> = ({ onSelectSession }) => {
+  const { history, loading, error } = useAppSelector(
+    (state) => state.chatHistory
+  );
 
-  const fetchHistory = async () => {
-    setIsLoading(true);
-    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
-    if (!jwtAccessToken) {
-      setError("Authentication token not found.");
-      setIsLoading(false);
-      return;
-    }
+  const { todaySessions, previous7DaysSessions, past30DaysSessions } =
+    segregateSessions(history);
 
-    try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/queryhistory/retrieve/",
-        {
-          headers: { Authorization: `Bearer ${jwtAccessToken}` },
-        }
-      );
-      setHistoryData(response.data);
-    } catch (error) {
-      console.error("Error fetching query history:", error);
-      setError("Failed to fetch history.");
-    }
-    setIsLoading(false);
+  const renderSession = (session: Session) => {
+    const firstHumanMessage = session.messages.find(
+      (message) => message.role === "human"
+    );
+    if (!firstHumanMessage) return null;
+
+    return (
+      <div
+        key={session.session_id}
+        className="mr-8 px-3 py-2.5 overflow-hidden whitespace-nowrap text-[14px] flex gap-4 items-center hover:bg-gray-200 font-normal hover:font-medium rounded-sm hover:text-gray-600 cursor-pointer"
+        onClick={() => onSelectSession(session.session_id)}
+      >
+        <div className="text-gray-300">
+          <IoChatbubbleOutline size={22} />
+        </div>
+        <div>{firstHumanMessage.content}</div>
+      </div>
+    );
   };
 
-  if (isLoading) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
@@ -45,42 +45,32 @@ const HistoryMobile = () => {
   }
 
   return (
-    <>
-      <div className="py-3 px-2 flex">
-        <div>
-          <MdChevronLeft size={28} />
-        </div>
-        <div className="text-blue-400 flex justify-center items-center italic text-xl font-semibold">
-          Query History
-        </div>
-      </div>
-      <div className="px-2">
-        {Object.entries(historyData).map(
-          ([timePeriod, queries]) =>
-            Array.isArray(queries) &&
-            queries.length > 0 && (
-              <div key={timePeriod}>
-                <div className="text-base py-2 px-2 text-gray-500 font-semibold">
-                  {timePeriod}
-                </div>
-                {queries.map((query, index) => (
-                  <div
-                    key={index}
-                    className="mx-1 px-3 py-2.5 overflow-hidden overflow-ellipsis whitespace-nowrap text-[14px] flex gap-4  items-center hover:bg-red-500 font-normal hover:font-medium rounded-sm hover:text-gray-600 cursor-pointer"
-                    onClick={() => console.log("Query clicked:", query)} // replace with actual function
-                  >
-                    <div className="text-gray-300">
-                      <IoChatbubbleOutline size={22} />
-                    </div>
-
-                    <div>{query}</div>
-                  </div>
-                ))}
-              </div>
-            )
-        )}
-      </div>
-    </>
+    <div>
+      {todaySessions.length > 0 && (
+        <>
+          <div className="text-sm py-2 px-2 text-gray-500 font-semibold">
+            Today
+          </div>
+          {todaySessions.map(renderSession)}
+        </>
+      )}
+      {previous7DaysSessions.length > 0 && (
+        <>
+          <div className="text-sm py-2 px-2 text-gray-500 font-semibold">
+            Previous 7 Days
+          </div>
+          {previous7DaysSessions.map(renderSession)}
+        </>
+      )}
+      {past30DaysSessions.length > 0 && (
+        <>
+          <div className="text-sm py-2 px-2 text-gray-500 font-semibold">
+            Past 30 Days
+          </div>
+          {past30DaysSessions.map(renderSession)}
+        </>
+      )}
+    </div>
   );
 };
 
