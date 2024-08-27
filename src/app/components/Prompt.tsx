@@ -31,15 +31,9 @@ const Prompt: React.FC<PromptProps> = ({
   setIsInputEmpty,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isFeedbackFormOpen, setIsFeedbackFormOpen] = useState(false);
 
-  const handleFeedbackIconClick = () => {
-    setIsFeedbackFormOpen(true);
-  };
-
-  const closeFeedbackForm = () => {
-    setIsFeedbackFormOpen(false);
-  };
   useEffect(() => {
     scrollToBottom();
   }, [renderMessages]);
@@ -47,6 +41,20 @@ const Prompt: React.FC<PromptProps> = ({
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputPrompt(event.target.value);
     setIsInputEmpty(event.target.value.trim() === "");
+    autoResizeTextarea();
+  };
+
+  const autoResizeTextarea = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      console.log(
+        "Auto-resize triggered:",
+        textarea.scrollHeight,
+        textarea.clientHeight
+      );
+      textarea.style.height = "auto"; // Reset the height
+      textarea.style.height = `${textarea.scrollHeight}px`; // Set it to the scroll height
+    }
   };
 
   const handleSendClick = async () => {
@@ -66,6 +74,7 @@ const Prompt: React.FC<PromptProps> = ({
 
   const handleCardSelect = (value: string) => {
     setInputPrompt(value);
+    autoResizeTextarea();
   };
 
   const handleTextareaClick = () => {
@@ -73,8 +82,17 @@ const Prompt: React.FC<PromptProps> = ({
     handleToggleRightFrame();
   };
 
+  // Correctly define the feedback form handlers
+  const handleFeedbackIconClick = () => {
+    setIsFeedbackFormOpen(true);
+  };
+
+  const closeFeedbackForm = () => {
+    setIsFeedbackFormOpen(false);
+  };
+
   return (
-    <div className=" flex flex-col w-full items-center justify-center relative">
+    <div className="flex flex-col w-full items-center justify-center relative">
       <div className="prompt-container overflow-y-auto">
         {renderMessages().length === 0 ? (
           <>
