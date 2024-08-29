@@ -230,7 +230,7 @@ const RegisterLap: React.FC<RegisterLapProps> = ({
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
-        <div className="p-8">
+        <div className="flex justify-center items-center p-8">
           <span className="text-sm xl:text-base text-gray-400 font-light">
             Already have an account?{" "}
             <Link href="/signin" className="font-medium text-blue-500">
