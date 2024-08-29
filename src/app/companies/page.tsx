@@ -36,7 +36,7 @@ const CompanyProfilePage: React.FC = () => {
       return;
     }
     if (hasMore) {
-      dispatch(fetchCompanies());
+      dispatch(fetchCompaniesList({page, page_size: 9}));
     }
   }, [dispatch, page, hasMore, initialLoad]);
 
@@ -176,7 +176,7 @@ const CompanyProfilePage: React.FC = () => {
                 value={searchTerm}
                 required
               />
-              <Button onClick={() => handleSearchCompanies(searchTerm)}>Search</Button>
+              <Button className='bg-[#4dabf7] hover:!bg-[#228be6] focus:!outline-none' onClick={() => handleSearchCompanies(searchTerm)}>Search</Button>
             </div>
             {showSuggestions && searchSuggestResults.length > 0 && (
               <div className="w-full bg-white border border-gray-300 z-10 suggestion-box">
