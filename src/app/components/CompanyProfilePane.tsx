@@ -69,7 +69,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   };
 
   const sendEmail = async () => {
-    await axios.post("http://127.0.0.1:8000/email/send-email/", {
+    await axios.post("https://nifo.theyellow.network/api/email/send-email/", {
       subject: "This is a test email",
       template_name: "email_template.html",
       context: { userInfo, mailData, companyData },
@@ -83,7 +83,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
       throw new Error("JWT token not found in localStorage");
     }
     await axios.post(
-      "http://127.0.0.1:8000/connects/",
+      "http://127.0.0.1:8000//connects/",
       { startup_id: companyData?.startup_id },
       { headers: { Authorization: `Bearer ${jwtAccessToken}` } }
     );
@@ -95,7 +95,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
       throw new Error("JWT token not found in localStorage");
     }
     await axios.post(
-      "http://127.0.0.1:8000/partnerconnect/",
+      "https://nifo.theyellow.network/api/partnerconnect/",
       {
         to_growthtechfirm: companyData?.startup_id,
         query_status: "Requested",
@@ -111,9 +111,8 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
     <>
       {openState && (
         <div
-          className={`h-screen bg-white shadow-md flex flex-col gap-y-4 py-8 overflow-auto ${
-            expanded ? "absolute right-0 lg:w-[500px] xl:w-[900px]" : ""
-          }`}
+          className={`h-screen bg-white shadow-md flex flex-col gap-y-4 py-8 overflow-auto ${expanded ? "absolute right-0 lg:w-[500px] xl:w-[900px]" : ""
+            }`}
         >
           <div className="mx-6 flex flex-col -mt-5 gap-6">
             <div className="flex justify-between">
@@ -133,11 +132,10 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
               <div className="flex justify-between items-center text-blue-400 font-semibold text-xl">
                 <div>{companyData?.startup_name}</div>
                 <div
-                  className={`flex justify-center items-center px-4 py-1.5 rounded-md text-white font-semibold ${
-                    connectionStatus === "Connect"
+                  className={`flex justify-center items-center px-4 py-1.5 rounded-md text-white font-semibold ${connectionStatus === "Connect"
                       ? "bg-gray-400 hover:bg-yellow-400 cursor-pointer"
                       : "bg-red-400 cursor-default"
-                  }`}
+                    }`}
                   onClick={handleConnect}
                 >
                   {isLoading ? (

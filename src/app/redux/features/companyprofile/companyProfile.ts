@@ -1,6 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { StartupType, CompanyProfile } from "../../../interfaces";
-import { getRequest, getRequestWithAccessToken, putRequestWithAccessToken } from "../../hooks";
+import {
+  getRequest,
+  getRequestWithAccessToken,
+  putRequestWithAccessToken,
+} from "../../hooks";
 
 interface CompanyProfileState {
   loading: boolean;
@@ -25,7 +29,6 @@ const initialState: CompanyProfileState = {
   hasMore: true,
 };
 
-
 // Thunk to fetch all companies used in Register page
 export const fetchCompanies = createAsyncThunk<
   StartupType[],
@@ -43,7 +46,6 @@ export const fetchCompanies = createAsyncThunk<
     );
   }
 });
-
 
 export const fetchCompaniesList = createAsyncThunk(
   'companyProfile/fetchCompaniesList',
@@ -65,6 +67,41 @@ export const fetchCompaniesList = createAsyncThunk(
   }
 );
 
+
+export const searchCompaniesSuggestion = createAsyncThunk<
+  StartupType[],
+  string,
+  { rejectValue: string }
+>("companyProfile/searchCompaniesSuggestion", async (query, { rejectWithValue }) => {
+  try {
+    const response = await getRequest(
+      `http://127.0.0.1:8000/directorysearch/companyview/searchSuggestion/?query=${query}`
+    );
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data || "Error in searching companies"
+    );
+  }
+});
+
+
+export const searchCompanies = createAsyncThunk<
+  StartupType[],
+  string,
+  { rejectValue: string }
+>("companyProfile/searchCompanies", async (query, { rejectWithValue }) => {
+  try {
+    const response = await getRequest(
+      `http://127.0.0.1:8000/directorysearch/companyview/search/?query=${query}`
+    );
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data || "Error in searching companies"
+    );
+  }
+});
 
 
 
@@ -111,64 +148,25 @@ export const updateCompanyById = createAsyncThunk<
   StartupType,
   { id: string; data: Partial<StartupType> },
   { rejectValue: string }
->("companyProfile/updateCompanyById", async ({ id, data }, { rejectWithValue }) => {
-  try {
-    const response = await putRequestWithAccessToken(
-      `http://127.0.0.1:8000/directorysearch/companyview/${id}/`,
-      data
-    );
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue(
-      error.response?.data || `Error in updating company with ID: ${id}`
-    );
+>(
+  "companyProfile/updateCompanyById",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const response = await putRequestWithAccessToken(
+        `http://127.0.0.1:8000/directorysearch/companyview/${id}/`,
+        data
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data || `Error in updating company with ID: ${id}`
+      );
+    }
   }
-});
-
-
-
-// Add search thunk
-export const searchCompaniesSuggestion = createAsyncThunk<
-  StartupType[],
-  string,
-  { rejectValue: string }
->("companyProfile/searchCompaniesSuggestion", async (query, { rejectWithValue }) => {
-  try {
-    const response = await getRequest(
-      `http://127.0.0.1:8000/directorysearch/companyview/searchSuggestion/?query=${query}`
-    );
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue(
-      error.response?.data || "Error in searching companies"
-    );
-  }
-});
-
-
-
-// Add search thunk
-export const searchCompanies = createAsyncThunk<
-  StartupType[],
-  string,
-  { rejectValue: string }
->("companyProfile/searchCompanies", async (query, { rejectWithValue }) => {
-  try {
-    const response = await getRequest(
-      `http://127.0.0.1:8000/directorysearch/companyview/search/?query=${query}`
-    );
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue(
-      error.response?.data || "Error in searching companies"
-    );
-  }
-});
-
-
+);
 
 const companyProfileSlice = createSlice({
-  name: 'companyProfile',
+  name: "companyProfile",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -191,7 +189,6 @@ const companyProfileSlice = createSlice({
           state.loading = false;
         }
       );
-
 
     // Fetch a company by ID
     builder
@@ -243,16 +240,20 @@ const companyProfileSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateCompanyById.fulfilled, (state, action: PayloadAction<StartupType>) => {
-        state.company = action.payload; // Update the company with the new data
-        state.loading = false;
-      })
-      .addCase(updateCompanyById.rejected, (state, action: PayloadAction<string | undefined>) => {
-        state.error = action.payload || "Failed to update company";
-        state.loading = false;
-      });
-
-
+      .addCase(
+        updateCompanyById.fulfilled,
+        (state, action: PayloadAction<StartupType>) => {
+          state.company = action.payload; 
+          state.loading = false;
+        }
+      )
+      .addCase(
+        updateCompanyById.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.error = action.payload || "Failed to update company";
+          state.loading = false;
+        }
+      );
 
     //Companies List
     builder
@@ -323,7 +324,6 @@ const companyProfileSlice = createSlice({
     );
 
   },
-
 });
 
 export default companyProfileSlice.reducer;

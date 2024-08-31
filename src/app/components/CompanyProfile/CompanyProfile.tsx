@@ -23,7 +23,7 @@ const CompanyProfile: React.FC<CompanyProfileProps> = ({ company }) => {
   </div>;
   }
 
-  return (
+  return (  
     <div className="bg-white p-6 rounded-lg shadow-sm border ">
       <h1 className="sm:text-4xl text-3xl font-bold text-gray-900 mb-4">{company.startup_name}</h1>
       <div className="space-y-4">

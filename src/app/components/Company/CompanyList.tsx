@@ -41,11 +41,11 @@ const handleCompanyProfile = (id: string) => {
     <div>
       {viewType === "card" ? (
         <div className="card-view">
-          <div className={`flex gap-6 flex-wrap  ${companies.length % 3 === 0 ? 'justify-center' : 'ml-[10%] justify-start'}`}>
+          <div className={`flex gap-6 flex-wrap  ${companies.length % 3 === 0 ? 'justify-center' : 'sm:ml-[10%]  justify-start'}`}>
             {companies.map((company, index) => (
               <div
                 key={company.startup_id}
-                className="w-[100%] md:w-[48%] lg:w-[28%]  "
+                className="w-[100%] md:w-[48%] lg:w-[28%]"
                 ref={companies.length === index + 1 ? lastCompanyElementRef : null}
               >
                 <Card className="h-[260px] relative hover:border hover:border-[#4dabf7] hover:border-1 ">

@@ -9,8 +9,11 @@ import ViewType from '../components/Company/CardListToggle';
 import CompanyList from '../components/Company/CompanyList';
 import debounce from 'lodash.debounce';
 import { CompanyProfile } from "../../app/interfaces";
+import { encryptURL } from '../utils/shareUtils';
+import { useRouter } from 'next/router';
 
 const CompanyProfilePage: React.FC = () => {
+  
   const [activeView, setActiveView] = useState<"card" | "list">("card");
   const [selectedFilters, setSelectedFilters] = useState<{ [key: string]: string[] }>({});
   const [checkedState, setCheckedState] = useState<{ [key: string]: { [item: string]: boolean } }>({});
@@ -19,7 +22,6 @@ const CompanyProfilePage: React.FC = () => {
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [isShowBox, setisShowBox] = useState<boolean>(false);
   const [noResults, setNoResults] = useState<boolean>(false);
-
   const dispatch = useAppDispatch();
   const companies = useAppSelector((state) => state.companyProfile.companiesList);
   const loading = useAppSelector((state) => state.companyProfile.loading);
@@ -27,8 +29,16 @@ const CompanyProfilePage: React.FC = () => {
   const hasMore = useAppSelector((state) => state.companyProfile.hasMore);
   const searchResults = useAppSelector((state) => state.companyProfile.searchResults);
   const searchSuggestResults = useAppSelector((state) => state.companyProfile.searchSuggestResults);
-
   const [initialLoad, setInitialLoad] = useState(true);
+  const navigate = useRouter();
+  
+
+  const handleSuggestionClick = (id:string) => {
+    const encryptedID = encryptURL(id);
+    navigate.push(`/companies/${encryptedID}`);
+  };
+
+
 
   useEffect(() => {
     if (initialLoad) {
@@ -83,18 +93,6 @@ const CompanyProfilePage: React.FC = () => {
     }));
   };
 
-  const handleSuggestionClick = (companyName: string) => {
-    setisShowBox(false);
-    const selectedCompany = searchSuggestResults.find(
-      (company) => company.startup_name === companyName
-    );
-
-    if (selectedCompany) {
-      setSearchTerm(companyName);
-      setShowSuggestions(false);
-      dispatch(fetchCompanyProfileById(selectedCompany.startup_id.toString()));
-    }
-  };
 
 
 
@@ -159,13 +157,12 @@ const CompanyProfilePage: React.FC = () => {
     <div className='w-[90%] mx-auto my-0 px-4'>
       <div className='flex justify-between mt-10'>
         <h1 className='text-3xl'>Growth Tech Firms List</h1>
-        <ViewType />
       </div>
 
       <div className='flex justify-between mt-10 gap-4'>
         <div className="w-full flex justify-around h-fit flex-col">
-          <div className='flex w-[70%] mx-auto my-0 flex-col'>
-            <div className='flex'>
+          <div className='flex sm:w-[70%] w-[90%] mx-auto my-0 flex-col'>
+            <div className='flex sm:flex-row flex-col gap-3'>
               <TextInput
                 id="text"
                 type="text"
@@ -184,7 +181,7 @@ const CompanyProfilePage: React.FC = () => {
                   <div
                     key={suggestion.startup_id}
                     className="p-2 hover:bg-gray-200 cursor-pointer"
-                    onClick={() => handleSuggestionClick(suggestion.startup_name)}
+                    onClick={() => handleSuggestionClick(suggestion.startup_id.toString())}
                   >
                     {suggestion.startup_name}
                   </div>
