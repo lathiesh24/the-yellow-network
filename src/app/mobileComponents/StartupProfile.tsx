@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import { FaAngleLeft } from "react-icons/fa";
 import { TbShare2 } from "react-icons/tb";
 import CryptoJS from "crypto-js";
+import { useAppDispatch } from "../redux/hooks";
+import { setConnectionStatus } from "../redux/features/connection/connectionSlice";
 
 const StartupProfile = ({
   selectedStartup,
   onBackClick,
-  connectionStatus,
-  setConnectionStatus,
+  connectionStatus
 }) => {
   useEffect(() => {
     // Log whenever connectionStatus changes
@@ -18,9 +19,9 @@ const StartupProfile = ({
     );
   }, [connectionStatus, selectedStartup]);
 
+  const dispatch = useAppDispatch()
   const handleButtonClick = () => {
-    // Example of updating connection status locally
-    setConnectionStatus("Requested"); // Update based on your logic
+    dispatch(setConnectionStatus('requested'));
   };
 
   if (!selectedStartup) {

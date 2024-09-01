@@ -15,7 +15,6 @@ interface SearchMobileProps {
   onSaveInput: any;
   messages: any[];
   connectionStatus: any;
-  setConnectionStatus: (status: any) => void;
   setSessionId: (id: any) => void;
   handleNewChat: any
 }
@@ -30,7 +29,6 @@ const SearchMobile: React.FC<SearchMobileProps> = ({
   onSaveInput,
   messages,
   connectionStatus,
-  setConnectionStatus,
   setSessionId,
   handleNewChat
 }) => {
@@ -189,7 +187,6 @@ const SearchMobile: React.FC<SearchMobileProps> = ({
           selectedStartup={selectedStartup}
           onBackClick={handleBackClick}
           connectionStatus={connectionStatus}
-          setConnectionStatus={setConnectionStatus}
         />
       ) : messages.length > 0 ? (
         renderAnswerTab()
