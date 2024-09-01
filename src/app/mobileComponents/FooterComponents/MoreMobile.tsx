@@ -50,17 +50,17 @@ function MoreMobile({
           </div>
           <div className="ml-2">{userName}</div>
         </div>
-        <div className="flex gap-32">
-        <button className="bg-blue-400 text-white py-2 px-4 rounded" onClick={handleLogout}>
+        <div className="flex gap-16">
+        <button className="bg-blue-400 text-white px-4 rounded" onClick={handleLogout}>
           Logout
         </button>
 
-        <button className="border border-gray-200 p-2 px-4 rounded-md" onClick={handleCompanyProfile}>
+        <button className="border border-gray-200 p-2 rounded-md" onClick={handleCompanyProfile}>
           View company profile
         </button>
         </div>
       </div>
-      <div className="flex flex-col items-start border border-gray-100 m-2 rounded-xl text-sm">
+      {/* <div className="flex flex-col items-start border border-gray-100 m-2 rounded-xl text-sm">
         <MenuOption label="History" onClick={() => setActiveTab("History")} />
         <hr />
         <MenuOption label="Recommended Queries" onClick={() => setActiveTab("Recommendation")} />
@@ -68,7 +68,7 @@ function MoreMobile({
         <MenuOption label="Connections" onClick={() => setActiveTab("Connections")} />
         <hr />
         <MenuOption label="Chat" onClick={() => setActiveTab("Chat")} />
-      </div>
+      </div> */}
     </div>
   );
 
@@ -78,7 +78,7 @@ function MoreMobile({
       // case "History": return <HistoryMobile onSelectSession={} />;
       case "Recommendation": return <RecommendedQueriesMobile />;
       case "Connections": return <ConnectionsMobile />;
-      case "Chat": return <ChatComponentMobile />;
+      // case "Chat": return <ChatComponentMobile />;
       default: return null;
     }
   };

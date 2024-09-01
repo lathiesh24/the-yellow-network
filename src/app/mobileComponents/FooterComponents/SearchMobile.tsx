@@ -59,9 +59,9 @@ const SearchMobile: React.FC<SearchMobileProps> = ({
   };
 
   const renderMainContent = () => (
-    <div className="relative flex flex-col items-center justify-center min-h-screen">
+    <div className="relative flex flex-col items-center justify-center h-[80vh]">
       <div
-        className="absolute top-0 left-0 m-4 text-blue-400 cursor-pointer"
+        className="absolute top-0 left-0 m-4 text-blue-500 cursor-pointer"
         onClick={toggleHistory}
       >
         <FaBars size={24} />
@@ -103,14 +103,14 @@ const SearchMobile: React.FC<SearchMobileProps> = ({
     <div className="pb-64">
       <div className="flex justify-between items-center">
         <div
-          className="mt-4 ml-4 text-blue-400 cursor-pointer"
+          className="mt-4 ml-4 text-blue-500 cursor-pointer"
           onClick={toggleHistory}
         >
           <FaBars size={24} />
         </div>
 
         <div 
-        className="p-2 rounded-md bg-blue-400 text-white mt-4 mr-4 text-sm font-semibold"
+        className="p-2 rounded-md bg-blue-500 text-white mt-4 mr-4 text-sm font-semibold"
         onClick={()=>handleNewChat()}
         >
           New Chat

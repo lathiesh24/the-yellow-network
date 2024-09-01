@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { FaAngleLeft } from "react-icons/fa";
-import { TbShare2 } from "react-icons/tb";
 import CryptoJS from "crypto-js";
 import { useAppDispatch } from "../redux/hooks";
 import { setConnectionStatus } from "../redux/features/connection/connectionSlice";
+import { IoShareSocialOutline } from "react-icons/io5";
 
 const StartupProfile = ({
   selectedStartup,
@@ -83,7 +83,7 @@ const StartupProfile = ({
               handleShareClick(selectedStartup?.database_info?.startup_id)
             }
           >
-            <TbShare2 size={26} />
+            <IoShareSocialOutline size={26} />
           </div>
 
           {/* Connect button */}

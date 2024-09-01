@@ -14,10 +14,10 @@ import SearchMobile from "../../mobileComponents/FooterComponents/SearchMobile";
 import TrendsMobile from "../../mobileComponents/FooterComponents/TrendsMobile";
 import MoreMobile from "../../mobileComponents/FooterComponents/MoreMobile";
 import { ChatHistoryResponse, StartupType } from "../../interfaces";
-import { TbShare2 } from "react-icons/tb";
 import { encryptURL } from "../../utils/shareUtils";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchPartnerConnectsByOrg } from "../../redux/features/connection/connectionSlice";
+import { IoShareSocialOutline } from "react-icons/io5";
 
 export default function HomePage() {
   const [messages, setMessages] = useState([]);
@@ -89,7 +89,7 @@ export default function HomePage() {
 
     try {
       const response = await axios.post(
-        "https://nifo.theyellow.network/api/prompt/chat/",
+        "http://127.0.0.1:8000/prompt/chat/",
         userQuery,
         {
           headers: {
@@ -127,7 +127,7 @@ export default function HomePage() {
     if (jwtAccessToken) {
       try {
         const response = await axios.get(
-          `https://nifo.theyellow.network/api/prompt/convo/${sessionId}/`,
+          `http://127.0.0.1:8000/prompt/convo/${sessionId}/`,
           {
             headers: {
               Authorization: `Bearer ${jwtAccessToken}`,
@@ -287,7 +287,7 @@ export default function HomePage() {
               open={open}
               handleToggleLeftFrame={handleToggleLeftFrameNavbar}
             />
-            <TbShare2
+            <IoShareSocialOutline
               size={24}
               className="ml-4 cursor-pointer"
               onClick={handleShareClick}
