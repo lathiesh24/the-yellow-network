@@ -35,7 +35,7 @@ export const fetchCompaniesByPagination = createAsyncThunk<
   async ({ page, page_size }, { rejectWithValue }) => {
     try {
       const response = await getRequest(
-        `http://127.0.0.1:8000/directorysearch/companyview/?page=${page}&page_size=${page_size}/`
+        `https://nifo.theyellow.network/api/directorysearch/companyview/?page=${page}&page_size=${page_size}/`
       );
       return response.data.results;
     } catch (error: any) {
@@ -54,7 +54,7 @@ export const fetchAllCompanies = createAsyncThunk<
 >("companyProfile/fetchAllCompanies", async (_, { rejectWithValue }) => {
   try {
     const response = await getRequest(
-      `http://127.0.0.1:8000/directorysearch/companyregistrationsearch/`
+      `https://nifo.theyellow.network/api/directorysearch/companyregistrationsearch/`
     );
     return response.data;
   } catch (error: any) {
@@ -72,7 +72,7 @@ export const fetchCompanyById = createAsyncThunk<
 >("companyProfile/fetchCompanyById", async (id, { rejectWithValue }) => {
   try {
     const response = await getRequest(
-      `http://127.0.0.1:8000/directorysearch/companyview/${id}/`
+      `https://nifo.theyellow.network/api/directorysearch/companyview/${id}/`
     );
     return response.data;
   } catch (error: any) {
@@ -83,25 +83,26 @@ export const fetchCompanyById = createAsyncThunk<
 });
 
 // Thunk to create a new company
-export const postCompany = createAsyncThunk<
-  any,
-  any,
-  { rejectValue: string }
->("companyProfile/postCompany", async (newCompanyData, { rejectWithValue }) => {
-
-  console.log("Registration of company into the postCompany Api endpointr",newCompanyData);
-  try {
-    const response = await postRequest(
-      `http://127.0.0.1:8000/directorysearch/companyview/`,
+export const postCompany = createAsyncThunk<any, any, { rejectValue: string }>(
+  "companyProfile/postCompany",
+  async (newCompanyData, { rejectWithValue }) => {
+    console.log(
+      "Registration of company into the postCompany Api endpointr",
       newCompanyData
     );
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue(
-      error.response?.data || "Error in posting new company"
-    );
+    try {
+      const response = await postRequest(
+        `https://nifo.theyellow.network/api/directorysearch/companyview/`,
+        newCompanyData
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data || "Error in posting new company"
+      );
+    }
   }
-});
+);
 
 // Thunk to update a company by ID
 export const updateCompanyById = createAsyncThunk<
@@ -113,7 +114,7 @@ export const updateCompanyById = createAsyncThunk<
   async ({ id, data }, { rejectWithValue }) => {
     try {
       const response = await putRequest(
-        `http://127.0.0.1:8000/directorysearch/companyview/${id}/`,
+        `https://nifo.theyellow.network/api/directorysearch/companyview/${id}/`,
         data
       );
       return response.data;
@@ -133,9 +134,9 @@ export const deleteCompanyById = createAsyncThunk<
 >("companyProfile/deleteCompanyById", async (id, { rejectWithValue }) => {
   try {
     await deleteRequest(
-      `http://127.0.0.1:8000/directorysearch/companyview/${id}/`
+      `https://nifo.theyellow.network/api/directorysearch/companyview/${id}/`
     );
-    return id; 
+    return id;
   } catch (error: any) {
     return rejectWithValue(
       error.response?.data || `Error in deleting company with ID: ${id}`

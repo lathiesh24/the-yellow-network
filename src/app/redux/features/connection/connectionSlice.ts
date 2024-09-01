@@ -1,6 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getRequest, getRequestWithAccessToken, postRequest, postRequestWithAccessToken } from "../../hooks"; // Import the request utility functions
-
+import {
+  getRequest,
+  getRequestWithAccessToken,
+  postRequest,
+  postRequestWithAccessToken,
+} from "../../hooks"; // Import the request utility functions
 
 type ConnectionStatus = "requested" | "rejected" | "connected";
 
@@ -28,7 +32,7 @@ interface PartnerConnectState {
   error: string | null;
   loading: boolean;
   successMessage: string | null;
-  connectionStatus : ConnectionStatus | null;
+  connectionStatus: ConnectionStatus | null;
 }
 
 const initialState: PartnerConnectState = {
@@ -37,7 +41,7 @@ const initialState: PartnerConnectState = {
   error: null,
   loading: false,
   successMessage: null,
-  connectionStatus : null
+  connectionStatus: null,
 };
 
 export const createPartnerConnect = createAsyncThunk<
@@ -49,7 +53,7 @@ export const createPartnerConnect = createAsyncThunk<
   async (payload, { rejectWithValue }) => {
     try {
       const response = await postRequestWithAccessToken(
-        "http://127.0.0.1:8000/partnerconnect/connects/",
+        "https://nifo.theyellow.network/api/partnerconnect/connects/",
         payload
       );
       return response.data;
@@ -68,7 +72,7 @@ export const fetchPartnerConnects = createAsyncThunk<
 >("partnerConnect/fetchPartnerConnects", async (_, { rejectWithValue }) => {
   try {
     const response = await getRequestWithAccessToken(
-      "http://127.0.0.1:8000/partnerconnect/connects/"
+      "https://nifo.theyellow.network/api/partnerconnect/connects/"
     );
     return response.data;
   } catch (error: any) {
@@ -77,7 +81,6 @@ export const fetchPartnerConnects = createAsyncThunk<
     );
   }
 });
-
 
 export const fetchPartnerConnectsByOrg = createAsyncThunk<
   PartnerConnectResponse[],
@@ -88,7 +91,7 @@ export const fetchPartnerConnectsByOrg = createAsyncThunk<
   async (orgId, { rejectWithValue }) => {
     try {
       const response = await getRequestWithAccessToken(
-        `http://127.0.0.1:8000/partnerconnect/connects/?requested_org=${orgId}`
+        `https://nifo.theyellow.network/api/partnerconnect/connects/?requested_org=${orgId}`
       );
       return response.data;
     } catch (error: any) {
@@ -163,7 +166,6 @@ const partnerConnectSlice = createSlice({
       });
   },
 });
-
 
 export const { setConnectionStatus } = partnerConnectSlice.actions;
 export default partnerConnectSlice.reducer;
