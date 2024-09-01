@@ -80,7 +80,7 @@ export default function HomePage() {
 
     try {
       const response = await axios.post(
-        "https://nifo.theyellow.network/api/prompt/chat/",
+        "http://127.0.0.1:8000/prompt/chat/",
         userQuery,
         {
           headers: {
@@ -118,7 +118,7 @@ export default function HomePage() {
     if (jwtAccessToken) {
       try {
         const response = await axios.get(
-          `https://nifo.theyellow.network/api/prompt/convo/${sessionId}/`,
+          `http://127.0.0.1:8000/prompt/convo/${sessionId}/`,
           {
             headers: {
               Authorization: `Bearer ${jwtAccessToken}`,
@@ -152,7 +152,7 @@ export default function HomePage() {
     console.log("Fetching status for startupId:", startupId);
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
     if (jwtAccessToken && startupId) {
-      const url = `https://nifo.theyellow.network/api/connects/${startupId}/`;
+      const url = `http://127.0.0.1:8000/connects/${startupId}/`;
       try {
         const response = await axios.get(url, {
           headers: {

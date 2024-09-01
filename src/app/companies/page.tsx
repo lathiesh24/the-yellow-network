@@ -11,6 +11,8 @@ import debounce from 'lodash.debounce';
 import { CompanyProfile } from "../../app/interfaces";
 import { encryptURL } from '../utils/shareUtils';
 import { useRouter } from 'next/router';
+import Suggestions from '../components/Company/Suggestion';
+
 
 const CompanyProfilePage: React.FC = () => {
   
@@ -30,15 +32,7 @@ const CompanyProfilePage: React.FC = () => {
   const searchResults = useAppSelector((state) => state.companyProfile.searchResults);
   const searchSuggestResults = useAppSelector((state) => state.companyProfile.searchSuggestResults);
   const [initialLoad, setInitialLoad] = useState(true);
-  const navigate = useRouter();
   
-
-  const handleSuggestionClick = (id:string) => {
-    const encryptedID = encryptURL(id);
-    navigate.push(`/companies/${encryptedID}`);
-  };
-
-
 
   useEffect(() => {
     if (initialLoad) {
@@ -64,36 +58,6 @@ const CompanyProfilePage: React.FC = () => {
     },
     [loading, hasMore]
   );
-
-  const handleFilterChange = (category: string, item: string, isSelected: boolean) => {
-    setSelectedFilters(prevFilters => {
-      const updatedFilters = { ...prevFilters };
-      if (isSelected) {
-        if (!updatedFilters[category]) {
-          updatedFilters[category] = [];
-        }
-        if (!updatedFilters[category].includes(item)) {
-          updatedFilters[category].push(item);
-        }
-      } else {
-        updatedFilters[category] = updatedFilters[category].filter(filterItem => filterItem !== item);
-        if (updatedFilters[category].length === 0) {
-          delete updatedFilters[category];
-        }
-      }
-      return updatedFilters;
-    });
-
-    setCheckedState(prevState => ({
-      ...prevState,
-      [category]: {
-        ...prevState[category],
-        [item]: isSelected
-      }
-    }));
-  };
-
-
 
 
   const handleSearch = useCallback(
@@ -178,13 +142,8 @@ const CompanyProfilePage: React.FC = () => {
             {showSuggestions && searchSuggestResults.length > 0 && (
               <div className="w-full bg-white border border-gray-300 z-10 suggestion-box">
                 {searchSuggestResults.map((suggestion) => (
-                  <div
-                    key={suggestion.startup_id}
-                    className="p-2 hover:bg-gray-200 cursor-pointer"
-                    onClick={() => handleSuggestionClick(suggestion.startup_id.toString())}
-                  >
-                    {suggestion.startup_name}
-                  </div>
+                  <Suggestions suggestion={suggestion}/>
+                  
                 ))}
               </div>
             )}

@@ -89,7 +89,7 @@ const RegisterLap: React.FC<RegisterLapProps> = ({
   }) => {
     try {
       await axios.post(
-        "https://nifo.theyellow.network/api/prompt/registerOrganization/",
+        "http://127.0.0.1:8000/prompt/registerOrganization/",
         data
       );
       handleCloseModal();

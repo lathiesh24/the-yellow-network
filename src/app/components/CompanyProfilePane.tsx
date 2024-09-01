@@ -69,7 +69,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   };
 
   const sendEmail = async () => {
-    await axios.post("https://nifo.theyellow.network/api/email/send-email/", {
+    await axios.post("http://127.0.0.1:8000/email/send-email/", {
       subject: "This is a test email",
       template_name: "email_template.html",
       context: { userInfo, mailData, companyData },
@@ -95,7 +95,7 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
       throw new Error("JWT token not found in localStorage");
     }
     await axios.post(
-      "https://nifo.theyellow.network/api/partnerconnect/",
+      "http://127.0.0.1:8000/partnerconnect/",
       {
         to_growthtechfirm: companyData?.startup_id,
         query_status: "Requested",
