@@ -30,7 +30,6 @@ export default function HomePage() {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [isInputEmpty, setIsInputEmpty] = useState<boolean>(true);
   const [mailMessage, setMailMessage] = useState<any>(null);
-  // const [connectionStatus, setConnectionStatus] = useState<string>("Connect");
   const [queryData, setQueryData] = useState<ChatHistoryResponse | null>(null);
   const [activeTab, setActiveTab] = useState<string>("Spotlight");
   const [sessionId, setSessionId] = useState<string>(() => {
@@ -41,6 +40,7 @@ export default function HomePage() {
   const [requestQuery, setRequestQuery] = useState<string>();
 
   console.log("queryDatainHome", queryData, inputPrompt);
+
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("user");
     if (userInfoFromStorage) {
@@ -74,51 +74,55 @@ export default function HomePage() {
   };
 
   const dispatch = useAppDispatch();
-  // const { connectionStatus, loading, error, successMessage } = useAppSelector(
-  //   (state) => state.partnerConnect
-  // );
 
-  const handleSaveInput = async (input: string) => {
-    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
-    const userQuery = { input, session_id: sessionId };
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { question: input, response: "Loading" },
-    ]);
+const handleSaveInput = async (input: string) => {
+  const jwtAccessToken = localStorage.getItem("jwtAccessToken");
+  const userQuery = { input, session_id: sessionId };
+  setMessages((prevMessages) => [
+    ...prevMessages,
+    { question: input, response: "Loading" },
+  ]);
 
-    try {
-      const response = await axios.post(
-        "https://nifo.theyellow.network/api/prompt/chat/",
-        userQuery,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtAccessToken}`,
-          },
-        }
-      );
+  try {
+    const response = await axios.post(
+      "http://127.0.0.1:8000/prompt/chat/",
+      userQuery,
+      {
+        headers: {
+          Authorization: `Bearer ${jwtAccessToken}`,
+        },
+      }
+    );
 
-      console.log(response, "response ===>");
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) =>
-          msg.question === input
-            ? { question: input, response: response.data }
-            : msg
-        )
-      );
+    setMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg.question === input
+          ? { question: input, response: response.data }
+          : msg
+      )
+    );
+  } catch (error) {
+    let errorMessage = "Error fetching response";
 
-      // Save query data if needed
-      // await saveQueryData(input);
-    } catch (error) {
-      console.log("error in getting startups", error);
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) =>
-          msg.question === input
-            ? { question: input, response: "Error fetching response" }
-            : msg
-        )
-      );
+    if (error.code === "ECONNREFUSED") {
+      errorMessage =
+        "Connection error: Please ensure you are connected to the internet securely.";
+    } else if (error.response && error.response.status === 500) {
+      errorMessage = "Internal Server Error: Please try again later.";
+    } else if (error.message) {
+      errorMessage = `Error: ${error.message}`;
     }
-  };
+
+    setMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg.question === input
+          ? { question: input, presponse: errorMessage }
+          : msg
+      )
+    );
+  }
+};
+
 
   const handleGetConvo = async () => {
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
@@ -126,7 +130,7 @@ export default function HomePage() {
     if (jwtAccessToken) {
       try {
         const response = await axios.get(
-          `https://nifo.theyellow.network/api/prompt/convo/${sessionId}/`,
+          `http://127.0.0.1:8000/prompt/convo/${sessionId}/`,
           {
             headers: {
               Authorization: `Bearer ${jwtAccessToken}`,
@@ -208,16 +212,24 @@ export default function HomePage() {
         <div className="p-6 text-left border-l-4 border-blue-100">
           <span className="font-semibold text-black block mb-3">NIFO:</span>
           {message?.response === "Loading" ? (
-            <div>Loading..</div>
+            <div>Loading...</div>
           ) : (
             <div>
-              {message?.response?.response === "No specific details available."
-                ? null
-                : message?.response?.response}
+              {typeof message?.response?.response === "string" ? (
+                message?.response?.response ===
+                "No specific details available." ? null : (
+                  message?.response?.response
+                )
+              ) : (
+                <div>
+                  {message?.response?.response?.response ||
+                    JSON.stringify(message?.response?.response)}
+                </div>
+              )}
               <RenderStartup
                 message={message}
                 handleSendStartupData={handleSendStartupData}
-              ></RenderStartup>
+              />
             </div>
           )}
         </div>
@@ -240,10 +252,7 @@ export default function HomePage() {
             handleToggleLeftFrame={handleToggleLeftFrame}
             onSaveInput={handleSaveInput}
             handleNewChat={handleNewChat}
-            // saveQueryData={saveQueryData}
             messages={messages}
-            // connectionStatus={connectionStatus}
-            // setConnectionStatus={setConnectionStatus}
             setSessionId={setSessionId}
           />
         );
@@ -278,8 +287,6 @@ export default function HomePage() {
             renderMessages={renderMessages}
             open={open}
             openRightFrame={openRightFrame}
-
-            // saveQueryData={saveQueryData}
           />
           <div className="absolute left-2 top-2 flex items-center">
             <NavBar
@@ -294,23 +301,6 @@ export default function HomePage() {
             />
           </div>
         </div>
-        {/* {openRightFrame && selectedStartup && (
-          <div className={`${expanded ? "" : "w-1/4"}`}>
-            <CompanyProfilePane
-              companyData={selectedStartup}
-              setOpenState={setOpenRightFrame}
-              openState={openRightFrame}
-              userInfo={userInfo}
-              expanded={expanded}
-              toggleWidth={toggleWidth}
-              mailData={mailMessage}
-              setMailData={setMailMessage}
-               connectionStatus={connectionStatus}
-              queryData={queryData}
-              requestQuery={requestQuery}
-            />
-          </div>
-        )} */}
       </div>
 
       {/* Mobile Responsiveness */}
