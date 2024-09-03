@@ -107,44 +107,54 @@ export default function HomePage() {
 
   const dispatch = useAppDispatch();
 
-  const handleSaveInput = async (input: string) => {
-    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
-    const userQuery = { input, session_id: sessionId };
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { question: input, response: "Loading" },
-    ]);
+const handleSaveInput = async (input: string) => {
+  const jwtAccessToken = localStorage.getItem("jwtAccessToken");
+  const userQuery = { input, session_id: sessionId };
+  setMessages((prevMessages) => [
+    ...prevMessages,
+    { question: input, response: "Loading" },
+  ]);
 
-    try {
-      const response = await axios.post(
-        "https://nifo.theyellow.network/api/prompt/chat/",
-        userQuery,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtAccessToken}`,
-          },
-        }
-      );
+  try {
+    const response = await axios.post(
+      "http://127.0.0.1:8000/prompt/chat/",
+      userQuery,
+      {
+        headers: {
+          Authorization: `Bearer ${jwtAccessToken}`,
+        },
+      }
+    );
 
-      console.log(response, "response ===>");
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) =>
-          msg.question === input
-            ? { question: input, response: response.data }
-            : msg
-        )
-      );
-    } catch (error) {
-      console.log("error in getting startups", error);
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) =>
-          msg.question === input
-            ? { question: input, response: "Error fetching response" }
-            : msg
-        )
-      );
+    setMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg.question === input
+          ? { question: input, response: response.data }
+          : msg
+      )
+    );
+  } catch (error) {
+    let errorMessage = "Error fetching response";
+
+    if (error.code === "ECONNREFUSED") {
+      errorMessage =
+        "Connection error: Please ensure you are connected to the internet securely.";
+    } else if (error.response && error.response.status === 500) {
+      errorMessage = "Internal Server Error: Please try again later.";
+    } else if (error.message) {
+      errorMessage = `Error: ${error.message}`;
     }
-  };
+
+    setMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg.question === input
+          ? { question: input, presponse: errorMessage }
+          : msg
+      )
+    );
+  }
+};
+
 
   const handleGetConvo = async () => {
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
@@ -152,7 +162,7 @@ export default function HomePage() {
     if (jwtAccessToken) {
       try {
         const response = await axios.get(
-          `https://nifo.theyellow.network/api/prompt/convo/${sessionId}/`,
+          `http://127.0.0.1:8000/prompt/convo/${sessionId}/`,
           {
             headers: {
               Authorization: `Bearer ${jwtAccessToken}`,
@@ -234,16 +244,24 @@ export default function HomePage() {
         <div className="p-6 text-left border-l-4 border-blue-100">
           <span className="font-semibold text-black block mb-3">NIFO:</span>
           {message?.response === "Loading" ? (
-            <div>Loading..</div>
+            <div>Loading...</div>
           ) : (
             <div>
-              {message?.response?.response === "No specific details available."
-                ? null
-                : message?.response?.response}
+              {typeof message?.response?.response === "string" ? (
+                message?.response?.response ===
+                "No specific details available." ? null : (
+                  message?.response?.response
+                )
+              ) : (
+                <div>
+                  {message?.response?.response?.response ||
+                    JSON.stringify(message?.response?.response)}
+                </div>
+              )}
               <RenderStartup
                 message={message}
                 handleSendStartupData={handleSendStartupData}
-              ></RenderStartup>
+              />
             </div>
           )}
         </div>
@@ -268,10 +286,6 @@ const renderTabContent = () => {
           handleNewChat={handleNewChat}
           messages={messages}
           setSessionId={setSessionId}
-          connectionStatus={undefined}
-          setConnectionStatus={function (status: any): void {
-            throw new Error("Function not implemented.");
-          }}
         />
       );
     case "Trends":
