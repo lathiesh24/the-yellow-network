@@ -74,14 +74,13 @@ export default function HomePage() {
   };
 
   const dispatch = useAppDispatch();
-  const { connectionStatus, loading, error, successMessage } = useAppSelector(
-    (state) => state.partnerConnect
-  );
+  // const { connectionStatus, loading, error, successMessage } = useAppSelector(
+  //   (state) => state.partnerConnect
+  // );
 
   const handleSaveInput = async (input: string) => {
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
-    const userQuery = { input, session_id: sessionId }; // Adjust session_id as needed
-
+    const userQuery = { input, session_id: sessionId }; 
     setMessages((prevMessages) => [
       ...prevMessages,
       { question: input, response: "Loading" },
@@ -89,7 +88,7 @@ export default function HomePage() {
 
     try {
       const response = await axios.post(
-        "https://nifo.theyellow.network/api/prompt/chat/",
+        "http://127.0.0.1:8000/prompt/chat/",
         userQuery,
         {
           headers: {
@@ -127,7 +126,7 @@ export default function HomePage() {
     if (jwtAccessToken) {
       try {
         const response = await axios.get(
-          `https://nifo.theyellow.network/api/prompt/convo/${sessionId}/`,
+          `http://127.0.0.1:8000/prompt/convo/${sessionId}/`,
           {
             headers: {
               Authorization: `Bearer ${jwtAccessToken}`,
@@ -243,7 +242,7 @@ export default function HomePage() {
             handleNewChat={handleNewChat}
             // saveQueryData={saveQueryData}
             messages={messages}
-            connectionStatus={connectionStatus}
+            // connectionStatus={connectionStatus}
             // setConnectionStatus={setConnectionStatus}
             setSessionId={setSessionId}
           />
@@ -256,6 +255,8 @@ export default function HomePage() {
         return null;
     }
   };
+
+
 
   return (
     <main className="flex flex-col w-full">
@@ -295,7 +296,7 @@ export default function HomePage() {
             />
           </div>
         </div>
-        {openRightFrame && selectedStartup && (
+        {/* {openRightFrame && selectedStartup && (
           <div className={`${expanded ? "" : "w-1/4"}`}>
             <CompanyProfilePane
               companyData={selectedStartup}
@@ -306,12 +307,12 @@ export default function HomePage() {
               toggleWidth={toggleWidth}
               mailData={mailMessage}
               setMailData={setMailMessage}
-              connectionStatus={connectionStatus}
+               connectionStatus={connectionStatus}
               queryData={queryData}
               requestQuery={requestQuery}
             />
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Mobile Responsiveness */}

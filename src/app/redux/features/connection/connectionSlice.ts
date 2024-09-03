@@ -6,7 +6,8 @@ import {
   postRequestWithAccessToken,
 } from "../../hooks"; // Import the request utility functions
 
-type ConnectionStatus = "requested" | "rejected" | "connected";
+export type ConnectionStatus = "requested" | "rejected" | "connected" | "Connect";
+
 
 interface PartnerConnectPayload {
   consultant_email: string;
@@ -32,8 +33,9 @@ interface PartnerConnectState {
   error: string | null;
   loading: boolean;
   successMessage: string | null;
-  connectionStatus: ConnectionStatus | null;
+  connectionStatuses: { [startupId: number]: ConnectionStatus }; 
 }
+
 
 const initialState: PartnerConnectState = {
   connections: [],
@@ -41,7 +43,7 @@ const initialState: PartnerConnectState = {
   error: null,
   loading: false,
   successMessage: null,
-  connectionStatus: null,
+  connectionStatuses: {}, 
 };
 
 export const createPartnerConnect = createAsyncThunk<
@@ -51,9 +53,10 @@ export const createPartnerConnect = createAsyncThunk<
 >(
   "partnerConnect/createPartnerConnect",
   async (payload, { rejectWithValue }) => {
+    console.log("PAYLOAD",payload);
     try {
       const response = await postRequestWithAccessToken(
-        "https://nifo.theyellow.network/api/partnerconnect/connects/",
+        "http://127.0.0.1:8000/partnerconnect/connects/",
         payload
       );
       return response.data;
@@ -72,7 +75,7 @@ export const fetchPartnerConnects = createAsyncThunk<
 >("partnerConnect/fetchPartnerConnects", async (_, { rejectWithValue }) => {
   try {
     const response = await getRequestWithAccessToken(
-      "https://nifo.theyellow.network/api/partnerconnect/connects/"
+      "http://127.0.0.1:8000/partnerconnect/connects/"
     );
     return response.data;
   } catch (error: any) {
@@ -91,7 +94,7 @@ export const fetchPartnerConnectsByOrg = createAsyncThunk<
   async (orgId, { rejectWithValue }) => {
     try {
       const response = await getRequestWithAccessToken(
-        `https://nifo.theyellow.network/api/partnerconnect/connects/?requested_org=${orgId}`
+        `http://127.0.0.1:8000/partnerconnect/connects/?requested_org=${orgId}`
       );
       return response.data;
     } catch (error: any) {
@@ -109,11 +112,13 @@ const partnerConnectSlice = createSlice({
   reducers: {
     setConnectionStatus: (
       state,
-      action: PayloadAction<"requested" | "rejected" | "connected">
+      action: PayloadAction<{ startupId: number; status: ConnectionStatus }>
     ) => {
-      state.connectionStatus = action.payload;
+      const { startupId, status } = action.payload;
+      state.connectionStatuses[startupId] = status;
     },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(createPartnerConnect.pending, (state) => {

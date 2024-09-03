@@ -14,7 +14,6 @@ interface SearchMobileProps {
   handleToggleLeftFrame: () => void;
   onSaveInput: any;
   messages: any[];
-  connectionStatus: any;
   setSessionId: (id: any) => void;
   handleNewChat: any
 }
@@ -28,7 +27,6 @@ const SearchMobile: React.FC<SearchMobileProps> = ({
   handleToggleLeftFrame,
   onSaveInput,
   messages,
-  connectionStatus,
   setSessionId,
   handleNewChat
 }) => {
@@ -36,13 +34,17 @@ const SearchMobile: React.FC<SearchMobileProps> = ({
   const [answerTab, setAnswerTab] = useState(false);
   const [selectedStartup, setSelectedStartup] = useState<any>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [queryForConnect, setQueryForConnect] = useState();
 
+
+  console.log("messages in mobile", messages);
   const handleAccordian = () => {
     setIsAccordionOpen(!isAccordionOpen);
   };
 
-  const handleStartups = (startup: any) => {
+  const handleStartups = (startup: any, message:any) => {
     setSelectedStartup(startup);
+    setQueryForConnect(message.question);
   };
 
   const handleBackClick = () => {
@@ -109,9 +111,9 @@ const SearchMobile: React.FC<SearchMobileProps> = ({
           <FaBars size={24} />
         </div>
 
-        <div 
-        className="p-2 rounded-md bg-blue-500 text-white mt-4 mr-4 text-sm font-semibold"
-        onClick={()=>handleNewChat()}
+        <div
+          className="p-2 rounded-md bg-blue-500 text-white mt-4 mr-4 text-sm font-semibold"
+          onClick={() => handleNewChat()}
         >
           New Chat
         </div>
@@ -137,16 +139,16 @@ const SearchMobile: React.FC<SearchMobileProps> = ({
                   <div className="w-1/4">Startups</div>
                   <div className="w-3/4">Reason</div>
                 </div>
-                {message.response.startups.map((startup, index) => (
+                {message?.response?.startups.map((startup, index) => (
                   <div
                     key={index}
                     className="flex gap-6 rounded-lg p-1 shadow-[0_3px_10px_rgb(0,0,0,0.2)] cursor-pointer"
-                    onClick={() => handleStartups(startup)}
+                    onClick={() => handleStartups(startup, message)}
                   >
                     <div className="w-1/4">
                       <Image
-                        src={startup.logo || "/default_logo.png"}
-                        alt={`${startup.name} Logo`}
+                        src={startup?.database_info?.startup_logo || "/nologo.png"}
+                        alt={`${startup?.name || "Startup"} Logo`}
                         width={200}
                         height={50}
                       />
@@ -186,7 +188,7 @@ const SearchMobile: React.FC<SearchMobileProps> = ({
         <StartupProfile
           selectedStartup={selectedStartup}
           onBackClick={handleBackClick}
-          connectionStatus={connectionStatus}
+          queryForConnect={queryForConnect}
         />
       ) : messages.length > 0 ? (
         renderAnswerTab()
