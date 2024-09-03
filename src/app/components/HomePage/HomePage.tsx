@@ -42,7 +42,6 @@ export default function HomePage() {
   const [selectedIndustry, setSelectedIndustry] = useState(null);
   const [selectedTechnology, setSelectedTechnology] = useState(null);
 
-
   console.log("queryDatainHome", queryData, inputPrompt);
 
   useEffect(() => {
@@ -94,7 +93,6 @@ export default function HomePage() {
     setSelectedTechnology(technologyName);
   };
 
-
   const toggleWidth = () => {
     setExpanded(!expanded);
   };
@@ -107,54 +105,53 @@ export default function HomePage() {
 
   const dispatch = useAppDispatch();
 
-const handleSaveInput = async (input: string) => {
-  const jwtAccessToken = localStorage.getItem("jwtAccessToken");
-  const userQuery = { input, session_id: sessionId };
-  setMessages((prevMessages) => [
-    ...prevMessages,
-    { question: input, response: "Loading" },
-  ]);
+  const handleSaveInput = async (input: string) => {
+    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
+    const userQuery = { input, session_id: sessionId };
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { question: input, response: "Loading" },
+    ]);
 
-  try {
-    const response = await axios.post(
-      "http://127.0.0.1:8000/prompt/chat/",
-      userQuery,
-      {
-        headers: {
-          Authorization: `Bearer ${jwtAccessToken}`,
-        },
+    try {
+      const response = await axios.post(
+        "https://nifo.theyellow.network/api/prompt/chat/",
+        userQuery,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtAccessToken}`,
+          },
+        }
+      );
+
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.question === input
+            ? { question: input, response: response.data }
+            : msg
+        )
+      );
+    } catch (error) {
+      let errorMessage = "Error fetching response";
+
+      if (error.code === "ECONNREFUSED") {
+        errorMessage =
+          "Connection error: Please ensure you are connected to the internet securely.";
+      } else if (error.response && error.response.status === 500) {
+        errorMessage = "Internal Server Error: Please try again later.";
+      } else if (error.message) {
+        errorMessage = `Error: ${error.message}`;
       }
-    );
 
-    setMessages((prevMessages) =>
-      prevMessages.map((msg) =>
-        msg.question === input
-          ? { question: input, response: response.data }
-          : msg
-      )
-    );
-  } catch (error) {
-    let errorMessage = "Error fetching response";
-
-    if (error.code === "ECONNREFUSED") {
-      errorMessage =
-        "Connection error: Please ensure you are connected to the internet securely.";
-    } else if (error.response && error.response.status === 500) {
-      errorMessage = "Internal Server Error: Please try again later.";
-    } else if (error.message) {
-      errorMessage = `Error: ${error.message}`;
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.question === input
+            ? { question: input, presponse: errorMessage }
+            : msg
+        )
+      );
     }
-
-    setMessages((prevMessages) =>
-      prevMessages.map((msg) =>
-        msg.question === input
-          ? { question: input, presponse: errorMessage }
-          : msg
-      )
-    );
-  }
-};
-
+  };
 
   const handleGetConvo = async () => {
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
@@ -162,7 +159,7 @@ const handleSaveInput = async (input: string) => {
     if (jwtAccessToken) {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:8000/prompt/convo/${sessionId}/`,
+          `https://nifo.theyellow.network/api/prompt/convo/${sessionId}/`,
           {
             headers: {
               Authorization: `Bearer ${jwtAccessToken}`,
@@ -269,43 +266,42 @@ const handleSaveInput = async (input: string) => {
     ));
   };
 
-const renderTabContent = () => {
-  switch (activeTab) {
-    case "Spotlight":
-      return <SpotlightMobile />;
-    case "Search":
-      return (
-        <SearchMobile
-          isInputEmpty={isInputEmpty}
-          inputPrompt={inputPrompt}
-          setInputPrompt={setInputPrompt}
-          setIsInputEmpty={setIsInputEmpty}
-          handleToggleRightFrame={handleToggleRightFrame}
-          handleToggleLeftFrame={handleToggleLeftFrame}
-          onSaveInput={handleSaveInput}
-          handleNewChat={handleNewChat}
-          messages={messages}
-          setSessionId={setSessionId}
-        />
-      );
-    case "Trends":
-      return (
-        <TrendsMobile
-          selectedSector={selectedSector}
-          selectedIndustry={selectedIndustry}
-          selectedTechnology={selectedTechnology}
-          handleSectorClick={handleSectorClick}
-          handleIndustryClick={handleIndustryClick}
-          handleTechnologyClick={handleTechnologyClick}
-        />
-      );
-    case "More":
-      return <MoreMobile userInfo={userInfo} />;
-    default:
-      return null;
-  }
-};
-
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "Spotlight":
+        return <SpotlightMobile />;
+      case "Search":
+        return (
+          <SearchMobile
+            isInputEmpty={isInputEmpty}
+            inputPrompt={inputPrompt}
+            setInputPrompt={setInputPrompt}
+            setIsInputEmpty={setIsInputEmpty}
+            handleToggleRightFrame={handleToggleRightFrame}
+            handleToggleLeftFrame={handleToggleLeftFrame}
+            onSaveInput={handleSaveInput}
+            handleNewChat={handleNewChat}
+            messages={messages}
+            setSessionId={setSessionId}
+          />
+        );
+      case "Trends":
+        return (
+          <TrendsMobile
+            selectedSector={selectedSector}
+            selectedIndustry={selectedIndustry}
+            selectedTechnology={selectedTechnology}
+            handleSectorClick={handleSectorClick}
+            handleIndustryClick={handleIndustryClick}
+            handleTechnologyClick={handleTechnologyClick}
+          />
+        );
+      case "More":
+        return <MoreMobile userInfo={userInfo} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <main className="flex flex-col w-full">
@@ -348,7 +344,9 @@ const renderTabContent = () => {
       {/* Mobile Responsiveness */}
       <div className="flex flex-col md:hidden h-screen">
         {/* Mobile Header */}
-        <MobileHeader handleBack={handleBack} />
+        <MobileHeader
+        // handleBack={handleBack}
+        />
 
         {/* Content Area */}
         <div className="flex-grow overflow-y-auto">{renderTabContent()}</div>

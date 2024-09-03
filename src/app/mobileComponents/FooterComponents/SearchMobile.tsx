@@ -210,7 +210,7 @@ const SearchMobile: React.FC<SearchMobileProps> = ({
   );
 
   return (
-    <div>
+    <div className="mt-20">
       {selectedStartup ? (
         <StartupProfile
           selectedStartup={selectedStartup}

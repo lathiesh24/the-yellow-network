@@ -58,7 +58,7 @@ export const createPartnerConnect = createAsyncThunk<
     console.log("PAYLOAD", payload);
     try {
       const response = await postRequestWithAccessToken(
-        "http://127.0.0.1:8000/partnerconnect/connects/",
+        "https://nifo.theyellow.network/api/partnerconnect/connects/",
         payload
       );
       return response.data;
@@ -77,7 +77,7 @@ export const fetchPartnerConnects = createAsyncThunk<
 >("partnerConnect/fetchPartnerConnects", async (_, { rejectWithValue }) => {
   try {
     const response = await getRequestWithAccessToken(
-      "http://127.0.0.1:8000/partnerconnect/connects/"
+      "https://nifo.theyellow.network/api/partnerconnect/connects/"
     );
     return response.data;
   } catch (error: any) {
@@ -96,7 +96,7 @@ export const fetchPartnerConnectsByOrg = createAsyncThunk<
   async (orgId, { rejectWithValue }) => {
     try {
       const response = await getRequestWithAccessToken(
-        `http://127.0.0.1:8000/partnerconnect/connects/?requested_org=${orgId}`
+        `https://nifo.theyellow.network/api/partnerconnect/connects/?requested_org=${orgId}`
       );
       return response.data;
     } catch (error: any) {
