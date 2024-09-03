@@ -7,10 +7,8 @@ import { TbLocation } from "react-icons/tb";
 
 export const Ecosystem = () => {
   const searchParams = useSearchParams();
-
-  // Extracting data from query parameters
-  const useCaseTitle = searchParams.get("useCaseTitle");
-  const description = searchParams.get("description");
+  const useCaseTitle = searchParams.get("usecase");
+  const description = searchParams.get("usecaseDescription");
   const startups = JSON.parse(searchParams.get("startups") || "[]");
 
   return (
@@ -29,20 +27,18 @@ export const Ecosystem = () => {
         {startups && startups.length > 0 ? (
           startups.map((startup, index) => (
             <div key={index} className="shadow-custom rounded-md px-3 py-4">
-              <div className="font-bold">{startup}</div>
-
+              <div className="font-bold">{startup.name}</div>{" "}
+              {/* Correctly display the startup name */}
               <div className="flex items-center justify-between mt-2">
                 <div className="text-xxl">
-                  {/* Placeholder description for each startup */}
-                  {startup} is revolutionizing the industry with cutting-edge
-                  technology.
+                  {/* Display the startup description */}
+                  {startup.description}
                 </div>
                 <div className="relative -mt-7 flex justify-center">
                   {/* Placeholder image */}
                   <img src="/placeholder-image.png" alt="placeholder" />
                 </div>
               </div>
-
               <div className="flex justify-between mt-3">
                 <button className="inline-flex items-center text-[#0081CA] py-1 px-2 rounded border border-[#0081CA]">
                   Explore <CiGlobe className="ml-2" />

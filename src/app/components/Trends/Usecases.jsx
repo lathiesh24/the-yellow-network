@@ -83,19 +83,22 @@ const Usecases = ({ selectedIndustry, selectedTechnology }) => {
 
   const currentUseCase = useCases.length > 0 ? useCases[currentIndex] : null;
 
-  const handleUsecaseClick = () => {
-    if (currentUseCase) {
-      const query = new URLSearchParams({
-        useCaseTitle: currentUseCase.useCaseTitle,
-        description: currentUseCase.description,
-        startups: JSON.stringify(currentUseCase.startups || []),
-        enhancement: currentUseCase.enhancement || '',
-        measureOfImpact: currentUseCase.measureOfImpact || ''
-      }).toString();
+  console.log(currentUseCase)
+const handleUsecaseClick = () => {
+  if (currentUseCase) {
+    const query = new URLSearchParams({
+      usecase: currentUseCase.usecase,
+      usecaseDescription: currentUseCase.usecaseDescription,
+      Enhancement: currentUseCase.Enhancement || "",
+      MeasureOfImpact: currentUseCase["Measure of Impact"] || "",
+      startups: JSON.stringify(currentUseCase.startups || []), // Include startups
+    }).toString();
 
-      router.push(`/usecase?${query}`);
-    }
-  };
+    router.push(`/usecase?${query}`);
+  }
+};
+
+
 
   return (
     <div
@@ -113,12 +116,12 @@ const Usecases = ({ selectedIndustry, selectedTechnology }) => {
       {/* Animated Visible Card */}
       {currentUseCase && (
         <div
-          key={currentUseCase.useCaseId}
+          key={currentUseCase.usecase}
           className={`flex flex-col justify-between border shadow-xl px-7 py-4 rounded-md text-center w-full h-24 cursor-pointer ${slide}`}
           onClick={handleUsecaseClick}
           onTransitionEnd={handleTransitionEnd}
         >
-          <div>{currentUseCase.useCaseTitle}</div>
+          <div>{currentUseCase.usecase}</div>
           <div className="flex text-[#0081CA] justify-end">
             <BsArrowRight size={24} />
           </div>
