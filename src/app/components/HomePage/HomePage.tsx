@@ -322,9 +322,14 @@ export default function HomePage() {
       </div>
 
       {/* Mobile Responsiveness */}
-      <div className="flex flex-col md:hidden">
+      <div className="flex flex-col md:hidden h-screen">
+        {/* Mobile Header */}
         <MobileHeader />
-        {renderTabContent()}
+
+        {/* Content Area */}
+        <div className="flex-grow overflow-y-auto">{renderTabContent()}</div>
+
+        {/* Bottom Bar */}
         <BottomBar setActiveTab={setActiveTab} activeTab={activeTab} />
       </div>
     </main>

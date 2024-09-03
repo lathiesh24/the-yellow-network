@@ -1,0 +1,316 @@
+{
+  "sectors": [
+    {
+      "sectorId": "bfsi",
+      "sectorName": "Banking, Financial Service & Insurance",
+      "industries": [
+        {
+          "industryId": "lifeHealthInsurance",
+          "industryName": "Life & Health Insurance",
+          "technologies": [
+            {
+              "technologyId": "generativeAi",
+              "technologyName": "Generative AI",
+              "useCases": [
+                {
+                  "useCaseId": "predictiveUnderwriting",
+                  "useCaseTitle": "Predictive Underwriting",
+                  "description": "Use AI to assess risks accurately, reducing underwriting time by 50% and improving accuracy by 30%.",
+                  "reference": "McKinsey",
+                  "startups": [
+                    "ZestAI",
+                    "LapetusSolutions",
+                    "UnderwriteMe",
+                    "Akur8",
+                    "Flyreel"
+                  ]
+                },
+                {
+                  "useCaseId": "fraudDetectionInClaims",
+                  "useCaseTitle": "Fraud Detection in Claims",
+                  "description": "Implement machine learning to identify fraudulent claims, potentially reducing fraud by up to 75%.",
+                  "reference": "Gartner",
+                  "startups": [
+                    "ShiftTechnology",
+                    "Friss",
+                    "Snapsheet",
+                    "Insurify",
+                    "ClaraAnalytics"
+                  ]
+                },
+                {
+                  "useCaseId": "customerLifetimeValuePrediction",
+                  "useCaseTitle": "Customer Lifetime Value Prediction",
+                  "description": "Leverage predictive analytics to optimize customer acquisition strategies, increasing retention by 15%.",
+                  "reference": "Forrester"
+                },
+                {
+                  "useCaseId": "personalizedWellnessPrograms",
+                  "useCaseTitle": "Personalized Wellness Programs",
+                  "description": "Use IoT devices and AI to tailor wellness plans, reducing policyholder health risks by 20%.",
+                  "reference": "McKinsey"
+                },
+                {
+                  "useCaseId": "churnPrediction",
+                  "useCaseTitle": "Churn Prediction",
+                  "description": "Utilize predictive analytics to identify at-risk customers and implement retention strategies, reducing churn by 20%.",
+                  "reference": "Gartner"
+                }
+              ]
+            },
+            {
+              "technologyId": "appliedAi",
+              "technologyName": "Applied AI",
+              "useCases": []
+            },
+            {
+              "technologyId": "mlOps",
+              "technologyName": "Industrializing Machine Learning (MLOps)",
+              "useCases": []
+            },
+            {
+              "technologyId": "digitalTrustCybersecurity",
+              "technologyName": "Digital Trust and Cybersecurity",
+              "useCases": []
+            },
+            {
+              "technologyId": "advancedConnectivity",
+              "technologyName": "Advanced Connectivity (IoT and 5G)",
+              "useCases": []
+            },
+            {
+              "technologyId": "cloudEdgeComputing",
+              "technologyName": "Cloud and Edge Computing",
+              "useCases": []
+            },
+            {
+              "technologyId": "nextGenSoftwareDevelopment",
+              "technologyName": "Next-Generation Software Development",
+              "useCases": [
+                {
+                  "useCaseId": "automatedClaimsProcessing",
+                  "useCaseTitle": "Automated Claims Processing",
+                  "description": "Use RPA and AI to automate claims, decreasing processing time by 80% and operational costs by 30%.",
+                  "reference": "McKinsey"
+                },
+                {
+                  "useCaseId": "healthRiskAssessmentTools",
+                  "useCaseTitle": "Health Risk Assessment Tools",
+                  "description": "Implement AI-based risk assessments to predict chronic conditions, leading to early interventions and a 15% decrease in claims.",
+                  "reference": "Deloitte"
+                },
+                {
+                  "useCaseId": "predictiveCustomerSupport",
+                  "useCaseTitle": "Predictive Customer Support",
+                  "description": "Use AI to anticipate customer queries and offer proactive support, improving satisfaction scores by 40%.",
+                  "reference": "Forrester"
+                },
+                {
+                  "useCaseId": "behavioralInsuranceProducts",
+                  "useCaseTitle": "Behavioral Insurance Products",
+                  "description": "Create insurance products based on real-time health data, leading to a 20% increase in policyholder engagement.",
+                  "reference": "Accenture"
+                },
+                {
+                  "useCaseId": "telemedicineIntegration",
+                  "useCaseTitle": "Telemedicine Integration",
+                  "description": "Implement telemedicine solutions with predictive analytics to reduce hospitalization rates by 25%.",
+                  "reference": "McKinsey"
+                },
+                {
+                  "useCaseId": "predictivePolicyLapsePrevention",
+                  "useCaseTitle": "Predictive Policy Lapse Prevention",
+                  "description": "Use machine learning to identify policies at risk of lapsing, improving policy retention by 10%.",
+                  "reference": "Gartner"
+                },
+                {
+                  "useCaseId": "operationalRiskManagement",
+                  "useCaseTitle": "Operational Risk Management",
+                  "description": "Apply predictive analytics to manage operational risks, reducing compliance costs by 15%.",
+                  "reference": "Deloitte"
+                },
+                {
+                  "useCaseId": "customerSentimentAnalysis",
+                  "useCaseTitle": "Customer Sentiment Analysis",
+                  "description": "Use NLP to analyze customer feedback and predict satisfaction, leading to a 20% increase in NPS.",
+                  "reference": "Forrester"
+                },
+                {
+                  "useCaseId": "predictiveMarketingCampaigns",
+                  "useCaseTitle": "Predictive Marketing Campaigns",
+                  "description": "Leverage AI to forecast campaign performance, increasing conversion rates by 35%.",
+                  "reference": "Accenture"
+                }
+              ]
+            },
+            {
+              "technologyId": "immersiveRealityTechnologies",
+              "technologyName": "Immersive Reality Technologies",
+              "useCases": []
+            },
+            {
+              "technologyId": "quantumTechnologies",
+              "technologyName": "Quantum Technologies",
+              "useCases": []
+            },
+            {
+              "technologyId": "climateTechnologies",
+              "technologyName": "Climate Technologies",
+              "useCases": []
+            },
+            {
+              "technologyId": "distributedInfrastructure",
+              "technologyName": "Distributed Infrastructure",
+              "useCases": []
+            },
+            {
+              "technologyId": "trustArchitecture",
+              "technologyName": "Trust Architecture (Blockchain and Zero-Trust Security)",
+              "useCases": []
+            },
+            {
+              "technologyId": "nextLevelProcessAutomation",
+              "technologyName": "Next-Level Process Automation",
+              "useCases": []
+            }
+          ]
+        },
+        {
+          "industryId": "diversifiedBanks",
+          "industryName": "Diversified Banks",
+          "technologies": []
+        },
+        {
+          "industryId": "regionalBanks",
+          "industryName": "Regional Banks",
+          "technologies": []
+        },
+        {
+          "industryId": "consumerFinance",
+          "industryName": "Consumer Finance",
+          "technologies": []
+        },
+        {
+          "industryId": "diversifiedFinancialServices",
+          "industryName": "Diversified Financial Services",
+          "technologies": []
+        },
+        {
+          "industryId": "multiSectorHoldings",
+          "industryName": "Multi-Sector Holdings",
+          "technologies": []
+        },
+        {
+          "industryId": "specializedFinance",
+          "industryName": "Specialized Finance",
+          "technologies": []
+        },
+        {
+          "industryId": "commercialResidentialMortgageFinance",
+          "industryName": "Commercial & Residential Mortgage Finance",
+          "technologies": []
+        },
+        {
+          "industryId": "transactionPaymentProcessingServices",
+          "industryName": "Transaction & Payment Processing Services",
+          "technologies": []
+        },
+        {
+          "industryId": "assetManagementCustodyBanks",
+          "industryName": "Asset Management & Custody Banks",
+          "technologies": []
+        },
+        {
+          "industryId": "investmentBankingBrokerage",
+          "industryName": "Investment Banking & Brokerage",
+          "technologies": []
+        },
+        {
+          "industryId": "diversifiedCapitalMarkets",
+          "industryName": "Diversified Capital Markets",
+          "technologies": []
+        },
+        {
+          "industryId": "financialExchangesData",
+          "industryName": "Financial Exchanges & Data",
+          "technologies": []
+        },
+        {
+          "industryId": "mortgageReits",
+          "industryName": "Mortgage REITs",
+          "technologies": []
+        },
+        {
+          "industryId": "insuranceBrokers",
+          "industryName": "Insurance Brokers",
+          "technologies": []
+        },
+        {
+          "industryId": "multiLineInsurance",
+          "industryName": "Multi-line Insurance",
+          "technologies": []
+        },
+        {
+          "industryId": "propertyCasualtyInsurance",
+          "industryName": "Property & Casualty Insurance",
+          "technologies": []
+        },
+        {
+          "industryId": "reinsurance",
+          "industryName": "Reinsurance",
+          "technologies": []
+        }
+      ]
+    },
+    {
+      "sectorId": "energy",
+      "sectorName": "Energy",
+      "industries": []
+    },
+    {
+      "sectorId": "materials",
+      "sectorName": "Materials",
+      "industries": []
+    },
+    {
+      "sectorId": "industrials",
+      "sectorName": "Industrials",
+      "industries": []
+    },
+    {
+      "sectorId": "consumerDiscretionary",
+      "sectorName": "Consumer Discretionary",
+      "industries": []
+    },
+    {
+      "sectorId": "consumerStaples",
+      "sectorName": "Consumer Staples",
+      "industries": []
+    },
+    {
+      "sectorId": "healthcare",
+      "sectorName": "Healthcare",
+      "industries": []
+    },
+    {
+      "sectorId": "informationTechnology",
+      "sectorName": "Information Technology",
+      "industries": []
+    },
+    {
+      "sectorId": "communicationServices",
+      "sectorName": "Communication Services",
+      "industries": []
+    },
+    {
+      "sectorId": "utilities",
+      "sectorName": "Utilities",
+      "industries": []
+    },
+    {
+      "sectorId": "realEstate",
+      "sectorName": "Real Estate",
+      "industries": []
+    }
+  ]
+}
