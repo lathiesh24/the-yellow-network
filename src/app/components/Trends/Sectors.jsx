@@ -76,7 +76,7 @@ const Sectors = ({ onSectorClick }) => {
       onTouchEnd={handleTouchEnd}
     >
       {/* Sector image, positioned independently */}
-      <div className="absolute bottom-20 right-0 z-40">
+      <div className="">
         <img src="/circle.svg" alt="Sector" className="w-32" />
       </div>
 

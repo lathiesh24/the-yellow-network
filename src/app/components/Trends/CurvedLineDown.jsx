@@ -11,12 +11,27 @@ const CurvedLineDown = ({ selectedSector, onIndustryClick }) => {
     (sector) => sector.sectorName === selectedSector
   );
 
+
   // Extract industry names based on the selected sector
   const industryNames = selectedSectorData
     ? selectedSectorData.industries.map((industry) => industry.industryName)
     : ["No Industries Found"];
 
+    const totalPositions = 8;
+    const highlightedPosition = 3;
+
+    const [dots, setDots] = useState(
+      Array.from(
+        {
+          length: totalPositions,
+        },
+        (_, i) => industryNames[i % industryNames.length]
+      )
+    );
+
+
   const [currentIndex, setCurrentIndex] = useState(0);
+   const [rotationOffset, setRotationOffset] = useState(0);
   const [startX, setStartX] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -30,13 +45,10 @@ const CurvedLineDown = ({ selectedSector, onIndustryClick }) => {
 
     const deltaX = e.touches[0].clientX - startX;
 
-    if (deltaX > 50) {
-      handleScroll("prev");
-      setStartX(e.touches[0].clientX);
-    } else if (deltaX < -50) {
-      handleScroll("next");
-      setStartX(e.touches[0].clientX);
-    }
+     if (Math.abs(deltaX) > 20) {
+       handleScroll(deltaX > 0 ? "prev" : "next");
+       setStartX(e.touches[0].clientX); 
+     }
   };
 
   const handleTouchEnd = () => {
@@ -44,24 +56,31 @@ const CurvedLineDown = ({ selectedSector, onIndustryClick }) => {
   };
 
   const handleScroll = (direction) => {
+    if (isAnimating) return;
     setIsAnimating(true);
 
-    setTimeout(() => {
-      setCurrentIndex((prevIndex) =>
-        direction === "next"
-          ? (prevIndex + 1) % industryNames.length
-          : (prevIndex - 1 + industryNames.length) % industryNames.length
+    if (direction === "next") {
+      setRotationOffset(
+        (prevOffset) => prevOffset - (2 * Math.PI) / totalPositions
       );
-      setIsAnimating(false);
-    }, 500);
-  };
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % totalPositions);
+    } else if (direction === "prev") {
+      setRotationOffset(
+        (prevOffset) => prevOffset + (2 * Math.PI) / totalPositions
+      );
+      setCurrentIndex(
+        (prevIndex) => (prevIndex - 1 + totalPositions) % totalPositions
+      );
+    }
 
-  const fixedAngles = [Math.PI, (3 * Math.PI) / 4, Math.PI / 2];
-  const middleIndex = Math.floor(fixedAngles.length / 2);
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 500); 
+  };
 
   return (
     <div
-      className="relative bg-gray-100 flex justify-end items-end select-none mb-20"
+      className="relative bg-gray-100 flex justify-end items-end select-none mb-20 "
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -81,21 +100,29 @@ const CurvedLineDown = ({ selectedSector, onIndustryClick }) => {
               </span>
             </div>
           </div>
-          {fixedAngles.map((angle, index) => {
-            const isMiddleDot = index === middleIndex; // Check if this is the middle dot
-            const newAngle = angle + (isAnimating ? Math.PI / 4 : 0);
-            const x = centerX + radius * Math.cos(newAngle);
-            const y = centerY - radius * Math.sin(newAngle);
+          {Array.from({ length: totalPositions }).map((_, index) => {
+            const angle =
+              (index / totalPositions) * 2 * Math.PI + rotationOffset;
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY - radius * Math.sin(angle);
+
+            // Highlight the dot based on the current index
+            const isHighlighted =
+              index === (currentIndex + highlightedPosition) % totalPositions;
 
             return (
               <div
                 key={index}
                 className={`absolute transition-all duration-500 ease-in-out`}
-                style={{ left: `${x}px`, top: `${y}px` }}
+                style={{
+                  left: `${x}px`,
+                  top: `${y}px`,
+                  visibility: "visible",
+                }}
               >
                 <div
                   className={`relative rounded-full shadow-lg cursor-pointer ${
-                    isMiddleDot
+                    isHighlighted
                       ? "bg-[#3AB8FF] border-2 border-[#FFEFA7] w-7 h-7"
                       : "bg-[#D8D8D8] w-6 h-6"
                   }`}
@@ -109,7 +136,7 @@ const CurvedLineDown = ({ selectedSector, onIndustryClick }) => {
                 >
                   <div
                     className={`absolute right-full mr-4 text-black text-sm w-32 text-right ${
-                      isMiddleDot ? "font-semibold text-base" : ""
+                      isHighlighted ? "font-semibold text-base" : ""
                     }`}
                   >
                     {
