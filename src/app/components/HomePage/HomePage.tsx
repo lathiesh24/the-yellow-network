@@ -38,6 +38,10 @@ export default function HomePage() {
   });
 
   const [requestQuery, setRequestQuery] = useState<string>();
+  const [selectedSector, setSelectedSector] = useState(null);
+  const [selectedIndustry, setSelectedIndustry] = useState(null);
+  const [selectedTechnology, setSelectedTechnology] = useState(null);
+
 
   console.log("queryDatainHome", queryData, inputPrompt);
 
@@ -62,6 +66,34 @@ export default function HomePage() {
       setOpen(!open);
     }
   };
+
+  const handleBack = () => {
+    if (selectedTechnology) {
+      setSelectedTechnology(null); // Go back to Industries
+    } else if (selectedIndustry) {
+      setSelectedIndustry(null); // Go back to SubSectors
+    } else if (selectedSector) {
+      setSelectedSector(null); // Go back to Sectors
+    } else {
+      setActiveTab("Spotlight"); // Go back to Spotlight if at the root of Trends
+    }
+  };
+
+  const handleSectorClick = (sectorName) => {
+    setSelectedSector(sectorName);
+    setSelectedIndustry(null); // Reset industry and technology
+    setSelectedTechnology(null);
+  };
+
+  const handleIndustryClick = (industryName) => {
+    setSelectedIndustry(industryName);
+    setSelectedTechnology(null); // Reset technology
+  };
+
+  const handleTechnologyClick = (technologyName) => {
+    setSelectedTechnology(technologyName);
+  };
+
 
   const toggleWidth = () => {
     setExpanded(!expanded);
@@ -237,33 +269,43 @@ const handleSaveInput = async (input: string) => {
     ));
   };
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case "Spotlight":
-        return <SpotlightMobile />;
-      case "Search":
-        return (
-          <SearchMobile
-            isInputEmpty={isInputEmpty}
-            inputPrompt={inputPrompt}
-            setInputPrompt={setInputPrompt}
-            setIsInputEmpty={setIsInputEmpty}
-            handleToggleRightFrame={handleToggleRightFrame}
-            handleToggleLeftFrame={handleToggleLeftFrame}
-            onSaveInput={handleSaveInput}
-            handleNewChat={handleNewChat}
-            messages={messages}
-            setSessionId={setSessionId}
-          />
-        );
-      case "Trends":
-        return <TrendsMobile />;
-      case "More":
-        return <MoreMobile userInfo={userInfo} />;
-      default:
-        return null;
-    }
-  };
+const renderTabContent = () => {
+  switch (activeTab) {
+    case "Spotlight":
+      return <SpotlightMobile />;
+    case "Search":
+      return (
+        <SearchMobile
+          isInputEmpty={isInputEmpty}
+          inputPrompt={inputPrompt}
+          setInputPrompt={setInputPrompt}
+          setIsInputEmpty={setIsInputEmpty}
+          handleToggleRightFrame={handleToggleRightFrame}
+          handleToggleLeftFrame={handleToggleLeftFrame}
+          onSaveInput={handleSaveInput}
+          handleNewChat={handleNewChat}
+          messages={messages}
+          setSessionId={setSessionId}
+        />
+      );
+    case "Trends":
+      return (
+        <TrendsMobile
+          selectedSector={selectedSector}
+          selectedIndustry={selectedIndustry}
+          selectedTechnology={selectedTechnology}
+          handleSectorClick={handleSectorClick}
+          handleIndustryClick={handleIndustryClick}
+          handleTechnologyClick={handleTechnologyClick}
+        />
+      );
+    case "More":
+      return <MoreMobile userInfo={userInfo} />;
+    default:
+      return null;
+  }
+};
+
 
   return (
     <main className="flex flex-col w-full">
@@ -304,9 +346,14 @@ const handleSaveInput = async (input: string) => {
       </div>
 
       {/* Mobile Responsiveness */}
-      <div className="flex flex-col md:hidden">
-        <MobileHeader />
-        {renderTabContent()}
+      <div className="flex flex-col md:hidden h-screen">
+        {/* Mobile Header */}
+        <MobileHeader handleBack={handleBack} />
+
+        {/* Content Area */}
+        <div className="flex-grow overflow-y-auto">{renderTabContent()}</div>
+
+        {/* Bottom Bar */}
         <BottomBar setActiveTab={setActiveTab} activeTab={activeTab} />
       </div>
     </main>
