@@ -36,8 +36,8 @@ const MobileHeader = () => {
         )}
 
         {/* Centered Logo */}
-        <div className="flex-1 flex justify-center">
-          <Image src="/tyn-logo.png" width={100} height={100} alt="Tyn Logo" />
+        <div className="absolute left-1/2 transform -translate-x-1/2">
+          <Image src="/nifoimage.png" width={100} height={100} alt="Tyn Logo" />
         </div>
 
         {/* Right Placeholder for balance */}

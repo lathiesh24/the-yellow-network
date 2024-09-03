@@ -1,12 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FaAngleLeft } from "react-icons/fa";
-import { TbShare2 } from "react-icons/tb";
 import MobileHeader from "../../mobileComponents/MobileHeader";
 import BottomBar from "../../mobileComponents/BottomBar";
 import { useParams } from "next/navigation";
 import CryptoJS from "crypto-js";
+import { IoShareSocialOutline } from "react-icons/io5";
 
 const StartupDetails = () => {
   const [activeSpotlight, setActiveSpotlight] = useState(false);
@@ -119,7 +118,7 @@ const StartupDetails = () => {
                 className="text-gray-500 cursor-pointer"
                 onClick={handleShareClick}
               >
-                <TbShare2 size={26} />
+                <IoShareSocialOutline size={26} />
               </div>
             </div>
           </div>
