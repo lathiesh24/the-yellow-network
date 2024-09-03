@@ -14,10 +14,10 @@ export const Ecosystem = () => {
   return (
     <div className="flex flex-col">
       <div className="bg-[#005585] p-4 fixed w-full z-50">
-        <div className="text-xl font-bold text-white">
+        <div className="text-lg font-semibold text-white">
           {useCaseTitle || "Ecosystem Overview"}
         </div>
-        <div className="text-lg mt-4 text-white">
+        <div className="text-base mt-4 text-white">
           {description ||
             "Learn about the startups and technologies revolutionizing the industry."}
         </div>
@@ -26,11 +26,11 @@ export const Ecosystem = () => {
       <div className="mx-3 flex flex-col gap-8 pt-48 pb-8">
         {startups && startups.length > 0 ? (
           startups.map((startup, index) => (
-            <div key={index} className="shadow-custom rounded-md px-3 py-4">
+            <div key={index} className="shadow-md border-2 rounded-md px-3 py-4">
               <div className="font-bold">{startup.name}</div>{" "}
               {/* Correctly display the startup name */}
               <div className="flex items-center justify-between mt-2">
-                <div className="text-xxl">
+                <div className="text-sm">
                   {/* Display the startup description */}
                   {startup.description}
                 </div>
