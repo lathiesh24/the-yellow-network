@@ -30,7 +30,6 @@ export default function HomePage() {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [isInputEmpty, setIsInputEmpty] = useState<boolean>(true);
   const [mailMessage, setMailMessage] = useState<any>(null);
-  // const [connectionStatus, setConnectionStatus] = useState<string>("Connect");
   const [queryData, setQueryData] = useState<ChatHistoryResponse | null>(null);
   const [activeTab, setActiveTab] = useState<string>("Spotlight");
   const [sessionId, setSessionId] = useState<string>(() => {
@@ -39,8 +38,13 @@ export default function HomePage() {
   });
 
   const [requestQuery, setRequestQuery] = useState<string>();
+  const [selectedSector, setSelectedSector] = useState(null);
+  const [selectedIndustry, setSelectedIndustry] = useState(null);
+  const [selectedTechnology, setSelectedTechnology] = useState(null);
+
 
   console.log("queryDatainHome", queryData, inputPrompt);
+
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("user");
     if (userInfoFromStorage) {
@@ -63,6 +67,34 @@ export default function HomePage() {
     }
   };
 
+  const handleBack = () => {
+    if (selectedTechnology) {
+      setSelectedTechnology(null); // Go back to Industries
+    } else if (selectedIndustry) {
+      setSelectedIndustry(null); // Go back to SubSectors
+    } else if (selectedSector) {
+      setSelectedSector(null); // Go back to Sectors
+    } else {
+      setActiveTab("Spotlight"); // Go back to Spotlight if at the root of Trends
+    }
+  };
+
+  const handleSectorClick = (sectorName) => {
+    setSelectedSector(sectorName);
+    setSelectedIndustry(null); // Reset industry and technology
+    setSelectedTechnology(null);
+  };
+
+  const handleIndustryClick = (industryName) => {
+    setSelectedIndustry(industryName);
+    setSelectedTechnology(null); // Reset technology
+  };
+
+  const handleTechnologyClick = (technologyName) => {
+    setSelectedTechnology(technologyName);
+  };
+
+
   const toggleWidth = () => {
     setExpanded(!expanded);
   };
@@ -74,9 +106,6 @@ export default function HomePage() {
   };
 
   const dispatch = useAppDispatch();
-  // const { connectionStatus, loading, error, successMessage } = useAppSelector(
-  //   (state) => state.partnerConnect
-  // );
 
   const handleSaveInput = async (input: string) => {
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
@@ -105,9 +134,6 @@ export default function HomePage() {
             : msg
         )
       );
-
-      // Save query data if needed
-      // await saveQueryData(input);
     } catch (error) {
       console.log("error in getting startups", error);
       setMessages((prevMessages) =>
@@ -225,36 +251,47 @@ export default function HomePage() {
     ));
   };
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case "Spotlight":
-        return <SpotlightMobile />;
-      case "Search":
-        return (
-          <SearchMobile
-            isInputEmpty={isInputEmpty}
-            inputPrompt={inputPrompt}
-            setInputPrompt={setInputPrompt}
-            setIsInputEmpty={setIsInputEmpty}
-            handleToggleRightFrame={handleToggleRightFrame}
-            handleToggleLeftFrame={handleToggleLeftFrame}
-            onSaveInput={handleSaveInput}
-            handleNewChat={handleNewChat}
-            // saveQueryData={saveQueryData}
-            messages={messages}
-            // connectionStatus={connectionStatus}
-            // setConnectionStatus={setConnectionStatus}
-            setSessionId={setSessionId}
-          />
-        );
-      case "Trends":
-        return <TrendsMobile />;
-      case "More":
-        return <MoreMobile userInfo={userInfo} />;
-      default:
-        return null;
-    }
-  };
+const renderTabContent = () => {
+  switch (activeTab) {
+    case "Spotlight":
+      return <SpotlightMobile />;
+    case "Search":
+      return (
+        <SearchMobile
+          isInputEmpty={isInputEmpty}
+          inputPrompt={inputPrompt}
+          setInputPrompt={setInputPrompt}
+          setIsInputEmpty={setIsInputEmpty}
+          handleToggleRightFrame={handleToggleRightFrame}
+          handleToggleLeftFrame={handleToggleLeftFrame}
+          onSaveInput={handleSaveInput}
+          handleNewChat={handleNewChat}
+          messages={messages}
+          setSessionId={setSessionId}
+          connectionStatus={undefined}
+          setConnectionStatus={function (status: any): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
+      );
+    case "Trends":
+      return (
+        <TrendsMobile
+          selectedSector={selectedSector}
+          selectedIndustry={selectedIndustry}
+          selectedTechnology={selectedTechnology}
+          handleSectorClick={handleSectorClick}
+          handleIndustryClick={handleIndustryClick}
+          handleTechnologyClick={handleTechnologyClick}
+        />
+      );
+    case "More":
+      return <MoreMobile userInfo={userInfo} />;
+    default:
+      return null;
+  }
+};
+
 
   return (
     <main className="flex flex-col w-full">
@@ -278,8 +315,6 @@ export default function HomePage() {
             renderMessages={renderMessages}
             open={open}
             openRightFrame={openRightFrame}
-
-            // saveQueryData={saveQueryData}
           />
           <div className="absolute left-2 top-2 flex items-center">
             <NavBar
@@ -294,29 +329,12 @@ export default function HomePage() {
             />
           </div>
         </div>
-        {/* {openRightFrame && selectedStartup && (
-          <div className={`${expanded ? "" : "w-1/4"}`}>
-            <CompanyProfilePane
-              companyData={selectedStartup}
-              setOpenState={setOpenRightFrame}
-              openState={openRightFrame}
-              userInfo={userInfo}
-              expanded={expanded}
-              toggleWidth={toggleWidth}
-              mailData={mailMessage}
-              setMailData={setMailMessage}
-               connectionStatus={connectionStatus}
-              queryData={queryData}
-              requestQuery={requestQuery}
-            />
-          </div>
-        )} */}
       </div>
 
       {/* Mobile Responsiveness */}
       <div className="flex flex-col md:hidden h-screen">
         {/* Mobile Header */}
-        <MobileHeader />
+        <MobileHeader handleBack={handleBack} />
 
         {/* Content Area */}
         <div className="flex-grow overflow-y-auto">{renderTabContent()}</div>

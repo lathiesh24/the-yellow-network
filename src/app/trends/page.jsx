@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 import Trends from '../components/Trends/Trends'
-import BottomBar from "../trends/page";
+import BottomBar from "../";
 import MobileHeader from "../trends/page";
 
 const page = () => {

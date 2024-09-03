@@ -9,17 +9,10 @@ const Sectors = ({ onSectorClick }) => {
   // Extract sector names from the sectors data
   const sectorNames = sectorsData.sectors.map((sector) => sector.sectorName);
 
-  const totalPositions = 8; // Number of positions around the circle
-  const highlightedPosition = 3; // The index of the position to be highlighted (starting from 0)
+  const totalPositions = sectorNames.length; // Use the actual number of sectors
+  const highlightedPosition = Math.floor(totalPositions / 2); // Middle position or close to it
 
-  // Initialize the dots with the first 8 sectors or repeat if fewer than 8
-  const [dots, setDots] = useState(
-    Array.from(
-      { length: totalPositions },
-      (_, i) => sectorNames[i % sectorNames.length]
-    )
-  );
-  const [currentIndex, setCurrentIndex] = useState(0); // Index of the highlighted dot
+  const [currentIndex, setCurrentIndex] = useState(4); // Index of the highlighted dot
   const [rotationOffset, setRotationOffset] = useState(0); // Track rotation
   const [isAnimating, setIsAnimating] = useState(false);
   const [startX, setStartX] = useState(null); // Initialize startX state
@@ -53,13 +46,13 @@ const Sectors = ({ onSectorClick }) => {
       setRotationOffset(
         (prevOffset) => prevOffset - (2 * Math.PI) / totalPositions
       );
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % totalPositions);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % sectorNames.length);
     } else if (direction === "prev") {
       setRotationOffset(
         (prevOffset) => prevOffset + (2 * Math.PI) / totalPositions
       );
       setCurrentIndex(
-        (prevIndex) => (prevIndex - 1 + totalPositions) % totalPositions
+        (prevIndex) => (prevIndex - 1 + sectorNames.length) % sectorNames.length
       );
     }
 
@@ -69,73 +62,88 @@ const Sectors = ({ onSectorClick }) => {
   };
 
   return (
-    <div
-      className="relative h-screen w-screen bg-gray-100 flex justify-end items-end select-none pb-20 overflow-hidden"
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
-      {/* Sector image, positioned independently */}
-      <div className="">
-        <img src="/circle.svg" alt="Sector" className="w-32" />
+    <div className="relative flex flex-col justify-between h-screen overflow-hidden">
+      <div>
+        <div className="">
+          <img src="/sector_default.png" alt="" className="" />
+        </div>
+        <div className="bg-[#005585] flex flex-col px-4 py-4 gap-2">
+          <div className="flex text-lg text-white font-medium">
+            TYN Industry trends outlook
+          </div>
+          <div className="flex text-base text-white font-light">
+            Get Contextualize industry trends which most big players adopted
+          </div>
+        </div>
       </div>
 
-      {/* Dots rotating around the center */}
-      <div className="absolute">
-        <div className="relative w-48">
-          <div className="relative">
-            <img
-              src="/circle2.svg"
-              alt="Inner Arc"
-              className="relative w-48 z-0"
-            />
-            <div className="absolute bottom-10 right-4 flex justify-center items-center z-50">
-              <span className="text-lg font-semibold uppercase text-gray-700">
-                Sector
-              </span>
+      <div
+        className="relative w-screen  flex justify-end items-end select-none pb-20 "
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Sector image, positioned independently */}
+        <div className="">
+          <img src="/circle.svg" alt="Sector" className="w-32" />
+        </div>
+
+        {/* Dots rotating around the center */}
+        <div className="absolute">
+          <div className="relative w-48">
+            <div className="relative">
+              <img
+                src="/circle2.svg"
+                alt="Inner Arc"
+                className="relative w-48 z-0"
+              />
+              <div className="absolute bottom-10 right-4 flex justify-center items-center z-50">
+                <span className="text-lg font-semibold uppercase text-gray-700">
+                  Sector
+                </span>
+              </div>
             </div>
-          </div>
-          {Array.from({ length: totalPositions }).map((_, index) => {
-            const angle =
-              (index / totalPositions) * 2 * Math.PI + rotationOffset;
-            const x = centerX + radius * Math.cos(angle);
-            const y = centerY - radius * Math.sin(angle);
+            {sectorNames.map((sectorName, index) => {
+              const angle =
+                (index / totalPositions) * 2 * Math.PI + rotationOffset;
+              const x = centerX + radius * Math.cos(angle);
+              const y = centerY - radius * Math.sin(angle);
 
-            // Highlight the dot based on the current index
-            const isHighlighted =
-              index === (currentIndex + highlightedPosition) % totalPositions;
+              // Highlight the dot based on the current index
+              const isHighlighted = index === currentIndex;
 
-            return (
-              <div
-                key={index}
-                className={`absolute transition-all duration-500 ease-in-out`}
-                style={{
-                  left: `${x}px`,
-                  top: `${y}px`,
-                  visibility: "visible",
-                }}
-              >
+              return (
                 <div
-                  className={`relative rounded-full  shadow-lg ${
-                    isHighlighted
-                      ? "bg-[#3AB8FF] border-2 border-[#FFEFA7] w-7 h-7"
-                      : "bg-[#D8D8D8] w-6 h-6"
-                  }`}
+                  key={index}
+                  className={`absolute transition-all duration-500 ease-in-out`}
+                  style={{
+                    left: `${x}px`,
+                    top: `${y}px`,
+                    visibility: "visible",
+                  }}
                 >
                   <div
-                    className={`absolute right-full mr-4 text-black text-sm w-32 text-right  ${
+                    className={`relative rounded-full  shadow-lg ${
                       isHighlighted
-                        ? "font-semibold text-base text-[#3AB8FF]"
-                        : ""
-                    } cursor-pointer`}
-                    onClick={() => onSectorClick(dots[index])}
+                        ? "bg-[#3AB8FF] border-2 border-[#FFEFA7] w-7 h-7"
+                        : "bg-[#D8D8D8] w-6 h-6"
+                    }`}
                   >
-                    {dots[index]}
+                    <div
+                      className={`absolute right-full mr-4 text-black text-sm w-32 text-right  ${
+                        isHighlighted
+                          ? "font-semibold text-base text-[#3AB8FF]"
+                          : ""
+                      } cursor-pointer`}
+                      onClick={() => onSectorClick(sectorName)}
+                    >
+                      {sectorName}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
