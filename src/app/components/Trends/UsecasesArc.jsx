@@ -6,14 +6,6 @@ const UsecasesArc = ({
   selectedTechnology,
   OriginalTechnologyNames,
 }) => {
-<<<<<<< HEAD
-const UsecasesArc = ({
-  selectedIndustry,
-  selectedTechnology,
-  OriginalTechnologyNames,
-}) => {
-=======
->>>>>>> f0a4967 (Rotation logic moved)
   const radius1 = 165; // Radius of the first arc
   const radius2 = 285; // Radius of the second arc
   const centerX1 = 155; // Center the first arc's topmost dot horizontally
@@ -55,14 +47,7 @@ const UsecasesArc = ({
             (selectedIndustryIndex - 1 + OriginalTechnologyNames.length) %
               OriginalTechnologyNames.length
           ],
-          OriginalTechnologyNames[
-            (selectedIndustryIndex - 1 + OriginalTechnologyNames.length) %
-              OriginalTechnologyNames.length
-          ],
           selectedIndustry,
-          OriginalTechnologyNames[
-            (selectedIndustryIndex + 1) % OriginalTechnologyNames.length
-          ],
           OriginalTechnologyNames[
             (selectedIndustryIndex + 1) % OriginalTechnologyNames.length
           ],
@@ -109,6 +94,7 @@ const UsecasesArc = ({
       <div className="relative flex justify-end items-start select-none mt-16">
         {/* First Arc */}
         <div>
+        <div>
           <img src="/circleup1.svg" alt="" className="w-32" />
         </div>
 
@@ -126,11 +112,6 @@ const UsecasesArc = ({
               const isMiddleDot = index === 1; // Middle dot is at index 1
               const x = centerX1 + radius1 * Math.sin(angle);
               const y = centerY1 + radius1 * Math.cos(angle);
-<<<<<<< HEAD
-              const x = centerX1 + radius1 * Math.sin(angle);
-              const y = centerY1 + radius1 * Math.cos(angle);
-=======
->>>>>>> f0a4967 (Rotation logic moved)
 
               return (
                 <div
@@ -150,21 +131,11 @@ const UsecasesArc = ({
                         isMiddleDot
                           ? "font-semibold text-base text-[#4C4C4C]"
                           : "text-[#797979]"
-<<<<<<< HEAD
-                        isMiddleDot
-                          ? "font-semibold text-base text-[#4C4C4C]"
-                          : "text-[#797979]"
-=======
->>>>>>> f0a4967 (Rotation logic moved)
                       }`}
                     >
                       {
                         displayedIndustries[
                           (selectedIndustryIndex + index) %
-<<<<<<< HEAD
-                          (selectedIndustryIndex + index) %
-=======
->>>>>>> f0a4967 (Rotation logic moved)
                             displayedIndustries.length
                         ]
                       }
@@ -178,7 +149,6 @@ const UsecasesArc = ({
 
         {/* Second Arc */}
         <div>
-        <div>
           <div className="relative w-[300px]">
             <div>
               <img src="/circleup2.svg" alt="" className="w-[300px]" />
@@ -187,11 +157,12 @@ const UsecasesArc = ({
               const isMiddleDot = index === 1; // Middle dot is at index 1
               const x = centerX2 + radius2 * Math.sin(angle);
               const y = centerY2 + radius2 * Math.cos(angle);
+              const x = centerX2 + radius2 * Math.sin(angle);
+              const y = centerY2 + radius2 * Math.cos(angle);
 
               return (
                 <div
                   key={index}
-                  className="absolute transition-all duration-500 ease-in-out"
                   className="absolute transition-all duration-500 ease-in-out"
                   style={{ left: `${x}px`, top: `${y}px` }}
                 >
@@ -207,12 +178,6 @@ const UsecasesArc = ({
                         isMiddleDot
                           ? "font-semibold text-base text-[#4C4C4C]"
                           : "text-[#797979]"
-<<<<<<< HEAD
-                        isMiddleDot
-                          ? "font-semibold text-base text-[#4C4C4C]"
-                          : "text-[#797979]"
-=======
->>>>>>> f0a4967 (Rotation logic moved)
                       }`}
                     >
                       {isMiddleDot
@@ -221,15 +186,6 @@ const UsecasesArc = ({
                             (selectedTechnologyIndex + index) %
                               displayedTechnologies.length
                           ]}
-<<<<<<< HEAD
-                      {isMiddleDot
-                        ? selectedTechnology
-                        : displayedTechnologies[
-                            (selectedTechnologyIndex + index) %
-                              displayedTechnologies.length
-                          ]}
-=======
->>>>>>> f0a4967 (Rotation logic moved)
                     </div>
                   </div>
                 </div>
