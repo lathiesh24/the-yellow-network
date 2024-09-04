@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getRequest } from "../../hooks"; // Import the getRequest utility function
+import { getRequest } from "../../hooks";
 import { Spotlight } from "../../../interfaces";
 
 interface SpotlightState {

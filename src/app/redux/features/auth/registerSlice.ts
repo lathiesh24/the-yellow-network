@@ -34,7 +34,7 @@ export const registerUser = createAsyncThunk(
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
-        error.response?.data?.message?.email[0] ||
+        error.response?.data?.email[0] ||
           "Unexpected error during registration. Please try again."
       );
     }
