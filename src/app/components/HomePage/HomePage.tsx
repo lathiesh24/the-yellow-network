@@ -18,8 +18,7 @@ import { encryptURL } from "../../utils/shareUtils";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchPartnerConnectsByOrg } from "../../redux/features/connection/connectionSlice";
 import { IoShareSocialOutline } from "react-icons/io5";
-import TrendsMobileHeader from "../../mobileComponents/TrendsMobileHeader";  // Add this line
-
+import TrendsMobileHeader from "../../mobileComponents/TrendsMobileHeader"; // Add this line
 
 export default function HomePage() {
   const [messages, setMessages] = useState([]);
@@ -104,7 +103,6 @@ export default function HomePage() {
       setOpenRightFrame(!openRightFrame);
     }
   };
-
 
   const dispatch = useAppDispatch();
 
@@ -347,12 +345,11 @@ export default function HomePage() {
       {/* Mobile Responsiveness */}
       <div className="flex flex-col md:hidden h-screen">
         {/* Mobile Header */}
-{activeTab === "Trends" ? (
-  <TrendsMobileHeader handleBack={handleBack} />
-) : (
-  <MobileHeader />
-)}
-
+        {activeTab === "Trends" ? (
+          <TrendsMobileHeader handleBack={handleBack} />
+        ) : (
+          <MobileHeader />
+        )}
 
         {/* Content Area */}
         <div className="flex-grow overflow-y-auto">{renderTabContent()}</div>
