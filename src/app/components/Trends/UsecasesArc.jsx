@@ -1,12 +1,6 @@
 import React from "react";
-import React from "react";
 import sectorsData from "../../data/sector_data.json"; // Import the JSON data
 
-const UsecasesArc = ({
-  selectedIndustry,
-  selectedTechnology,
-  OriginalTechnologyNames,
-}) => {
 const UsecasesArc = ({
   selectedIndustry,
   selectedTechnology,
@@ -134,9 +128,6 @@ const UsecasesArc = ({
                   >
                     <div
                       className={`absolute right-full mr-2 top-2 text-sm w-32 text-right ${
-                        isMiddleDot
-                          ? "font-semibold text-base text-[#4C4C4C]"
-                          : "text-[#797979]"
                         isMiddleDot
                           ? "font-semibold text-base text-[#4C4C4C]"
                           : "text-[#797979]"
