@@ -6,11 +6,14 @@ const UsecasesArc = ({
   selectedTechnology,
   OriginalTechnologyNames,
 }) => {
+<<<<<<< HEAD
 const UsecasesArc = ({
   selectedIndustry,
   selectedTechnology,
   OriginalTechnologyNames,
 }) => {
+=======
+>>>>>>> f0a4967 (Rotation logic moved)
   const radius1 = 165; // Radius of the first arc
   const radius2 = 285; // Radius of the second arc
   const centerX1 = 155; // Center the first arc's topmost dot horizontally
@@ -123,8 +126,11 @@ const UsecasesArc = ({
               const isMiddleDot = index === 1; // Middle dot is at index 1
               const x = centerX1 + radius1 * Math.sin(angle);
               const y = centerY1 + radius1 * Math.cos(angle);
+<<<<<<< HEAD
               const x = centerX1 + radius1 * Math.sin(angle);
               const y = centerY1 + radius1 * Math.cos(angle);
+=======
+>>>>>>> f0a4967 (Rotation logic moved)
 
               return (
                 <div
@@ -144,15 +150,21 @@ const UsecasesArc = ({
                         isMiddleDot
                           ? "font-semibold text-base text-[#4C4C4C]"
                           : "text-[#797979]"
+<<<<<<< HEAD
                         isMiddleDot
                           ? "font-semibold text-base text-[#4C4C4C]"
                           : "text-[#797979]"
+=======
+>>>>>>> f0a4967 (Rotation logic moved)
                       }`}
                     >
                       {
                         displayedIndustries[
                           (selectedIndustryIndex + index) %
+<<<<<<< HEAD
                           (selectedIndustryIndex + index) %
+=======
+>>>>>>> f0a4967 (Rotation logic moved)
                             displayedIndustries.length
                         ]
                       }
@@ -195,9 +207,12 @@ const UsecasesArc = ({
                         isMiddleDot
                           ? "font-semibold text-base text-[#4C4C4C]"
                           : "text-[#797979]"
+<<<<<<< HEAD
                         isMiddleDot
                           ? "font-semibold text-base text-[#4C4C4C]"
                           : "text-[#797979]"
+=======
+>>>>>>> f0a4967 (Rotation logic moved)
                       }`}
                     >
                       {isMiddleDot
@@ -206,12 +221,15 @@ const UsecasesArc = ({
                             (selectedTechnologyIndex + index) %
                               displayedTechnologies.length
                           ]}
+<<<<<<< HEAD
                       {isMiddleDot
                         ? selectedTechnology
                         : displayedTechnologies[
                             (selectedTechnologyIndex + index) %
                               displayedTechnologies.length
                           ]}
+=======
+>>>>>>> f0a4967 (Rotation logic moved)
                     </div>
                   </div>
                 </div>
