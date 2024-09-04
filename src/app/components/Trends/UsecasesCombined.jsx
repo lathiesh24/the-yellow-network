@@ -3,8 +3,6 @@ import UsecasesArc from "./UsecasesArc";
 import Usecases from "./Usecases";
 
 const CombinedComponent = ({ selectedIndustry, selectedTechnology }) => {
-
-  console.log("CombinedComponent", selectedIndustry, selectedTechnology)
   return (
     <div className="flex flex-col justify-between h-screen">
       {/* UsecasesArc arc at the top */}

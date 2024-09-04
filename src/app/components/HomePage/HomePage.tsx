@@ -44,8 +44,6 @@ export default function HomePage() {
   const [selectedIndustry, setSelectedIndustry] = useState(null);
   const [selectedTechnology, setSelectedTechnology] = useState(null);
 
-  console.log("queryDatainHome", queryData, inputPrompt);
-
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("user");
     if (userInfoFromStorage) {
