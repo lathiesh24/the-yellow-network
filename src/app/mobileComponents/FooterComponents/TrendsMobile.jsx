@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Sectors from "../../components/Trends/Sectors";
 import SubSectors from "../../components/Trends/SubSectors";
 import Industries from "../../components/Trends/Industries";
@@ -12,18 +12,22 @@ const TrendsMobile = ({
   handleIndustryClick,
   handleTechnologyClick,
 }) => {
+  const [technologyNames, setTechnologyNames] = useState([]);
+
   return (
     <div>
       {selectedTechnology ? (
         <UseCasesCombined
           selectedTechnology={selectedTechnology}
           selectedIndustry={selectedIndustry}
+          technologyNames={technologyNames} // Pass technologyNames here
         />
       ) : selectedIndustry ? (
         <Industries
           selectedSector={selectedSector}
           selectedIndustry={selectedIndustry}
           onTechnologyClick={handleTechnologyClick}
+          setTechnologyNames={setTechnologyNames} // Pass the updater function here
         />
       ) : selectedSector ? (
         <SubSectors
