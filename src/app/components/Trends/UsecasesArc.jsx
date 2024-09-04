@@ -1,12 +1,6 @@
 import React from "react";
-import React from "react";
 import sectorsData from "../../data/sector_data.json"; // Import the JSON data
 
-const UsecasesArc = ({
-  selectedIndustry,
-  selectedTechnology,
-  OriginalTechnologyNames,
-}) => {
 const UsecasesArc = ({
   selectedIndustry,
   selectedTechnology,
@@ -153,7 +147,9 @@ const UsecasesArc = ({
         </div>
 
         {/* Second Arc */}
-        <div>
+        <div
+          className="absolute"
+        >
           <div className="relative w-[300px]">
             <div>
               <img src="/circleup2.svg" alt="" className="w-[300px]" />
@@ -166,7 +162,6 @@ const UsecasesArc = ({
               return (
                 <div
                   key={index}
-                  className="absolute transition-all duration-500 ease-in-out"
                   className="absolute transition-all duration-500 ease-in-out"
                   style={{ left: `${x}px`, top: `${y}px` }}
                 >
