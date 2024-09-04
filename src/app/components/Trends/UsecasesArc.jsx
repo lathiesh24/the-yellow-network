@@ -1,6 +1,12 @@
 import React from "react";
+import React from "react";
 import sectorsData from "../../data/sector_data.json"; // Import the JSON data
 
+const UsecasesArc = ({
+  selectedIndustry,
+  selectedTechnology,
+  OriginalTechnologyNames,
+}) => {
 const UsecasesArc = ({
   selectedIndustry,
   selectedTechnology,
@@ -47,14 +53,7 @@ const UsecasesArc = ({
             (selectedIndustryIndex - 1 + OriginalTechnologyNames.length) %
               OriginalTechnologyNames.length
           ],
-          OriginalTechnologyNames[
-            (selectedIndustryIndex - 1 + OriginalTechnologyNames.length) %
-              OriginalTechnologyNames.length
-          ],
           selectedIndustry,
-          OriginalTechnologyNames[
-            (selectedIndustryIndex + 1) % OriginalTechnologyNames.length
-          ],
           OriginalTechnologyNames[
             (selectedIndustryIndex + 1) % OriginalTechnologyNames.length
           ],
@@ -101,6 +100,7 @@ const UsecasesArc = ({
       <div className="relative flex justify-end items-start select-none mt-16">
         {/* First Arc */}
         <div>
+        <div>
           <img src="/circleup1.svg" alt="" className="w-32" />
         </div>
 
@@ -116,8 +116,6 @@ const UsecasesArc = ({
             </div>
             {fixedAnglesArc1.map((angle, index) => {
               const isMiddleDot = index === 1; // Middle dot is at index 1
-              const x = centerX1 + radius1 * Math.sin(angle);
-              const y = centerY1 + radius1 * Math.cos(angle);
               const x = centerX1 + radius1 * Math.sin(angle);
               const y = centerY1 + radius1 * Math.cos(angle);
 
@@ -139,6 +137,9 @@ const UsecasesArc = ({
                         isMiddleDot
                           ? "font-semibold text-base text-[#4C4C4C]"
                           : "text-[#797979]"
+                        isMiddleDot
+                          ? "font-semibold text-base text-[#4C4C4C]"
+                          : "text-[#797979]"
                       }`}
                     >
                       {
@@ -156,15 +157,15 @@ const UsecasesArc = ({
         </div>
 
         {/* Second Arc */}
-        <div
-          className="absolute"
-        >
+        <div>
           <div className="relative w-[300px]">
             <div>
               <img src="/circleup2.svg" alt="" className="w-[300px]" />
             </div>
             {fixedAnglesArc2.map((angle, index) => {
               const isMiddleDot = index === 1; // Middle dot is at index 1
+              const x = centerX2 + radius2 * Math.sin(angle);
+              const y = centerY2 + radius2 * Math.cos(angle);
               const x = centerX2 + radius2 * Math.sin(angle);
               const y = centerY2 + radius2 * Math.cos(angle);
 
