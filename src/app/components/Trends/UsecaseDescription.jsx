@@ -11,8 +11,6 @@ const UsecaseDescription = () => {
   const { useCaseTitle, description, startups, enhancement, measureOfImpact } =
     location.state || {};
 
-  console.log("Enhancement", enhancement);
-
   const handleGoBack = () => {
     navigate(-1); // Navigate to the previous page
   };
