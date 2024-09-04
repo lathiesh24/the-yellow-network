@@ -1,12 +1,6 @@
 import React from "react";
-import React from "react";
 import sectorsData from "../../data/sector_data.json"; // Import the JSON data
 
-const UsecasesArc = ({
-  selectedIndustry,
-  selectedTechnology,
-  OriginalTechnologyNames,
-}) => {
 const UsecasesArc = ({
   selectedIndustry,
   selectedTechnology,
@@ -122,6 +116,8 @@ const UsecasesArc = ({
             </div>
             {fixedAnglesArc1.map((angle, index) => {
               const isMiddleDot = index === 1; // Middle dot is at index 1
+              const x = centerX1 + radius1 * Math.sin(angle);
+              const y = centerY1 + radius1 * Math.cos(angle);
               const x = centerX1 + radius1 * Math.sin(angle);
               const y = centerY1 + radius1 * Math.cos(angle);
 
