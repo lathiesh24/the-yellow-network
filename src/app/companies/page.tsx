@@ -5,25 +5,17 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { fetchCompanies, fetchCompaniesList, searchCompanies, fetchCompanyById, fetchCompanyProfileById, searchCompaniesSuggestion } from '../redux/features/companyprofile/companyProfile';
 import { Button, TextInput } from "flowbite-react";
 import { IoSearchOutline } from "react-icons/io5";
-import ViewType from '../components/Company/CardListToggle';
 import CompanyList from '../components/Company/CompanyList';
 import debounce from 'lodash.debounce';
-import { CompanyProfile } from "../../app/interfaces";
-import { encryptURL } from '../utils/shareUtils';
-import { useRouter } from 'next/router';
 import Suggestions from '../components/Company/Suggestion';
 
 
 const CompanyProfilePage: React.FC = () => {
-  
+
   const [activeView, setActiveView] = useState<"card" | "list">("card");
-  const [selectedFilters, setSelectedFilters] = useState<{
-    [key: string]: string[];
-  }>({});
-  const [checkedState, setCheckedState] = useState<{
-    [key: string]: { [item: string]: boolean };
-  }>({});
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [selectedFilters, setSelectedFilters] = useState<{ [key: string]: string[] }>({});
+  const [checkedState, setCheckedState] = useState<{ [key: string]: { [item: string]: boolean } }>({});
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [page, setPage] = useState<number>(1);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [isShowBox, setisShowBox] = useState<boolean>(false);
@@ -127,7 +119,7 @@ const CompanyProfilePage: React.FC = () => {
         <h1 className='text-3xl'>Growth Tech Firms List</h1>
       </div>
 
-      <div className="flex justify-between mt-10 gap-4">
+      <div className='flex justify-between mt-10 gap-4'>
         <div className="w-full flex justify-around h-fit flex-col">
           <div className='flex sm:w-[70%] w-[90%] mx-auto my-0 flex-col'>
             <div className='flex sm:flex-row flex-col gap-3'>

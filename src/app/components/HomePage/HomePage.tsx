@@ -18,9 +18,11 @@ import { TbShare2 } from "react-icons/tb";
 import { encryptURL } from "../../utils/shareUtils";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchPartnerConnectsByOrg } from "../../redux/features/connection/connectionSlice";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function HomePage() {
   const [messages, setMessages] = useState([]);
+  const searchParams = useSearchParams();
   const [defaultPrompt, setDefaultPrompt] = useState<string>("");
   const [open, setOpen] = useState<boolean>(true);
   const [selectedStartup, setSelectedStartup] = useState<StartupType>();
@@ -32,7 +34,9 @@ export default function HomePage() {
   const [mailMessage, setMailMessage] = useState<any>(null);
   // const [connectionStatus, setConnectionStatus] = useState<string>("Connect");
   const [queryData, setQueryData] = useState<ChatHistoryResponse | null>(null);
-  const [activeTab, setActiveTab] = useState<string>("Spotlight");
+  const [activeTab, setActiveTab] = useState<string>(searchParams.get('tab') || 'Spotlight');
+  const router = useRouter();
+
   const [sessionId, setSessionId] = useState<string>(() => {
     const now = new Date();
     return now.getSeconds().toString();
@@ -56,6 +60,17 @@ export default function HomePage() {
   const handleToggleLeftFrameNavbar = () => {
     setOpen(!open);
   };
+
+  useEffect(() => {
+    const currentTab = searchParams.get('tab') || 'More';
+    console.log("Current tab=>"+currentTab)
+    setActiveTab(currentTab);
+  }, [searchParams]);
+
+  useEffect(() => {
+    router.push(`/?tab=${activeTab}`);
+    console.log("Active tab = > "+activeTab);
+  }, [activeTab, router]);
 
   const handleToggleLeftFrame = () => {
     if (open) {
@@ -226,7 +241,7 @@ export default function HomePage() {
     ));
   };
 
-  const renderTabContent = () => {
+  const renderTabContent = () => { 
     switch (activeTab) {
       case "Spotlight":
         return <SpotlightMobile />;
@@ -279,8 +294,6 @@ export default function HomePage() {
             renderMessages={renderMessages}
             open={open}
             openRightFrame={openRightFrame}
-
-            // saveQueryData={saveQueryData}
           />
           <div className="absolute left-2 top-2 flex items-center">
             <NavBar

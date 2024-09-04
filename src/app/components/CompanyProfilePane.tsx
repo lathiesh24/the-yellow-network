@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   MdOutlineKeyboardDoubleArrowLeft,
@@ -87,40 +88,12 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
   };
 
   const sendEmail = async () => {
-    await axios.post("http://127.0.0.1:8000/email/send-email/", {
+    await axios.post("https://nifo.theyellow.network/api/email/send-email/", {
       subject: "This is a test email",
       template_name: "email_template.html",
       context: { userInfo, mailData, companyData },
       recipient_list: ["lathiesh@theyellow.network"],
     });
-  };
-
-  const connectStatusChange = async () => {
-    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
-    if (!jwtAccessToken) {
-      throw new Error("JWT token not found in localStorage");
-    }
-    await axios.post(
-      "http://127.0.0.1:8000//connects/",
-      { startup_id: companyData?.startup_id },
-      { headers: { Authorization: `Bearer ${jwtAccessToken}` } }
-    );
-  };
-
-  const createPartnerConnect = async () => {
-    const jwtAccessToken = localStorage.getItem("jwtAccessToken");
-    if (!jwtAccessToken) {
-      throw new Error("JWT token not found in localStorage");
-    }
-    await axios.post(
-      "http://127.0.0.1:8000/partnerconnect/",
-      {
-        to_growthtechfirm: companyData?.startup_id,
-        query_status: "Requested",
-        user_query: queryData?.id,
-      },
-      { headers: { Authorization: `Bearer ${jwtAccessToken}` } }
-    );
   };
 
   const closeModal = () => setIsModalOpen(false);
@@ -129,8 +102,9 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
     <>
       {openState && (
         <div
-          className={`h-screen bg-white shadow-md flex flex-col gap-y-4 py-8 overflow-auto ${expanded ? "absolute right-0 lg:w-[500px] xl:w-[900px]" : ""
-            }`}
+          className={`h-screen bg-white shadow-md flex flex-col gap-y-4 py-8 overflow-auto ${
+            expanded ? "absolute right-0 lg:w-[500px] xl:w-[900px]" : ""
+          }`}
         >
           <div className="mx-6 flex flex-col -mt-5 gap-6">
             <div className="flex justify-between">
