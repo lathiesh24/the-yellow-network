@@ -1,6 +1,12 @@
 import React from "react";
+import React from "react";
 import sectorsData from "../../data/sector_data.json"; // Import the JSON data
 
+const UsecasesArc = ({
+  selectedIndustry,
+  selectedTechnology,
+  OriginalTechnologyNames,
+}) => {
 const UsecasesArc = ({
   selectedIndustry,
   selectedTechnology,
@@ -47,7 +53,14 @@ const UsecasesArc = ({
             (selectedIndustryIndex - 1 + OriginalTechnologyNames.length) %
               OriginalTechnologyNames.length
           ],
+          OriginalTechnologyNames[
+            (selectedIndustryIndex - 1 + OriginalTechnologyNames.length) %
+              OriginalTechnologyNames.length
+          ],
           selectedIndustry,
+          OriginalTechnologyNames[
+            (selectedIndustryIndex + 1) % OriginalTechnologyNames.length
+          ],
           OriginalTechnologyNames[
             (selectedIndustryIndex + 1) % OriginalTechnologyNames.length
           ],
