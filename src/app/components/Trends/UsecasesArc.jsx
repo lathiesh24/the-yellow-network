@@ -1,6 +1,12 @@
 import React from "react";
+import React from "react";
 import sectorsData from "../../data/sector_data.json"; // Import the JSON data
 
+const UsecasesArc = ({
+  selectedIndustry,
+  selectedTechnology,
+  OriginalTechnologyNames,
+}) => {
 const UsecasesArc = ({
   selectedIndustry,
   selectedTechnology,
@@ -147,15 +153,15 @@ const UsecasesArc = ({
         </div>
 
         {/* Second Arc */}
-        <div
-          className="absolute"
-        >
+        <div>
           <div className="relative w-[300px]">
             <div>
               <img src="/circleup2.svg" alt="" className="w-[300px]" />
             </div>
             {fixedAnglesArc2.map((angle, index) => {
               const isMiddleDot = index === 1; // Middle dot is at index 1
+              const x = centerX2 + radius2 * Math.sin(angle);
+              const y = centerY2 + radius2 * Math.cos(angle);
               const x = centerX2 + radius2 * Math.sin(angle);
               const y = centerY2 + radius2 * Math.cos(angle);
 
