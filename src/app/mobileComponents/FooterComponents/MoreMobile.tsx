@@ -47,23 +47,23 @@ function MoreMobile({ userInfo }) {
 
   const renderMainMore = () => (
     <div>
-      <div className="flex flex-col gap-10 items-start mt-20 bg-gray-50 p-6 border border-gray-200 m-2 rounded-xl">
+      <div className="flex flex-col gap-10 items-start mt-20 bg-gray-50 p-6 border border-gray-200 m-2 rounded-xl  ">
         <div className="flex items-center">
           <div className="bg-blue-400 text-white rounded-full h-10 w-10 flex items-center justify-center">
             {getInitials(userName)}
           </div>
           <div className="ml-2">{userName}</div>
         </div>
-        <div className="flex gap-10">
+        <div className="flex flex-col gap-10 w-full">
           <button
-            className="bg-blue-400 text-white px-4 rounded"
+            className="bg-blue-400 py-2 text-white w-full rounded mx-auto text-lg flex justify-center items-center"
             onClick={handleLogout}
           >
             Logout
           </button>
 
           <button
-            className="border border-gray-200 p-2 rounded-md"
+            className="border border-gray-200 bg-white p-2 rounded-md"
             onClick={handleCompanyProfile}
           >
             View company profile
