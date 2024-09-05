@@ -1,12 +1,6 @@
 import React from "react";
-import React from "react";
 import sectorsData from "../../data/sector_data.json"; // Import the JSON data
 
-const UsecasesArc = ({
-  selectedIndustry,
-  selectedTechnology,
-  OriginalTechnologyNames,
-}) => {
 const UsecasesArc = ({
   selectedIndustry,
   selectedTechnology,
@@ -91,7 +85,7 @@ const UsecasesArc = ({
 
   const fixedAnglesArc2 = [
     -Math.PI / 2, // Top center (90°)
-    -Math.PI / 4, // Middle right (30°)
+    -Math.PI / 4, // Middle right (45°)
     0, // Bottom right (0°)
   ];
 
@@ -99,14 +93,14 @@ const UsecasesArc = ({
     <div>
       <div className="relative flex justify-end items-start select-none mt-16">
         {/* First Arc */}
-        <div>
-          <img src="/circleup1.svg" alt="" className="w-32" />
+        <div className="absolute">
+          <img src="/circleup1.svg" alt="Arc 1" className="w-32" />
         </div>
 
         <div className="absolute">
           <div className="relative w-44">
             <div>
-              <img src="/circleup2.svg" alt="" className="w-44" />
+              <img src="/circleup2.svg" alt="Arc 2" className="w-44" />
               <div className="absolute top-10 right-4 flex justify-center items-center">
                 <span className="text-lg font-semibold uppercase text-gray-700">
                   BFSI
@@ -156,13 +150,12 @@ const UsecasesArc = ({
         <div>
           <div className="relative w-[300px]">
             <div>
-              <img src="/circleup2.svg" alt="" className="w-[300px]" />
+              <img src="/circleup2.svg" alt="Arc 2" className="w-[300px]" />
             </div>
             {fixedAnglesArc2.map((angle, index) => {
               const isMiddleDot = index === 1; // Middle dot is at index 1
               const x = centerX2 + radius2 * Math.sin(angle);
               const y = centerY2 + radius2 * Math.cos(angle);
-  
 
               return (
                 <div
@@ -201,5 +194,5 @@ const UsecasesArc = ({
     </div>
   );
 };
-}
+
 export default UsecasesArc;
