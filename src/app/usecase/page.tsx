@@ -75,17 +75,28 @@ const UsecaseDescription: React.FC = () => {
         </div>
       </div>
 
-      <div className="relative flex flex-col justify-center items-center text-center py-8 mt-16 bg-[#005585] ">
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0 opacity-15">
-          <img src="bg-usecase.png" alt="Background" className="object-cover w-full h-full" />
-        </div>
+     <div className="relative flex flex-col justify-center items-center text-center gap-8 py-8 mt-16 bg-[#005585] ">
+  {/* Background Image */}
+  <div className="absolute inset-0 z-0 opacity-15">
+    <img src="bg-usecase.png" alt="Background" className="object-cover w-full h-full" />
+  </div>
 
-        {/* Text Container */}
-        <div className="relative z-10 text-white font-semibold text-2xl px-4 py-8">
-          {usecase || "No Use Case Title Available"}
-        </div>
+  {/* Text Container */}
+  <div className="relative z-10 text-white font-semibold text-2xl px-4 py-8">
+    {usecase || "No Use Case Title Available"}
+  </div>
 
+  {/* Explore Ecosystem Button */}
+  <div
+    className="relative z-10 text-sm font-medium bg-white mx-auto px-4 py-2 cursor-pointer rounded-md shadow-md"
+    onClick={handleExploreEcosystem}
+  >
+    Explore Ecosystem
+  </div>
+</div>
+
+<<<<<<< HEAD
+=======
         {/* Explore Ecosystem Button */}
         <div
           className="relative z-10 text-sm font-medium bg-white mx-auto px-4 py-2 cursor-pointer rounded-md shadow-md"
@@ -94,10 +105,32 @@ const UsecaseDescription: React.FC = () => {
           Explore Ecosystem
         </div>
       </div>
+     <div className="relative flex flex-col justify-center items-center text-center gap-8 py-8 mt-16 bg-[#005585] ">
+  {/* Background Image */}
+  <div className="absolute inset-0 z-0 opacity-15">
+    <img src="bg-usecase.png" alt="Background" className="object-cover w-full h-full" />
+  </div>
+
+  {/* Text Container */}
+  <div className="relative z-10 text-white font-semibold text-2xl px-4 py-8">
+    {usecase || "No Use Case Title Available"}
+  </div>
+
+  {/* Explore Ecosystem Button */}
+  <div
+    className="relative z-10 text-sm font-medium bg-white mx-auto px-4 py-2 cursor-pointer rounded-md shadow-md"
+    onClick={handleExploreEcosystem}
+  >
+    Explore Ecosystem
+  </div>
+</div>
+
+>>>>>>> 0b7e73b (changes)
 
       <div className="mx-4 py-4 leading-9 text-lg">
         {usecaseDescription && (
           <div>
+            <div className="font-semibold text-lg mb-2">Description</div>
             <div className="font-semibold text-lg mb-2">Description</div>
             <div className="text-base">{usecaseDescription}</div>
           </div>
@@ -106,12 +139,14 @@ const UsecaseDescription: React.FC = () => {
         {enhancement && (
           <div className="mt-4">
             <div className="font-semibold text-lg mb-2">Enhancement</div>
+            <div className="font-semibold text-lg mb-2">Enhancement</div>
             <div className="text-base">{enhancement}</div>
           </div>
         )}
 
         {measureOfImpact && (
           <div className="mt-4">
+            <div className="font-semibold text-lg mb-2">Measure of Impact</div>
             <div className="font-semibold text-lg mb-2">Measure of Impact</div>
             <div className="text-base">{measureOfImpact}</div>
           </div>
