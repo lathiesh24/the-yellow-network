@@ -162,8 +162,7 @@ const UsecasesArc = ({
               const isMiddleDot = index === 1; // Middle dot is at index 1
               const x = centerX2 + radius2 * Math.sin(angle);
               const y = centerY2 + radius2 * Math.cos(angle);
-              const x = centerX2 + radius2 * Math.sin(angle);
-              const y = centerY2 + radius2 * Math.cos(angle);
+  
 
               return (
                 <div
@@ -202,5 +201,5 @@ const UsecasesArc = ({
     </div>
   );
 };
-
+}
 export default UsecasesArc;
