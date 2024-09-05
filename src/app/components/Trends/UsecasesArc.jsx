@@ -1,12 +1,6 @@
 import React from "react";
-import React from "react";
 import sectorsData from "../../data/sector_data.json"; // Import the JSON data
 
-const UsecasesArc = ({
-  selectedIndustry,
-  selectedTechnology,
-  OriginalTechnologyNames,
-}) => {
 const UsecasesArc = ({
   selectedIndustry,
   selectedTechnology,
