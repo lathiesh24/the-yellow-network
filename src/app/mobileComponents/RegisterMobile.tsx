@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FormData, StartupType } from "../interfaces";
@@ -6,6 +7,9 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import RegistrationModel from "../components/RegisterModel/RegisterModel";
 import { fetchAllCompanies } from "../redux/features/companyprofile/companyProfileSlice";
+import Modal from "react-modal";
+import { useRouter } from "next/navigation"; // Import router for redirection
+import { registerUser } from "../redux/features/auth/registerSlice";
 
 interface RegisterMobileProps {
   onSubmit: SubmitHandler<FormData>;
@@ -21,6 +25,7 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
   error,
 }) => {
   const dispatch = useAppDispatch();
+  const router = useRouter(); // Initialize router for redirection
   const {
     handleSubmit,
     register,
@@ -36,6 +41,7 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
     null
   );
   const [showModal, setShowModal] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false); // New state for email confirmation modal
 
   const { companies } = useAppSelector((state) => state.companyProfile);
 
@@ -63,11 +69,26 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
     setValue("organization_id", company.startup_id);
   };
 
-  const handleFormSubmit: SubmitHandler<FormData> = (data) => {
+  const handleFormSubmit: SubmitHandler<FormData> = async (data) => {
     if (selectedCompanyId) {
       data.organization_id = selectedCompanyId;
     }
-    onSubmit(data);
+    try {
+      // Dispatch the registerUser action and await response
+      const response = await dispatch(registerUser(data)).unwrap();
+
+      // Store tokens in local storage (this assumes your response contains tokens)
+      localStorage.setItem("jwtAccessToken", response.tokens.access_token);
+      localStorage.setItem("jwtRefreshToken", response.tokens.refresh_token);
+
+      // Show the email confirmation modal after successful signup
+      setShowConfirmationModal(true);
+
+      // Redirect to homepage or dashboard after registration
+      router.push("/home"); // Adjust path as needed
+    } catch (error) {
+      console.error("Registration error:", error); // Handle any errors
+    }
   };
 
   const handleOpenModal = () => setShowModal(true);
@@ -75,6 +96,8 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
     setShowModal(false);
     dispatch(fetchAllCompanies()); // Refresh company list after modal closes
   };
+
+  const handleCloseConfirmationModal = () => setShowConfirmationModal(false); // Close email confirmation modal
 
   const showAddOrganizationButton =
     query &&
@@ -168,13 +191,13 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
                 ))}
               </ul>
             )}
-            {showAddOrganizationButton && (     
-                <button
-                  className="mt-2 bg-blue-500 text-white font-medium uppercase text-sm px-4 py-2 rounded-md"
-                  onClick={handleOpenModal}
-                >
-                  Company not found? Add it here!
-                </button>
+            {showAddOrganizationButton && (
+              <button
+                className="mt-2 bg-blue-500 text-white font-medium uppercase text-sm px-4 py-2 rounded-md"
+                onClick={handleOpenModal}
+              >
+                Company not found? Add it here!
+              </button>
             )}
             {errors.organization_name && (
               <p className="text-red-500">{errors.organization_name.message}</p>
@@ -207,6 +230,29 @@ const RegisterMobile: React.FC<RegisterMobileProps> = ({
         </form>
       </div>
       {showModal && <RegistrationModel onClose={handleCloseModal} />}
+
+      {/* Email Confirmation Modal */}
+      <Modal
+        isOpen={showConfirmationModal}
+        onRequestClose={handleCloseConfirmationModal}
+        contentLabel="Email Confirmation"
+        className="relative bg-white rounded-lg p-6 w-full max-w-md mx-4"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold">Confirm Your Email</h2>
+          <p className="mt-4">
+            We've sent you an email with a confirmation link. Please check your
+            inbox to verify your email.
+          </p>
+          <button
+            className="mt-6 bg-blue-500 font-semibold text-white px-4 py-2 rounded-lg"
+            onClick={handleCloseConfirmationModal}
+          >
+            OK
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };
