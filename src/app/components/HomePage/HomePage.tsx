@@ -70,8 +70,8 @@ const handleBack = () => {
 if (currentStep === "ecosystem") {
 setCurrentStep("usecaseDescription"); 
 } else if (currentStep === "usecaseDescription") {
-setCurrentStep("useCasesCombined"); 
-} else if (currentStep === "useCasesCombined") {
+setCurrentStep("usecasesCombined"); 
+} else if (currentStep === "usecasesCombined") {
 setCurrentStep("industries"); 
 } else if (currentStep === "industries") {
 setCurrentStep("subSectors"); 
