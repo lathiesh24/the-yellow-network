@@ -65,13 +65,13 @@ const TrendsMobile = ({
       ) : currentStep === "usecaseDescription" ? (
         selectedUseCase ? (
           <UsecaseDescription
-            usecase={selectedUseCase??.usecase || "No Usecase Available"}
+            usecase={selectedUseCase?.usecase || "No Usecase Available"}
             usecaseDescription={
-              selectedUseCase??.usecaseDescription || "No Description Available"
+              selectedUseCase?.usecaseDescription || "No Description Available"
             }
-            enhancement={selectedUseCase??.Enhancement || ""}
-            measureOfImpact={selectedUseCase?.?.["Measure of Impact"] || ""}
-            startups={selectedUseCase??.startups || [] || [] || []}
+            enhancement={selectedUseCase?.Enhancement || ""}
+            measureOfImpact={selectedUseCase?.["Measure of Impact"] || ""}
+            startups={selectedUseCase?.startups || [] }
             onComplete={handleBackToUsecases}
             handleEcosystem={handleEcosystem}
           />
