@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sectors from "../../components/Trends/Sectors";
 import SubSectors from "../../components/Trends/SubSectors";
 import Industries from "../../components/Trends/Industries";
 import CombinedComponent from "../../components/Trends/UsecasesCombined";
 import Ecosystem from "../../components/Trends/Ecosystem";
-import UsecaseDescription from "../../components/Trends/UsecaseDescription"; // Import UsecaseDescription
+import UsecaseDescription from "../../components/Trends/UsecaseDescription";
 
 const TrendsMobile = ({
   selectedSector,
@@ -17,27 +17,41 @@ const TrendsMobile = ({
   setCurrentStep,
 }) => {
   const [technologyNames, setTechnologyNames] = useState([]);
-  const [ecosystemData, setEcosystemData] = useState([]); // Store startups for Ecosystem
-  const [selectedUseCase, setSelectedUseCase] = useState(null); // Track selected use case
+  const [ecosystemData, setEcosystemData] = useState(() => {
+    // Retrieve data from localStorage on component mount
+    const savedEcosystemData = localStorage.getItem("ecosystemData");
+    return savedEcosystemData ? JSON.parse(savedEcosystemData) : [];
+  });
+
+  const [selectedUseCase, setSelectedUseCase] = useState(() => {
+    // Retrieve data from localStorage on component mount
+    const savedUseCase = localStorage.getItem("selectedUseCase");
+    return savedUseCase ? JSON.parse(savedUseCase) : null;
+  });
 
   // Handler for when a use case is clicked
   const handleUsecaseClick = (usecase) => {
     setSelectedUseCase(usecase);
+    localStorage.setItem("selectedUseCase", JSON.stringify(usecase)); // Save to localStorage
     setCurrentStep("usecaseDescription");
   };
 
   const handleEcosystem = ({ usecase, usecaseDescription, startups }) => {
-    setEcosystemData({
+    const ecosystemDataToSave = {
       usecase,
       usecaseDescription,
       startups,
-    });
+    };
+    setEcosystemData(ecosystemDataToSave);
+    localStorage.setItem("ecosystemData", JSON.stringify(ecosystemDataToSave)); // Save to localStorage
     setCurrentStep("ecosystem");
   };
 
   const handleBackToUsecases = () => {
     setCurrentStep("usecasesCombined");
   };
+
+
 
   return (
     <div>
@@ -49,11 +63,11 @@ const TrendsMobile = ({
         />
       ) : currentStep === "usecaseDescription" ? (
         <UsecaseDescription
-          usecase={selectedUseCase.usecase}
-          usecaseDescription={selectedUseCase.usecaseDescription}
-          enhancement={selectedUseCase.Enhancement || ""}
-          measureOfImpact={selectedUseCase["Measure of Impact"] || ""}
-          startups={selectedUseCase.startups}
+          usecase={selectedUseCase?.usecase}
+          usecaseDescription={selectedUseCase?.usecaseDescription}
+          enhancement={selectedUseCase?.Enhancement || ""}
+          measureOfImpact={selectedUseCase?.["Measure of Impact"] || ""}
+          startups={selectedUseCase?.startups || []}
           onComplete={handleBackToUsecases}
           handleEcosystem={handleEcosystem}
         />
@@ -62,7 +76,7 @@ const TrendsMobile = ({
           selectedIndustry={selectedIndustry}
           selectedTechnology={selectedTechnology}
           technologyNames={technologyNames}
-          onUsecaseClick={handleUsecaseClick} // Pass handler for use case selection
+          onUsecaseClick={handleUsecaseClick}
         />
       ) : currentStep === "industries" ? (
         <Industries
