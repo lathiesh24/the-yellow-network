@@ -64,7 +64,7 @@ const EcosystemContent: React.FC<{
 
   return (
     <div className="flex flex-col gap-4 mt-12">
-      <div className="bg-[#005585] p-4 w-full z-50 mt-4">
+      <div className="bg-[#005585] p-4 w-full mt-4">
         <div className="text-lg font-semibold text-white">
           {usecase || "Ecosystem Overview"}
         </div>
