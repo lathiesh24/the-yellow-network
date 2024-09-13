@@ -64,9 +64,6 @@ const CompanyProfilePane: React.FC<CompanyProfilePaneProps> = ({
       try {
         await sendEmail();
 
-        // Update the connection status in Redux after successful operations
-        dispatch(setConnectionStatus("requested"));
-
         // Dispatch the action to create a partner connect
         await dispatch(
           createPartnerConnect({

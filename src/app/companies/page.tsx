@@ -113,11 +113,45 @@ const CompanyProfilePage: React.FC = () => {
     }
   }
 
+
+  const handleSuggestionClick = (name: string) => {
+    setSearchTerm(name); 
+    setShowSuggestions(false); 
+    setisShowBox(false); 
+  };
+
+  const handleViewChange = (view: "card" | "list") => {
+    setActiveView(view); 
+  };
+
+
   return (
     <div className='w-[90%] mx-auto my-0 px-4'>
-      <div className='flex justify-between mt-10'>
-        <h1 className='text-3xl'>Growth Tech Firms List</h1>
+     <div className='flex items-center justify-between mt-10'>
+      <div className='flex justify-between '>
+        <h1 className='sm:text-3xl text-xl'>Growth Tech Firms List</h1>
       </div>
+
+      <div className="flex justify-center my-6">
+  <div className="inline-flex items-center bg-gray-100 border border-gray-300 rounded-lg shadow-sm">
+    <Button
+      className={`${activeView === 'card' ? 'bg-[#228be6] text-white shadow-md' : 'bg-white text-gray-800'} 
+            enabled:hover:!bg-[#4dabf7]   focus:outline-none outline-none focus:ring-0 focus:border-transparent rounded-r-none transition-all duration-300 `}
+      onClick={() => handleViewChange('card')}
+    >
+      Card View
+    </Button>
+    <Button
+      className={`${activeView === 'list' ? 'bg-[#228be6] text-white shadow-md' : 'bg-white text-gray-800'} 
+          enabled:hover:!bg-[#4dabf7]   focus:outline-none transition-all focus:ring-0 focus:border-transparent rounded-l-none duration-300`}
+      onClick={() => handleViewChange('list')}
+    >
+      List View
+    </Button>
+  </div>
+</div>
+
+     </div>
 
       <div className='flex justify-between mt-10 gap-4'>
         <div className="w-full flex justify-around h-fit flex-col">
@@ -138,7 +172,7 @@ const CompanyProfilePage: React.FC = () => {
             {showSuggestions && searchSuggestResults.length > 0 && (
               <div className="w-full bg-white border border-gray-300 z-10 suggestion-box">
                 {searchSuggestResults.map((suggestion) => (
-                  <Suggestions suggestion={suggestion}/>
+                  <Suggestions suggestion={suggestion} onSuggestionClick={handleSuggestionClick} />
                   
                 ))}
               </div>

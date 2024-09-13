@@ -14,10 +14,11 @@ import SearchMobile from "../../mobileComponents/FooterComponents/SearchMobile";
 import TrendsMobile from "../../mobileComponents/FooterComponents/TrendsMobile";
 import MoreMobile from "../../mobileComponents/FooterComponents/MoreMobile";
 import { ChatHistoryResponse, StartupType } from "../../interfaces";
-import { TbShare2 } from "react-icons/tb";
 import { encryptURL } from "../../utils/shareUtils";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchPartnerConnectsByOrg } from "../../redux/features/connection/connectionSlice";
+import { IoShareSocialOutline } from "react-icons/io5";
+import TrendsMobileHeader from "../../mobileComponents/TrendsMobileHeader"; // Add this line
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function HomePage() {
@@ -32,7 +33,6 @@ export default function HomePage() {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [isInputEmpty, setIsInputEmpty] = useState<boolean>(true);
   const [mailMessage, setMailMessage] = useState<any>(null);
-  // const [connectionStatus, setConnectionStatus] = useState<string>("Connect");
   const [queryData, setQueryData] = useState<ChatHistoryResponse | null>(null);
   const [activeTab, setActiveTab] = useState<string>(searchParams.get('tab') || 'Spotlight');
   const router = useRouter();
@@ -43,8 +43,10 @@ export default function HomePage() {
   });
 
   const [requestQuery, setRequestQuery] = useState<string>();
+  const [selectedSector, setSelectedSector] = useState(null);
+  const [selectedIndustry, setSelectedIndustry] = useState(null);
+  const [selectedTechnology, setSelectedTechnology] = useState(null);
 
-  console.log("queryDatainHome", queryData, inputPrompt);
   useEffect(() => {
     const userInfoFromStorage = localStorage.getItem("user");
     if (userInfoFromStorage) {
@@ -78,6 +80,33 @@ export default function HomePage() {
     }
   };
 
+  const handleBack = () => {
+    if (selectedTechnology) {
+      setSelectedTechnology(null); // Go back to Industries
+    } else if (selectedIndustry) {
+      setSelectedIndustry(null); // Go back to SubSectors
+    } else if (selectedSector) {
+      setSelectedSector(null); // Go back to Sectors
+    } else {
+      setActiveTab("Spotlight"); // Go back to Spotlight if at the root of Trends
+    }
+  };
+
+  const handleSectorClick = (sectorName) => {
+    setSelectedSector(sectorName);
+    setSelectedIndustry(null); // Reset industry and technology
+    setSelectedTechnology(null);
+  };
+
+  const handleIndustryClick = (industryName) => {
+    setSelectedIndustry(industryName);
+    setSelectedTechnology(null); // Reset technology
+  };
+
+  const handleTechnologyClick = (technologyName) => {
+    setSelectedTechnology(technologyName);
+  };
+
   const toggleWidth = () => {
     setExpanded(!expanded);
   };
@@ -89,14 +118,10 @@ export default function HomePage() {
   };
 
   const dispatch = useAppDispatch();
-  const { connectionStatus, loading, error, successMessage } = useAppSelector(
-    (state) => state.partnerConnect
-  );
 
   const handleSaveInput = async (input: string) => {
     const jwtAccessToken = localStorage.getItem("jwtAccessToken");
-    const userQuery = { input, session_id: sessionId }; // Adjust session_id as needed
-
+    const userQuery = { input, session_id: sessionId };
     setMessages((prevMessages) => [
       ...prevMessages,
       { question: input, response: "Loading" },
@@ -113,7 +138,6 @@ export default function HomePage() {
         }
       );
 
-      console.log(response, "response ===>");
       setMessages((prevMessages) =>
         prevMessages.map((msg) =>
           msg.question === input
@@ -121,15 +145,22 @@ export default function HomePage() {
             : msg
         )
       );
-
-      // Save query data if needed
-      // await saveQueryData(input);
     } catch (error) {
-      console.log("error in getting startups", error);
+      let errorMessage = "Error fetching response";
+
+      if (error.code === "ECONNREFUSED") {
+        errorMessage =
+          "Connection error: Please ensure you are connected to the internet securely.";
+      } else if (error.response && error.response.status === 500) {
+        errorMessage = "Internal Server Error: Please try again later.";
+      } else if (error.message) {
+        errorMessage = `Error: ${error.message}`;
+      }
+
       setMessages((prevMessages) =>
         prevMessages.map((msg) =>
           msg.question === input
-            ? { question: input, response: "Error fetching response" }
+            ? { question: input, presponse: errorMessage }
             : msg
         )
       );
@@ -224,16 +255,24 @@ export default function HomePage() {
         <div className="p-6 text-left border-l-4 border-blue-100">
           <span className="font-semibold text-black block mb-3">NIFO:</span>
           {message?.response === "Loading" ? (
-            <div>Loading..</div>
+            <div>Loading...</div>
           ) : (
             <div>
-              {message?.response?.response === "No specific details available."
-                ? null
-                : message?.response?.response}
+              {typeof message?.response?.response === "string" ? (
+                message?.response?.response ===
+                "No specific details available." ? null : (
+                  message?.response?.response
+                )
+              ) : (
+                <div>
+                  {message?.response?.response?.response ||
+                    JSON.stringify(message?.response?.response)}
+                </div>
+              )}
               <RenderStartup
                 message={message}
                 handleSendStartupData={handleSendStartupData}
-              ></RenderStartup>
+              />
             </div>
           )}
         </div>
@@ -256,15 +295,21 @@ export default function HomePage() {
             handleToggleLeftFrame={handleToggleLeftFrame}
             onSaveInput={handleSaveInput}
             handleNewChat={handleNewChat}
-            // saveQueryData={saveQueryData}
             messages={messages}
-            connectionStatus={connectionStatus}
-            // setConnectionStatus={setConnectionStatus}
             setSessionId={setSessionId}
           />
         );
       case "Trends":
-        return <TrendsMobile />;
+        return (
+          <TrendsMobile
+            selectedSector={selectedSector}
+            selectedIndustry={selectedIndustry}
+            selectedTechnology={selectedTechnology}
+            handleSectorClick={handleSectorClick}
+            handleIndustryClick={handleIndustryClick}
+            handleTechnologyClick={handleTechnologyClick}
+          />
+        );
       case "More":
         return <MoreMobile userInfo={userInfo} />;
       default:
@@ -300,7 +345,7 @@ export default function HomePage() {
               open={open}
               handleToggleLeftFrame={handleToggleLeftFrameNavbar}
             />
-            <TbShare2
+            <IoShareSocialOutline
               size={24}
               className="ml-4 cursor-pointer"
               onClick={handleShareClick}
@@ -308,29 +353,21 @@ export default function HomePage() {
             />
           </div>
         </div>
-        {openRightFrame && selectedStartup && (
-          <div className={`${expanded ? "" : "w-1/4"}`}>
-            <CompanyProfilePane
-              companyData={selectedStartup}
-              setOpenState={setOpenRightFrame}
-              openState={openRightFrame}
-              userInfo={userInfo}
-              expanded={expanded}
-              toggleWidth={toggleWidth}
-              mailData={mailMessage}
-              setMailData={setMailMessage}
-              connectionStatus={connectionStatus}
-              queryData={queryData}
-              requestQuery={requestQuery}
-            />
-          </div>
-        )}
       </div>
 
       {/* Mobile Responsiveness */}
-      <div className="flex flex-col md:hidden">
-        <MobileHeader />
-        {renderTabContent()}
+      <div className="flex flex-col md:hidden h-screen">
+        {/* Mobile Header */}
+        {activeTab === "Trends" ? (
+          <TrendsMobileHeader handleBack={handleBack} />
+        ) : (
+          <MobileHeader />
+        )}
+
+        {/* Content Area */}
+        <div className="flex-grow overflow-y-auto">{renderTabContent()}</div>
+
+        {/* Bottom Bar */}
         <BottomBar setActiveTab={setActiveTab} activeTab={activeTab} />
       </div>
     </main>

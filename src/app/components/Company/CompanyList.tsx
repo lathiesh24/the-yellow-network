@@ -77,26 +77,25 @@ const handleCompanyProfile = (id: string) => {
           </div>
         </div>
       ) : (
-        <div className="list-view mt-10">
+        <div className="list-view mt-2">
           {companies.map((company, index) => (
-            <Link href={`/profile/${company.startup_id}`} key={company.startup_id}>
               <div
                 className="flex flex-row items-center gap-4 bg-white p-6 rounded-lg shadow-sm mb-4 border hover:border hover:border-[#22b8cf] cursor-pointer"
                 ref={companies.length === index + 1 ? lastCompanyElementRef : null}
               >
                 <div className="flex-1">
-                  <h5 className="sm:text-xl font-bold tracking-tight text-gray-900 dark:text-white hidden sm:block">
+                  <h5 className="sm:text-xl font-bold tracking-tight text-gray-900 hover:text-[#228be6] dark:text-white hidden sm:block" onClick={() => handleCompanyProfile(company.startup_id.toString())}>
                     {truncateText(company.startup_name, 30)}
                   </h5>
-                  <h5 className="sm:text-xl font-bold tracking-tight text-gray-900 dark:text-white block sm:hidden">
-                    {truncateText(company.startup_name, 10)}
+                  <h5 className="sm:text-xl font-bold tracking-tight text-gray-900 hover:text-[#228be6] dark:text-white block sm:hidden" onClick={() => handleCompanyProfile(company.startup_id.toString())}>
+                    {truncateText(company.startup_name, 8)}
                   </h5>
                   <p className="font-normal text-gray-700 dark:text-gray-400 text-sm sm:block hidden">
                     {truncateText(company.startup_description, 80)}
                   </p>
                 </div>
-                <div className="flex justify-between items-center text-[14px]">
-                  <div className="flex items-center gap-2">
+                <div className="flex justify-between items-center text-[14px] gap-4">
+                  <div className="flex items-center gap-1">
                     <FaLocationDot />
                     {company.startup_country}
                   </div>
@@ -105,8 +104,8 @@ const handleCompanyProfile = (id: string) => {
                     <p>Website</p>
                   </a>
                 </div>
+                <Button className="bg-[#4dabf7] hover:!bg-[#228be6] focus:!outline-none">Connect</Button>
               </div>
-            </Link>
           ))}
           {isLoading && (
             <div className="w-full flex justify-center py-4">

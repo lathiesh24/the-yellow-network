@@ -6,7 +6,11 @@ import {
   postRequestWithAccessToken,
 } from "../../hooks"; // Import the request utility functions
 
-type ConnectionStatus = "requested" | "rejected" | "connected";
+export type ConnectionStatus =
+  | "requested"
+  | "rejected"
+  | "connected"
+  | "Connect";
 
 interface PartnerConnectPayload {
   consultant_email: string;
@@ -32,7 +36,7 @@ interface PartnerConnectState {
   error: string | null;
   loading: boolean;
   successMessage: string | null;
-  connectionStatus: ConnectionStatus | null;
+  connectionStatuses: { [startupId: number]: ConnectionStatus };
 }
 
 const initialState: PartnerConnectState = {
@@ -41,7 +45,7 @@ const initialState: PartnerConnectState = {
   error: null,
   loading: false,
   successMessage: null,
-  connectionStatus: null,
+  connectionStatuses: {},
 };
 
 export const createPartnerConnect = createAsyncThunk<
@@ -51,6 +55,7 @@ export const createPartnerConnect = createAsyncThunk<
 >(
   "partnerConnect/createPartnerConnect",
   async (payload, { rejectWithValue }) => {
+    console.log("PAYLOAD", payload);
     try {
       const response = await postRequestWithAccessToken(
         "https://nifo.theyellow.network/api/partnerconnect/connects/",
@@ -109,11 +114,13 @@ const partnerConnectSlice = createSlice({
   reducers: {
     setConnectionStatus: (
       state,
-      action: PayloadAction<"requested" | "rejected" | "connected">
+      action: PayloadAction<{ startupId: number; status: ConnectionStatus }>
     ) => {
-      state.connectionStatus = action.payload;
+      const { startupId, status } = action.payload;
+      state.connectionStatuses[startupId] = status;
     },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(createPartnerConnect.pending, (state) => {
