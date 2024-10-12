@@ -30,22 +30,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div>
-      <div className="hidden lg:block">
-        <LoginLap
-          onSubmit={handleLogin}
-          loading={loading}
-          message={message}
-          error={error}
-        />
-      </div>
-      <div className="lg:hidden">
-        <LoginMobile
-          onSubmit={handleLogin}
-          loading={loading}
-          message={message}
-          error={error}
-        />
-      </div>
+    Hi
     </div>
   );
 };
